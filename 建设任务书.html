@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>揭榜挂帅 建设任务书 — 点暇斋</title>
+<style>
+:root {
+  --bg: #1a1a2e;
+  --card-bg: #16213e;
+  --text: #e0e0e0;
+  --accent: #e67e22;
+  --accent2: #0f3460;
+  --heading: #ffffff;
+  --link: #4fc3f7;
+  --border: #333;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: "Microsoft YaHei","PingFang SC",sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  font-size: 15px;
+}
+.container {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+.sidebar {
+  width: 260px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 20px 10px;
+  background: var(--card-bg);
+  border-right: 1px solid var(--border);
+}
+.sidebar a {
+  display: block;
+  padding: 5px 12px;
+  margin: 1px 0;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 13px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.sidebar a:hover { background: var(--accent2); }
+.sidebar a.active { background: var(--accent); color: #fff; }
+.sidebar a.sub { padding-left: 26px; font-size: 12px; color: #999; }
+.sidebar .back-link {
+  display: block;
+  margin-bottom: 15px;
+  color: var(--link);
+  font-size: 13px;
+}
+.content {
+  flex: 1;
+  padding: 40px 50px;
+  max-width: 900px;
+}
+h1 {
+  color: var(--heading);
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 5px;
+}
+.subtitle {
+  text-align: center;
+  color: var(--accent);
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+.author {
+  text-align: center;
+  color: #aaa;
+  margin-bottom: 5px;
+}
+.affiliation {
+  text-align: center;
+  color: #888;
+  font-size: 13px;
+  margin-bottom: 30px;
+}
+h2 {
+  color: var(--heading);
+  font-size: 18px;
+  margin-top: 40px;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent);
+}
+h3 {
+  color: var(--link);
+  font-size: 15px;
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+p {
+  margin-bottom: 12px;
+  text-indent: 2em;
+}
+p.empty { display: none; }
+p.figure { text-align: center; margin: 20px 0 8px; text-indent: 0; }
+p.figure img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); }
+p.fig-caption {
+  text-align: center;
+  color: #888;
+  font-size: 12px;
+  margin-bottom: 20px;
+  text-indent: 0;
+}
+
+.table-wrapper { overflow-x: auto; margin: 16px 0; }
+.table-wrapper p { text-indent: 0; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 8px 0;
+}
+tr { border-bottom: 1px solid rgba(255,255,255,.06); }
+tr:first-child { border-top: 2px solid var(--accent); border-bottom: 1.5px solid var(--accent); }
+tr:last-child { border-bottom: 2px solid var(--accent); }
+td {
+  padding: 7px 10px;
+  vertical-align: top;
+  line-height: 1.6;
+}
+tr:first-child td {
+  color: #aaa;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.download-section {
+  text-align: center;
+  margin-top: 50px;
+  padding: 30px;
+  border-top: 1px solid var(--border);
+}
+.download-btn {
+  display: inline-block;
+  padding: 14px 36px;
+  background: var(--accent);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s;
+  margin-bottom: 15px;
+}
+.download-btn:hover {
+  background: #cf6d17;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(230,126,34,.3);
+}
+.download-section p {
+  text-indent: 0;
+  color: #667;
+  font-size: 12px;
+}
+
+.back-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 1000;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: rgba(13,31,53,.85);
+  border: 1px solid rgba(230,126,34,.2);
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 13px;
+  transition: all .3s;
+  cursor: pointer;
+}
+.back-top:hover {
+  border-color: var(--accent);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .container { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    max-height: 250px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .content { padding: 30px 16px; }
+  h1 { font-size: 20px; }
+  h2 { font-size: 16px; }
+  td { font-size: 11px; padding: 4px 6px; }
+}
+@media print { body { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <nav class="sidebar">
+    <a class="back-link" href="index.html">&#9664; 返回首页</a>
+    <a href="#abstract">摘要</a>
+    <a href="#h-ec13d9aa">一、项目概况</a>
+    <a class="sub" href="#h-0e008722">1.1 团队</a>
+    <a href="#h-870b1e13">二、建设基础与特色优势</a>
+    <a class="sub" href="#h-cdaf70b8">2.1 已建成果总览</a>
+    <a class="sub" href="#h-78605605">2.2 门户全景解读</a>
+    <a class="sub" href="#h-baf79c0b">2.3 核心差异化优势</a>
+    <a class="sub" href="#h-c894261c">2.4 教学效果实证</a>
+    <a class="sub" href="#h-ff5cc12e">2.5 同类建设对比</a>
+    <a class="sub" href="#h-a877d261">2.6 设计深意阐述</a>
+    <a href="#h-7b941d62">三、建设目标</a>
+    <a href="#h-cc751a68">四、建设内容与任务分解</a>
+    <a class="sub" href="#h-af308173">4.1 案例库体系化升级</a>
+    <a class="sub" href="#h-4fde2e41">4.2 精品课程数智化</a>
+    <a class="sub" href="#h-e450f189">4.3 配套资源开发</a>
+    <a class="sub" href="#h-787ee6ee">4.4 评估与省级推优</a>
+    <a href="#h-f917f44f">五、技术路线</a>
+    <a href="#h-3b80a6af">六、建设进度</a>
+    <a href="#h-0015284b">七、预期成果与验收指标</a>
+    <a href="#h-cd273fbe">八、经费预算</a>
+    <a href="#h-0160fd78">九、保障措施</a>
+    <a href="#h-1d24e49f">十、通知要求总对照</a>
+    <a href="#h-fb507f2c">参考文献</a>
+    <a class="sub" href="#h-02dfd317">附录A：门户URL清单</a>
+    <a class="sub" href="#h-9a5497e7">附录B：小说平台链接</a>
+    <a class="sub" href="#h-778d7963">附录C：案例索引</a>
+  </nav>
+
+  <main class="content" id="top">
+    <h1>研究生教育教学"揭榜挂帅"项目</h1>
+    <div class="subtitle">建 设 任 务 书</div>
+    <div class="author">成都大学 · 建筑与土木工程学院 · 环境工程系</div>
+    <div class="affiliation">
+      项目名称：纪实小说云-智能体协同：研究生《固体废弃物污染防治技术》课程数智化教学建设<br>
+      建设类别：(二)AI赋能优质研究生课程 + (五)AI赋能优质专业学位研究生教学案例<br>
+      负责人：黄正文 教授 / 孙清 博士 &nbsp;|&nbsp; 建设周期：2026年7月 - 2028年6月(2年) &nbsp;|&nbsp; 填表日期：2026年6月20日
+    </div>
+
+    <div style="background:var(--card-bg);padding:20px;border-radius:8px;margin-bottom:30px;border-left:4px solid var(--accent);">
+      <h2 id="abstract" style="font-size:16px;margin-top:0;margin-bottom:10px;border-bottom:none;">摘要</h2>
+      <p style="text-indent:0;font-size:14px;">本项目依托研究生《固体废弃物污染防治技术》课程，以"纪实小说云—智能体—数字门户"三位一体架构为核心，体系化升级AI赋能研究生教学资源体系。项目非从零建设——前期3年（2023-2026）已建成：7部原创工程纪实小说（200+万字，版权登记，在线连载）、11-Agent双向映射智能教学协同体系、67页GitHub Pages数字门户集群（在线可访问：<a href="https://zhengwen69.github.io/cdu-gufei-web-demo/" target="_blank" style="color:var(--link);">https://zhengwen69.github.io/cdu-gufei-web-demo/</a>）、27个标准化教学案例（FND五段法拆解，覆盖6模块35知识群，覆盖率100%）、3轮课程迭代（归因转移39%→7%，p&lt;0.05）、多篇教学教改论文（覆盖10国10刊）。本次申报，旨在以此为契机，对标推优之省级申报——故事云为根、NFSC为干、Agent为枝、门户为叶、重在参与。</p>
+    </div>
+
+<h2 id="h-ec13d9aa">一、项目概况</h2>
+<p>本项目团队自2023年起围绕研究生《固体废弃物污染防治技术》课程持续建设3年，已形成以纪实小说云为内容资源引擎、以11-Agent协同体系为智能化教学工具、以67页数字门户为在线展示与交付平台的三位一体教学资源体系。本次揭榜建设，旨在将上述前期成果体系化升级，争取达到省级优质教育教学资源推荐标准。</p>
+
+<h3 id="h-0e008722">1.1 团队</h3>
+<p>项目团队构成及分工如表1所示。</p>
+<div class="table-wrapper">
+<table><tr><td>姓名</td><td>职称/身份</td><td>职务</td><td>项目分工</td></tr>
+<tr><td>黄正文</td><td>教授</td><td>项目负责人</td><td>总设计/NFSC教学法/纪实小说/Agent架构</td></tr>
+<tr><td>孙 清</td><td>讲师/理学博士</td><td>共同负责人</td><td>数字门户架构/教学法论证</td></tr>
+<tr><td>王鸿斌</td><td>副教授/工学博士</td><td>无</td><td>Agent系统设计/产教融合</td></tr>
+<tr><td>曾 丽</td><td>副教授</td><td>系主任</td><td>教学管理/课程标准/质量监控</td></tr>
+<tr><td>王 静</td><td>教授</td><td>教学院长</td><td>学院统筹/省级推优/制度保障</td></tr>
+<tr><td>谢泽宇</td><td>硕士/工程师</td><td>无</td><td>跨域迁移实证/Agent测试</td></tr>
+<tr><td>丁扬飞</td><td>硕士研究生</td><td>无</td><td>案例配套资源/数据整理</td></tr>
+<tr><td>刘明海</td><td>硕士研究生</td><td>无</td><td>门户维护/视频制作/案例更新</td></tr></table>
+</div>
+<p style="text-indent:0;text-align:center;color:#888;font-size:12px;">表1 项目团队成员与分工</p>
+<p style="font-size:13px;color:#999;">注：谢泽宇(2014级)、丁扬飞(2023级)、刘明海(2024级)均为黄正文教授指导之硕士研究生。</p>
+
+<h2 id="h-870b1e13">二、建设基础与特色优势</h2>
+<p>本项目建设并非从零起步。前期3年(2023-2026)已完成核心体系建构：纪实小说云提供原创内容资源支撑(7部/200万字/版权登记)，NFSC四维教学法提供方法论框架(3轮迭代验证)，11-Agent体系提供智能化教学生产与分发能力(双向映射)，67页数字门户提供面向师生的在线交互界面(GitHub Pages部署运行)。本项目的建设定位为：在已有原型基础上进行体系化升级与规范化完善，补齐配套资源与评估数据，而非重新启动全新建设。</p>
+
+<h3 id="h-cdaf70b8">2.1 已建成果总览</h3>
+<p>前期3年已建成果清单如表2所示，每项均附在线验证URL。</p>
+<div class="table-wrapper">
+<table><tr><td>类别</td><td>内容</td><td>规模</td><td>在线验证URL</td><td>状态</td></tr>
+<tr><td>纪实小说云</td><td>7部原创工程纪实小说</td><td>200+万字/471回</td><td><a href="TingXian.html" style="color:var(--link);">TingXian.html</a></td><td>已发布/版权登记</td></tr>
+<tr><td>数字门户</td><td>GitHub Pages全门户集群</td><td>67页HTML</td><td><a href="index.html" style="color:var(--link);">index.html</a></td><td>在线运行中</td></tr>
+<tr><td>教学案例</td><td>S001-S027(FND五段法拆解)</td><td>27个/6模块/35知识群</td><td><a href="industry-education/cases-full.html" style="color:var(--link);">cases-full.html</a></td><td>100%覆盖</td></tr>
+<tr><td>Agent体系</td><td>11-Agent双向映射</td><td>11角色(教师9+学生2)</td><td><a href="agent团队演示.html" style="color:var(--link);">agent团队演示.html</a></td><td>已部署</td></tr>
+<tr><td>课程迭代</td><td>v1.0(2023)-&gt;v2.0(2025)-&gt;v3.0(2026)</td><td>3轮/约90名学生</td><td><a href="课程概览.html" style="color:var(--link);">课程概览.html</a></td><td>归因转移实证</td></tr>
+<tr><td>学术论文</td><td>10篇国际期刊(10国10刊)</td><td>5已投/1大修/4完善</td><td><a href="教研科研进展.html" style="color:var(--link);">教研科研进展.html</a></td><td>SSCI+Scopus</td></tr>
+<tr><td>跨域迁移</td><td>NFSC向其他学科迁移</td><td>7领域</td><td><a href="迁移探索.html" style="color:var(--link);">迁移探索.html</a></td><td>已验证</td></tr>
+<tr><td>产教融合</td><td>四川生态长城环保集团</td><td></td><td><a href="industry-education/" style="color:var(--link);">industry-education/</a></td><td>门户已建</td></tr>
+<tr><td>IP孵化</td><td>学科交叉IP孵化项目</td><td>已结题</td><td><a href="IP孵化结题报告.html" style="color:var(--link);">IP孵化结题报告.html</a></td><td>已结题</td></tr>
+<tr><td>版权登记</td><td>川作登字-2025-A-00072680等</td><td>多项</td><td>--</td><td>已登记</td></tr></table>
+</div>
+<p style="text-indent:0;text-align:center;color:#888;font-size:12px;">表2 前期已建成果清单</p>
+
+<h3 id="h-78605605">2.2 门户浏览页全景解读——每一页皆为已建成果之活证据</h3>
+<p>门户不止承载教学资源，门户即教学资源。67页非寻常网站堆砌，页页承载特定教学功能，处处蕴含AI赋能深意。评审无须信文字——点开URL即信。以下择取核心20页逐一注释(完整68页URL见附录A)。</p>
+<p>核心20页门户之教学功能与AI赋能体现如表3所示。</p>
+<div class="table-wrapper">
+<table><tr><td>序号</td><td>页面名称</td><td>在线URL</td><td>教学功能/AI赋能体现</td></tr>
+<tr><td>1</td><td>主门户首页</td><td><a href="index.html" style="color:var(--link);">index.html</a></td><td>认知决策中枢——全系统导航，一页总览AI赋能全貌</td></tr>
+<tr><td>2</td><td>课程概览</td><td><a href="课程概览.html" style="color:var(--link);">课程概览.html</a></td><td>OBE四目标PPT式展示——智能备课成果可视化</td></tr>
+<tr><td>3</td><td>章节导航</td><td><a href="章节导航.html" style="color:var(--link);">章节导航.html</a></td><td>8周教学方案Tab式索引——精准授课路径全展现</td></tr>
+<tr><td>4</td><td>知识导图</td><td><a href="知识导图.html" style="color:var(--link);">知识导图.html</a></td><td>故事云驱动知识树——小说非附庸,乃知识建构入口</td></tr>
+<tr><td>5</td><td>Agent团队演示</td><td><a href="agent团队演示.html" style="color:var(--link);">agent团队演示.html</a></td><td>11-Agent工作流全展示——AI赋能非虚设,可验证</td></tr>
+<tr><td>6</td><td>学习园地</td><td><a href="学习园地.html" style="color:var(--link);">学习园地.html</a></td><td>学生自学入口——个性化学习推送之载体</td></tr>
+<tr><td>7</td><td>互动社区</td><td><a href="互动社区.html" style="color:var(--link);">互动社区.html</a></td><td>签到/周报/同行评价——在线协同研讨</td></tr>
+<tr><td>8</td><td>教师仪表盘</td><td><a href="教师仪表盘.html" style="color:var(--link);">教师仪表盘.html</a></td><td>数据查阅/答疑/管理——数字化评价中枢</td></tr>
+<tr><td>9</td><td>第1周-空间错配</td><td><a href="第1周-空间错配.html" style="color:var(--link);">第1周-空间错配.html</a></td><td>NFSC第1维'叙'——叙事引擎激活认知</td></tr>
+<tr><td>10</td><td>学习-第1周</td><td><a href="学习-第1周.html" style="color:var(--link);">学习-第1周.html</a></td><td>学生伴学端——Agent双向映射之'学生版'</td></tr>
+<tr><td>11</td><td>迁移探索总枢纽</td><td><a href="迁移探索.html" style="color:var(--link);">迁移探索.html</a></td><td>7迁移路径入口——证明方法论可推广</td></tr>
+<tr><td>12</td><td>案例映射表</td><td><a href="industry-education/cases-full.html" style="color:var(--link);">cases-full.html</a></td><td>27案例x35知识群100%覆盖——数据铁证</td></tr>
+<tr><td>13</td><td>Agent七步赋能</td><td><a href="industry-education/agents.html" style="color:var(--link);">agents.html</a></td><td>预备教学练验改七步Agent并行</td></tr>
+<tr><td>14</td><td>故事云流水线</td><td><a href="industry-education/pipeline.html" style="color:var(--link);">pipeline.html</a></td><td>小说-&gt;NFSC-&gt;门户 全链路可视化</td></tr>
+<tr><td>15</td><td>NFSC方法论</td><td><a href="Exploring-NFSC.html" style="color:var(--link);">Exploring-NFSC.html</a></td><td>四维教学法深度学术阐述</td></tr>
+<tr><td>16</td><td>听弦(7部小说)</td><td><a href="TingXian.html" style="color:var(--link);">TingXian.html</a></td><td>200万字纪实小说入口+进度追踪</td></tr>
+<tr><td>17</td><td>教研科研进展</td><td><a href="教研科研进展.html" style="color:var(--link);">教研科研进展.html</a></td><td>专著1部+论文10篇进展一览</td></tr>
+<tr><td>18</td><td>IP孵化结题报告</td><td><a href="IP孵化结题报告.html" style="color:var(--link);">IP孵化结题报告.html</a></td><td>IP项目结题全文(2378行)</td></tr>
+<tr><td>19</td><td>UAV独立门户</td><td><a href="https://zhengwen69.github.io/CD-UAV/" target="_blank" style="color:var(--link);">CD-UAV</a></td><td>跨域迁移实证——无人机教学</td></tr>
+<tr><td>20</td><td>竹韵乐养</td><td><a href="CDU-Bamboo/" style="color:var(--link);">CDU-Bamboo/</a></td><td>跨域迁移实证——传统音乐教学</td></tr></table>
+</div>
+<p style="text-indent:0;text-align:center;color:#888;font-size:12px;">表3 门户浏览页全景解读(核心20页)</p>
+
+<h3 id="h-baf79c0b">2.3 核心差异化优势——故事云-智能体-四维教学法</h3>
+<p>非"给课程加个ChatGPT"之技术锦上添花，乃"叙事云重构知识入口"之认知范式变革。三位一体互依互构，缺一则体系坍塌。(见图1)</p>
+<p class="figure"><img src="assets/img/jianshe/img1.png" alt="图1" loading="lazy"></p>
+<p class="fig-caption">图1 "故事云-智能体-门户"三位一体架构</p>
+
+<p>优势一：纪实小说云——200万字难以效仿之内容壁垒。项目负责人以笔名"点暇斋"创作7部工程纪实小说(在线连载：<a href="TingXian.html" style="color:var(--link);">TingXian.html</a>)，取材于20年真实工程经历。此等资源非"网上搜案例"可得——乃亲历者以文学笔法书写之一手叙事，保留隐性知识中情感之厚度与人性之复杂。犹如比较"从菜市场买菜"与"自种有机农场"——前者人人可为，后者须20年积累。全国范围内，尚无第二个课题组拥有此等规模之自建原创教学叙事资源。</p>
+<p>优势二：11-Agent智能体——教育学意图性设计之AI系统。非"让学生直接用ChatGPT"之粗放方案(在线验证：<a href="agent团队演示.html" style="color:var(--link);">agent团队演示.html</a>)。11个Agent角色基于教学流程分析精心设计，每角色承担不可合并之独立功能(正交性原则)。核心命题："AI放大教师"而非"AI替代教师"——1名教师x11个Agent=11人级产出能力。</p>
+<p>优势三：NFSC四维教学法——从"知识搬运"到"认知重塑"(方法论阐述：<a href="Exploring-NFSC.html" style="color:var(--link);">Exploring-NFSC.html</a>)。叙事入情(故事云激活动机)-&gt;框架入脑(五维诊断结构化)-&gt;情境入手(三层浸润实践)-&gt;创造入魂(Agent辅助深层迁移)。非教学法名称之堆砌，乃经3轮课程迭代、约90名学生、1200份过程评估验证之实证方法论。</p>
+
+<h3 id="h-c894261c">2.4 教学效果数据实证</h3>
+<p>三轮课程迭代关键教学效果数据如表4所示。</p>
+<div class="table-wrapper">
+<table><tr><td>指标</td><td>v1.0(2023)</td><td>v2.0(2025)</td><td>v3.0(2026)</td><td>趋势</td></tr>
+<tr><td>性格归因占比(第5周)</td><td>—</td><td>39%</td><td>32%</td><td>下降</td></tr>
+<tr><td>性格归因占比(第8周)</td><td>—</td><td>11%</td><td>7%</td><td>显著下降(p&lt;0.05)</td></tr>
+<tr><td>框架术语准确使用(第4周)</td><td>—</td><td>23/30</td><td>27/30</td><td>提升</td></tr>
+<tr><td>&gt;=3维度交叉分析(第8周)</td><td>—</td><td>10/30</td><td>14/30</td><td>提升</td></tr>
+<tr><td>三轨产出完成率</td><td>—</td><td>85%</td><td>93%</td><td>提升</td></tr>
+<tr><td>评分者间信度kappa</td><td>--</td><td>0.71</td><td>0.74</td><td>稳定</td></tr></table>
+</div>
+<p style="text-indent:0;text-align:center;color:#888;font-size:12px;">表4 三轮课程迭代教学效果数据</p>
+<p>数据来源：P7-JUTLP纵向评估论文(已投Scopus Q1，澳大利亚)。样本：3队列约90名学生，1200份过程评估记录。归因转移39%-&gt;7%之机制：非通过说教，乃学生获得"五维错配"框架词汇后自然涌现之认知升级——识别"便利性陷阱""反馈延迟""规范缺位"等结构性因素取代"村民素质低"之道德归因。</p>
+
+<h3 id="h-ff5cc12e">2.5 与同类建设差异对比</h3>
+<p>与同类项目之差异化对比如表5所示。</p>
+<div class="table-wrapper">
+<table><tr><td>维度</td><td>常规AI赋能做法</td><td>本项目做法</td><td>差异壁垒</td></tr>
+<tr><td>教学内容来源</td><td>网上搜集/教材编选</td><td>200万字自创纪实小说+Agent自动拆解</td><td>极高(不可复制)</td></tr>
+<tr><td>AI应用方式</td><td>让学生用ChatGPT</td><td>11-Agent双向映射(教师端+学生端)</td><td>高(教育学设计)</td></tr>
+<tr><td>数字化载体</td><td>PPT+视频+学习通</td><td>67页GitHub门户(在线可验证)</td><td>高(即时验证)</td></tr>
+<tr><td>案例覆盖</td><td>5-10个零散案例</td><td>27案例x35知识群=100%覆盖</td><td>极高(系统化)</td></tr>
+<tr><td>教学法支撑</td><td>无体系方法论</td><td>NFSC四维+五维诊断(3轮验证)</td><td>极高(有实证)</td></tr>
+<tr><td>效果数据</td><td>无/仅满意度</td><td>归因转移39%-&gt;7%(p&lt;0.05,n=90)</td><td>极高(量化)</td></tr>
+<tr><td>可推广性</td><td>依赖个人</td><td>7跨域迁移+10篇论文固化</td><td>极高(已验证)</td></tr></table>
+</div>
+<p style="text-indent:0;text-align:center;color:#888;font-size:12px;">表5 与同类AI赋能建设差异对比</p>
+
+<h3 id="h-a877d261">2.6 故事云-智能体-四维教学法：设计深意阐述</h3>
+<p>故事云之设计深意。纪实小说并非文学创作自娱，而是Bruner叙事认知模式在工程教育中的系统化实现。7部小说覆盖固废全谱系工程场景，每部对应NFSC特定教学维度。Agent-S从中拆解出27个标准案例(覆盖6模块35知识群，覆盖率100%)，表明叙事资源乃方法论运行之必需供给，而非附加装饰。</p>
+<p>可推广性之设计深意。两级载体设计确保模式不依赖特殊个人条件：Level-1(纪实小说)为最优载体，Level-2(行业报告/工程案例/口述访谈)为普适载体。Agent-S对两级载体均可运行。7次跨域迁移验证中，UAV、竹笛、初中英语三次均未使用小说资源，表明方法论可独立于特定载体运行。标准操作包将提供无小说条件下之降格使用方案。</p>
+<p>智能体之设计深意。11-Agent体系之创新不在底层AI架构(基于GPT-4o/Claude的Prompt工程)，而在教育学角色分配之精密性。11个角色基于教学流程分析设定，每角色功能不可合并(正交性原则，经4学科迁移验证)。教师端与学生端一一对应(双向映射原则)，实现1名教师借助11个Agent达到11人级教学产出能力之效果，根本区别于通用AI工具之无差别接入。</p>
+<p>建设节奏之设计深意。本项目遵循"原型涌现-验证巩固-标杆升级"三阶段演化路径。2023-2026年为原型涌现期(追求体系完整性)，2026-2028年为标准化升级期(追求规范化与可验收性)。当前核心建设已完成约95%，2年建设期内的主要任务为：录制配套视频、采集评估数据、组织同行评审、编制推优材料，属精装修与验收手续性质而非主体建设阶段。</p>
+
+<h2 id="h-7b941d62">三、建设目标</h2>
+<p>故事为源，Agent为器，门户为桥，NFSC为魂——四者协力，一课成标杆。</p>
+<p>总目标：适应社会发展对环境工程创新人才培养之需要，充分发挥本学科在纪实叙事与智能体技术方面之独特优势与专业特色，全面推行"人工智能+教育"计划，以NFSC(叙-框-境-创)四维教学法为方法论内核，以纪实小说云为学科特色内容引擎，以11-Agent协同体系为技术基座，以67页数字门户为展示与交付载体，将研究生《固体废弃物污染防治技术》课程建设为"故事化内容-智能体拆解-门户可视化"三位一体的AI赋能研究生数智化教学标杆。提升师生智能素养，形成可向省级推优之规范化成果。</p>
+<p>表层：一门研究生课程的AI教学资源升级。中层：一套"故事云-Agent-门户"三位一体的方法论体系。深层：一条从"教师个人实践"到"可复制教育公共品"的转化路径。</p>
+<p>本项目与通知要求之逐条对照如表6所示。</p>
+<div class="table-wrapper">
+<table><tr><td>通知要求</td><td>已有基础</td><td>超额情况</td><td>本项目新建</td></tr>
+<tr><td>系统化开发高质量案例库</td><td>27案例x35知识群=100%</td><td>远超(常规5-10个)</td><td>配套视频+AI解析</td></tr>
+<tr><td>案例真实性</td><td>纪实小说取材真实项目</td><td>文学级真实性&gt;&gt;案例文本</td><td>同行评审认证</td></tr>
+<tr><td>配套数字化讲解视频</td><td>门户已有(非视频形态)</td><td>--</td><td>新录27个</td></tr>
+<tr><td>AI智能解析</td><td>Agent-S五段法已运行</td><td>已超额(自动化)</td><td>标准化文档输出</td></tr>
+<tr><td>全链条智慧育人</td><td>Agent备-授-学-评已闭环</td><td>已实现</td><td>SUS量化验证</td></tr>
+<tr><td>课程动态迭代</td><td>v1-&gt;v2-&gt;v3已3轮</td><td>已迭代3次</td><td>制度文件固化</td></tr>
+<tr><td>案例常态化更新</td><td>Agent-S可从新章节拆解</td><td>技术已具备</td><td>流程文件固化</td></tr></table>
+</div>
+<p style="text-indent:0;text-align:center;color:#888;font-size:12px;">表6 通知要求与已有基础超额对照</p>
+
+<h2 id="h-cc751a68">四、建设内容与任务分解</h2>
+<p>核心策略：非从零建设，乃将已有原型体系化升级为省级标杆。(见图2)</p>
+<p class="figure"><img src="assets/img/jianshe/img2.png" alt="图2" loading="lazy"></p>
+<p class="fig-caption">图2 建设内容逻辑(已建-新建-产出)</p>
+
+<h3 id="h-af308173">4.1 教学案例库体系化升级(贴合环境工程岗位实际需求)(聚焦)</h3>
+<p>紧扣资源与环境专业学位研究生职业化、应用型、实践型培养定位，在已有27个标准化案例基础上(验证：<a href="industry-education/cases-full.html" style="color:var(--link);">cases-full.html</a>)，补齐通知要求之全套配套：(1)为每案例录制3-5分钟数字化讲解视频——含情境还原、关键冲突提示、框架分析引导，由纪实小说云提供叙事素材，Agent-S提供结构化拆解脚本；(2)由Agent-S自动生成AI智能解析文档(FND五段：背景-冲突-决策-结局-启示+错配维度诊断)；(3)由Agent-4生成实训思考题与评分量规；(4)链接纪实小说原文(QQ阅读/17K文学)作为拓展资源。</p>
+<p>案例常态化更新机制：7部小说持续连载(日更约6600字)，Agent-S定期扫描新章节，自动检测可拆解教学素材并推荐入库——此为"活的案例库"而非静态文本集。</p>
+
+<h3 id="h-4fde2e41">4.2 精品课程全面数智化(愿景)</h3>
+<p>课程建设优化知识体系，融入固废处理学科前沿进展、环保产业动态与真实科研案例等鲜活内容。在已有67页门户+11-Agent+3轮迭代基础上，完成：(1)SUS(系统可用性量表)+TAM(技术接受模型)正式评估——问卷已设计完毕(20题)，待发放；(2)课程动态迭代制度文件(版本控制规范/学期回顾机制/Agent更新日志)；(3)课程思政元素显性标注(每周标注思政融入点)；(4)门户使用统计(匿名计数脚本)。目标：达成"打造智慧课堂与混合式教学场景，实现智能备课(Agent-2/3)-精准授课(Agent-S/I)-个性化学习(学生门户)-数字化评价(Agent-5/0)"全链条智慧育人模式。</p>
+
+<h3 id="h-e450f189">4.3 配套资源开发</h3>
+<p>(1)智能题库：Agent-4基于27案例+35知识群批量生成分层题库(基础/进阶/综合，&gt;=200题)；(2)线上微课：从门户录制操作演示10-15个；(3)虚拟实训：将Agent-I已设计之6个沉浸式脚本(EIA听证/模拟法庭/碳交易等)转化为可交互数字场景。</p>
+
+<h3 id="h-787ee6ee">4.4 评估与省级推优</h3>
+<p>(1)组织校内外同行评审(27案例质量认证)；(2)学生使用效果调查；(3)纵向评估报告编制(整合P7论文数据)；(4)省级推优材料包(课程/案例双线)。</p>
+
+<h2 id="h-f917f44f">五、技术路线</h2>
+<p>纪实小说云-Agent-门户三线并进，四阶段递进(见图3)。三维闭环互馈：叙事供给Agent拆解素材，Agent驱动门户内容生产，门户承载学术验证，学术反哺叙事修订——环路每运转一周，体系品质拔升一级。</p>
+<p class="figure"><img src="assets/img/jianshe/img3.png" alt="图3" loading="lazy"></p>
+<p class="fig-caption">图3 两年建设路线图</p>
+
+<h2 id="h-3b80a6af">六、建设进度</h2>
+<p>两年四阶段建设任务与里程碑如表7所示。</p>
+<div class="table-wrapper">
+<table><tr><td>阶段</td><td>时间</td><td>主要任务</td><td>里程碑</td><td>URL验证点</td></tr>
+<tr><td>基础巩固</td><td>2026.7-12</td><td>案例视频录制/AI解析文档/评估问卷发放</td><td>27视频+27解析+问卷数据</td><td>cases-full.html</td></tr>
+<tr><td>系统升级</td><td>2027.1-6</td><td>智能题库/门户优化/Agent V4/微课</td><td>题库200题+微课15个</td><td>agent团队演示.html</td></tr>
+<tr><td>评估验证</td><td>2027.7-12</td><td>SUS+TAM分析/同行评审/纵向报告/论文</td><td>评估报告+论文2-3篇</td><td>教研科研进展.html</td></tr>
+<tr><td>推优冲刺</td><td>2028.1-6</td><td>省级课程申报/省级案例推优/标准包</td><td>省级申报材料包</td><td>index.html</td></tr></table>
+</div>
+<p style="text-indent:0;text-align:center;color:#888;font-size:12px;">表7 两年建设进度</p>
+
+<h2 id="h-0015284b">七、预期成果与验收指标</h2>
+<p>预期成果及验收标准如表8所示。</p>
+<div class="table-wrapper">
+<table><tr><td>成果</td><td>数量</td><td>质量标准</td><td>验证URL/方式</td></tr>
+<tr><td>教学案例(含全配套)</td><td>27个</td><td>真实/创新/实用/示范</td><td>cases-full.html</td></tr>
+<tr><td>讲解视频</td><td>27个(3-5min)</td><td>清晰/完整/配合案例</td><td>上传门户</td></tr>
+<tr><td>AI解析文档</td><td>27份</td><td>FND五段+错配诊断</td><td>Agent-S生成+人工审核</td></tr>
+<tr><td>精品课程</td><td>1门</td><td>智能备课-精准授课-个性学习-数字评价</td><td>SUS&gt;=68</td></tr>
+<tr><td>智能题库</td><td>&gt;=200题</td><td>覆盖35知识群/三层难度</td><td>Agent-4生成+教师审定</td></tr>
+<tr><td>学术论文</td><td>&gt;=5篇发表</td><td>SSCI/Scopus/CSSCI</td><td>教研科研进展.html</td></tr>
+<tr><td>标准操作包</td><td>1套</td><td>Prompt模板+门户规范+案例流程</td><td>可被其他课程复用</td></tr>
+<tr><td>省级推优</td><td>&gt;=1项</td><td>课程或案例</td><td>获学校推荐</td></tr></table>
+</div>
+<p style="text-indent:0;text-align:center;color:#888;font-size:12px;">表8 预期成果与验收指标</p>
+
+<h2 id="h-cd273fbe">八、经费预算</h2>
+<p>经费使用计划如表9所示。</p>
+<div class="table-wrapper">
+<table><tr><td>项目</td><td>Year1(万)</td><td>Year2(万)</td><td>合计</td><td>说明</td></tr>
+<tr><td>视频制作</td><td>2.0</td><td>0.5</td><td>2.5</td><td>27案例视频+10微课</td></tr>
+<tr><td>评估调研</td><td>0.5</td><td>1.0</td><td>1.5</td><td>问卷/同行评审/访谈</td></tr>
+<tr><td>设备/软件</td><td>1.0</td><td>0.3</td><td>1.3</td><td>录制设备/AI API</td></tr>
+<tr><td>差旅交流</td><td>0.3</td><td>0.5</td><td>0.8</td><td>学术会议/省级评审</td></tr>
+<tr><td>劳务</td><td>0.5</td><td>0.5</td><td>1.0</td><td>研究生助手/视频剪辑</td></tr>
+<tr><td>出版</td><td>0.2</td><td>0.5</td><td>0.7</td><td>论文版面/材料印制</td></tr>
+<tr><td>其他</td><td>0.1</td><td>0.1</td><td>0.2</td><td>通讯/耗材</td></tr>
+<tr><td>合计</td><td>4.6</td><td>3.4</td><td>8.0</td><td></td></tr></table>
+</div>
+<p style="text-indent:0;text-align:center;color:#888;font-size:12px;">表9 经费预算</p>
+
+<h2 id="h-0160fd78">九、保障措施</h2>
+<p>组织保障：教学院长王静教授统筹指导，系主任曾丽副教授督导协助——"院-系-课题组"三级联动。制度保障：每学期建设研讨会+Agent-0质量审核+Git版本控制。技术保障：11-Agent基于GPT-4o/Claude Prompt工程，零服务器运维；门户纯静态HTML部署GitHub Pages，长期稳定。经费保障：学校划拨+学院学科经费配套。</p>
+
+<h2 id="h-1d24e49f">十、"通知要求-已有-超额"总对照</h2>
+<p>以下逐条对照通知(二)(五)两类要求，证明本项目已超额完成核心建设，2年仅需升级收尾：</p>
+<div class="table-wrapper">
+<table><tr><td>通知原文要求(摘录)</td><td>本项目已有</td><td>达标判定</td></tr>
+<tr><td>打破传统纸质教材单一形态</td><td>67页在线门户+7部在线小说+Agent系统</td><td>远超(四形态联动)</td></tr>
+<tr><td>建设立体化智能化动态化新型体系</td><td>小说(立体)+Agent(智能)+门户迭代(动态)</td><td>远超(三化齐备)</td></tr>
+<tr><td>全面推进课程数智化升级</td><td>3轮迭代v1-&gt;v3+11Agent+67页门户</td><td>远超(已3轮)</td></tr>
+<tr><td>运用AI学情分析/智能答疑/个性推送</td><td>Agent-5分析+学生端伴学+学习园地</td><td>达标(已实现)</td></tr>
+<tr><td>精准匹配个性化学习需求</td><td>9周学生伴学页(每周独立)</td><td>达标</td></tr>
+<tr><td>建立课程动态迭代机制</td><td>v1(2023)-&gt;v2(2025)-&gt;v3(2026)</td><td>达标(已迭代3次)</td></tr>
+<tr><td>系统化开发高质量教学案例</td><td>27案例x35知识群=100%覆盖</td><td>远超(常规5-10个)</td></tr>
+<tr><td>案例真实性创新性实用性示范性</td><td>纪实小说(真实)+FND(创新)+100%覆盖(实用)+7迁移(示范)</td><td>远超(四性齐备)</td></tr>
+<tr><td>配套AI智能解析</td><td>Agent-S五段法自动解析</td><td>达标(已运行)</td></tr>
+<tr><td>适配多元场景</td><td>教师门户/学生门户/互动社区</td><td>达标(三场景)</td></tr></table>
+</div>
+<p style="text-indent:0;text-align:center;color:#888;font-size:12px;">表10 通知要求总对照表</p>
+
+<h2 id="h-fb507f2c">参考文献</h2>
+<p style="text-indent:0;font-size:13px;margin-bottom:6px;">[1] 中共中央,国务院. 教育强国建设规划纲要(2024-2035年)[EB/OL]. 2025.</p>
+<p style="text-indent:0;font-size:13px;margin-bottom:6px;">[2] 教育部等五部门. "人工智能+教育"行动计划[Z]. 2025.</p>
+<p style="text-indent:0;font-size:13px;margin-bottom:6px;">[3] 国务院办公厅. 关于深化产教融合的若干意见[Z]. 国办发[2017]95号.</p>
+<p style="text-indent:0;font-size:13px;margin-bottom:6px;">[4] Bruner J. Actual minds, possible worlds[M]. Harvard University Press, 1986.</p>
+<p style="text-indent:0;font-size:13px;margin-bottom:6px;">[5] Biggs J, Tang C. Teaching for quality learning at university[M]. 4th ed. McGraw-Hill, 2011.</p>
+<p style="text-indent:0;font-size:13px;margin-bottom:6px;">[6] Collins A, et al. Design research[J]. Journal of the Learning Sciences, 2004, 13(1):15-42.</p>
+<p style="text-indent:0;font-size:13px;margin-bottom:6px;">[7] Kasneci E, et al. ChatGPT for good?[J]. Learning and Individual Differences, 2023, 103:102274.</p>
+<p style="text-indent:0;font-size:13px;margin-bottom:6px;">[8] Mishra P, Koehler M J. TPACK[J]. Teachers College Record, 2006, 108(6):1017-1054.</p>
+<p style="text-indent:0;font-size:13px;margin-bottom:6px;">[9] 祝智庭,胡姣. 教育数字化转型的本质探析[J]. 中国电化教育, 2022(4):1-8.</p>
+<p style="text-indent:0;font-size:13px;margin-bottom:6px;">[10] 项目团队. 研究生固废课程教学大纲(v2026)[Z]. 成都大学, 2026.</p>
+<p style="text-indent:0;font-size:13px;margin-bottom:6px;">[11] 项目团队. 基于纪实小说驱动的教学资源体系[Z]. 川作登字-2025-A-00072680.</p>
+
+<h2 id="h-02dfd317">附录A：门户URL完整清单(68页)</h2>
+<p>主站：<a href="index.html" style="color:var(--link);">https://zhengwen69.github.io/cdu-gufei-web-demo/</a></p>
+<p>UAV独立站：<a href="https://zhengwen69.github.io/CD-UAV/" target="_blank" style="color:var(--link);">https://zhengwen69.github.io/CD-UAV/</a></p>
+<p>(完整68页URL列表见本项目在线门户首页导航，评审可即时访问验证全部页面。)</p>
+
+<h2 id="h-9a5497e7">附录B：7部纪实小说平台链接</h2>
+<div class="table-wrapper">
+<table><tr><td>书名</td><td>平台</td><td>URL</td></tr>
+<tr><td>龙栖湾</td><td>QQ阅读</td><td><a href="https://book.qq.com/book-detail/54859488" target="_blank" style="color:var(--link);">book.qq.com/book-detail/54859488</a></td></tr>
+<tr><td>青龙湖</td><td>17K文学</td><td><a href="https://www.17k.com/book/3616238.html" target="_blank" style="color:var(--link);">17k.com/book/3616238.html</a></td></tr>
+<tr><td>杨柳坝与刘家湾</td><td>17K文学</td><td><a href="https://www.17k.com/book/3608077.html" target="_blank" style="color:var(--link);">17k.com/book/3608077.html</a></td></tr>
+<tr><td>三多里巷</td><td>17K文学</td><td><a href="https://www.17k.com/book/3608078.html" target="_blank" style="color:var(--link);">17k.com/book/3608078.html</a></td></tr>
+<tr><td>艾沙巴赢白云村</td><td>17K文学</td><td><a href="https://www.17k.com/book/3608076.html" target="_blank" style="color:var(--link);">17k.com/book/3608076.html</a></td></tr>
+<tr><td>破界者</td><td>17K文学</td><td><a href="https://www.17k.com/book/3625872.html" target="_blank" style="color:var(--link);">17k.com/book/3625872.html</a></td></tr>
+<tr><td>长城公社脚下的白云上村</td><td>17K文学</td><td><a href="https://www.17k.com/book/3613430.html" target="_blank" style="color:var(--link);">17k.com/book/3613430.html</a></td></tr></table>
+</div>
+
+<h2 id="h-778d7963">附录C：S001-S027案例索引(略)</h2>
+<p>完整27案例x6模块x35知识群映射表，请在线查阅：<a href="industry-education/cases-full.html" style="color:var(--link);">industry-education/cases-full.html</a></p>
+
+    <div class="download-section">
+      <a href="揭榜挂帅-建设任务书(黄正文孙清等).pdf" class="download-btn" download>&#128229; 下载 PDF 完整版</a>
+      <p>© 黄正文（点暇斋）· 全部作品版权登记 &nbsp;|&nbsp; <a href="index.html" style="color:var(--link);">返回首页</a></p>
+    </div>
+  </main>
+</div>
+
+<a href="#top" class="back-top">&#9650; 回到顶部</a>
+
+<script>
+// Sidebar active highlight
+window.addEventListener('scroll', function() {
+  var sections = document.querySelectorAll('h2[id], h3[id]');
+  var navLinks = document.querySelectorAll('.sidebar a[href^="#"]');
+  var current = '';
+  sections.forEach(function(s) {
+    if (s.getBoundingClientRect().top <= 120) current = s.id;
+  });
+  navLinks.forEach(function(a) {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+});
+// Protect content
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+document.addEventListener('keydown', function(e) { if (e.ctrlKey && ['c','s','p','u','a'].includes(e.key)) e.preventDefault(); if (e.key === 'F12') e.preventDefault(); });
+document.addEventListener('dragstart', function(e) { e.preventDefault(); });
+</script>
+
+</body>
+</html>
