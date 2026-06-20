@@ -106,7 +106,7 @@ p {
 }
 p.empty { display: none; }
 p.figure { text-align: center; margin: 20px 0 8px; text-indent: 0; }
-p.figure img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); }
+p.figure img { max-width: 660px; width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); }
 p.fig-caption {
   text-align: center;
   color: #888;
@@ -187,28 +187,118 @@ tr:first-child td {
   transform: translateY(-2px);
 }
 
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1100;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(230,126,34,.3);
+  background: rgba(13,31,53,.9);
+  color: #e67e22;
+  font-size: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  line-height: 38px;
+  text-align: center;
+  padding: 0;
+}
+
 @media (max-width: 768px) {
-  .container { flex-direction: column; }
+  body { font-size: 14px; }
+  .container { flex-direction: column; padding-top: 0; }
+
+  .sidebar-toggle { display: block; }
+
   .sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    max-height: 250px;
-    border-right: none;
-    border-bottom: 1px solid var(--border);
+    position: fixed;
+    top: 0; left: 0;
+    width: 260px;
+    height: 100vh;
+    max-height: 100vh;
+    z-index: 1050;
+    transform: translateX(-100%);
+    transition: transform .3s ease;
+    border-right: 1px solid var(--border);
+    border-bottom: none;
+    padding-top: 56px;
+    overflow-y: auto;
   }
-  .content { padding: 30px 16px; }
+  .sidebar.open { transform: translateX(0); }
+
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 1040;
+  }
+  .sidebar-overlay.show { display: block; }
+
+  .sidebar a { font-size: 14px; padding: 8px 16px; }
+  .sidebar a.sub { font-size: 13px; padding-left: 30px; }
+  .sidebar .back-link { font-size: 14px; margin-bottom: 10px; }
+
+  .content {
+    padding: 50px 12px 40px;
+    max-width: 100%;
+  }
+
   h1 { font-size: 20px; }
-  h2 { font-size: 16px; }
-  td { font-size: 11px; padding: 4px 6px; }
+  .subtitle { font-size: 14px; margin-bottom: 20px; }
+  .author { font-size: 12px; }
+  .affiliation { font-size: 11px; margin-bottom: 20px; line-height: 1.6; }
+
+  h2 { font-size: 16px; margin-top: 30px; }
+  h3 { font-size: 14px; }
+
+  p { font-size: 13px; margin-bottom: 10px; text-indent: 1.5em; }
+
+  .table-wrapper { margin: 10px -12px; }
+  .table-wrapper table { font-size: 11px; }
+  td { font-size: 10px; padding: 3px 4px; line-height: 1.5; }
+
+  p.figure img { max-width: 100%; border-radius: 4px; }
+  p.fig-caption { font-size: 11px; }
+
+  .download-section { margin-top: 30px; padding: 20px 12px; }
+  .download-btn {
+    display: block;
+    padding: 12px 20px;
+    font-size: 15px;
+    border-radius: 6px;
+  }
+
+  .back-top {
+    bottom: 16px;
+    right: 12px;
+    padding: 8px 12px;
+    font-size: 12px;
+    border-radius: 6px;
+  }
+
+  #abstract { font-size: 14px; }
+  #abstract p { font-size: 13px; text-indent: 0; }
+}
+@media (max-width: 420px) {
+  body { font-size: 13px; }
+  h1 { font-size: 18px; }
+  h2 { font-size: 15px; }
+  p { font-size: 12px; }
+  .content { padding: 46px 10px 36px; }
 }
 @media print { body { display: none; } }
 </style>
 </head>
 <body>
 
+<button class="sidebar-toggle" id="sbToggle" aria-label="目录">&#9776;</button>
+<div class="sidebar-overlay" id="sbOverlay"></div>
+
 <div class="container">
-  <nav class="sidebar">
+  <nav class="sidebar" id="sidebar">
     <a class="back-link" href="index.html">&#9664; 返回首页</a>
     <a href="#abstract">摘要</a>
     <a href="#h-ec13d9aa">一、项目概况</a>
@@ -507,6 +597,28 @@ tr:first-child td {
 <a href="#top" class="back-top">&#9650; 回到顶部</a>
 
 <script>
+// Mobile sidebar toggle
+(function() {
+  var sb = document.getElementById('sidebar');
+  var btn = document.getElementById('sbToggle');
+  var overlay = document.getElementById('sbOverlay');
+
+  function openSb() { sb.classList.add('open'); overlay.classList.add('show'); btn.innerHTML = '&#10005;'; }
+  function closeSb() { sb.classList.remove('open'); overlay.classList.remove('show'); btn.innerHTML = '&#9776;'; }
+
+  btn.addEventListener('click', function() {
+    sb.classList.contains('open') ? closeSb() : openSb();
+  });
+  overlay.addEventListener('click', closeSb);
+
+  // Close sidebar when a nav link is clicked (mobile)
+  sb.querySelectorAll('a[href^="#"]').forEach(function(a) {
+    a.addEventListener('click', function() {
+      if (window.innerWidth <= 768) closeSb();
+    });
+  });
+})();
+
 // Sidebar active highlight
 window.addEventListener('scroll', function() {
   var sections = document.querySelectorAll('h2[id], h3[id]');
@@ -519,6 +631,7 @@ window.addEventListener('scroll', function() {
     a.classList.toggle('active', a.getAttribute('href') === '#' + current);
   });
 });
+
 // Protect content
 document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
 document.addEventListener('keydown', function(e) { if (e.ctrlKey && ['c','s','p','u','a'].includes(e.key)) e.preventDefault(); if (e.key === 'F12') e.preventDefault(); });
