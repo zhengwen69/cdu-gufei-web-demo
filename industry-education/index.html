@@ -55,13 +55,15 @@ hdr .author a{color:#7fb8e0;text-decoration:none}
   hdr .course{font-size:10px;margin:2px 0 6px}
   hdr .sub{font-size:10px}
   hdr .author{font-size:10px}
-  /* wide cards text shrink */
-  div[style*="max-width:580px"]{max-width:100%!important}
-  div[style*="font-size:15px"]{font-size:13px!important}
-  div[style*="font-size:14px"]{font-size:12px!important}
-  div[style*="font-size:11px"]{font-size:10px!important}
-  span[style*="font-size:32px"]{font-size:24px!important}
-  span[style*="font-size:10px"],a[style*="font-size:10px"]{font-size:9px!important;padding:3px 8px!important}
+    /* wide cards text shrink */
+    .wide-cards{max-width:100%!important}
+    .wide-cards .g{padding:16px 14px}
+    .wide-cards .g div[style*="font-size:15px"],
+    .wide-cards .g div[style*="font-size:14px"]{font-size:12px!important}
+    .wide-cards .g div[style*="font-size:11px"]{font-size:9px!important;line-height:1.5!important}
+    .wide-cards .g span[style*="font-size:32px"]{font-size:22px!important}
+    .wide-cards .g span[style*="font-size:10px"],
+    .wide-cards .g a[style*="font-size:10px"]{font-size:8px!important;padding:2px 6px!important}
 }
 </style>
 </head>
@@ -106,7 +108,7 @@ hdr .author a{color:#7fb8e0;text-decoration:none}
   </a>
 </div>
 
-<div style="max-width:580px;width:100%;margin-top:16px">
+<div class="wide-cards" style="max-width:580px;width:100%;margin-top:16px">
   <a class="g" href="../建设任务书.html" style="display:block;border-color:rgba(230,126,34,.25);grid-column:span 2;background:rgba(13,31,53,.9);border:1px solid rgba(230,126,34,.2);border-radius:14px;padding:22px 24px;text-decoration:none;color:#c8d6e5;transition:all .4s;margin-bottom:12px" onmouseover="this.style.borderColor='#e67e22';this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 30px rgba(0,0,0,.4)'" onmouseout="this.style.borderColor='rgba(230,126,34,.2)';this.style.transform='none';this.style.boxShadow='none'">
     <div style="display:flex;align-items:center;gap:14px">
       <span style="font-size:32px">📋</span>
