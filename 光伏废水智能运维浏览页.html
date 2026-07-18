@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>光伏废水智能运维浏览页 — 点暇斋</title>
+<style>
+:root{--bg:#0a1628;--card:#16213e;--txt:#c8d6e5;--dim:#667;--acc:#e67e22;--blue:#3498db;--green:#2ecc71;--red:#e74c3c;--gold:#f0a500;--purple:#9b59b6}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex}
+.sidebar{width:220px;position:fixed;top:0;left:0;height:100vh;background:var(--card);border-right:1px solid rgba(255,255,255,.06);padding:20px 0;overflow-y:auto;z-index:100}
+.sidebar h3{color:var(--acc);font-size:14px;padding:6px 20px;margin-bottom:8px}
+.sidebar a{display:block;padding:8px 20px;color:var(--dim);text-decoration:none;font-size:12px;transition:all .2s;border-left:3px solid transparent}
+.sidebar a:hover{color:var(--txt);border-left-color:var(--acc)}
+.sidebar a.active{color:var(--acc);border-left-color:var(--acc);background:rgba(230,126,34,.08)}
+.main{margin-left:220px;flex:1;padding:24px 40px;max-width:calc(100vw - 220px)}
+.main h2{font-size:22px;color:#e0e0e0;margin-bottom:4px}
+.main .subtitle{font-size:13px;color:var(--dim);margin-bottom:24px}
+
+.tabs{display:flex;gap:0;margin-bottom:0;flex-wrap:wrap}
+.tab-btn{padding:10px 18px;background:rgba(13,31,53,.6);border:1px solid rgba(255,255,255,.05);color:var(--dim);font-size:13px;cursor:pointer;transition:all .25s;border-radius:6px 6px 0 0;margin-right:2px;font-family:inherit}
+.tab-btn:hover{color:var(--txt);background:rgba(13,31,53,.85)}
+.tab-btn.active{background:var(--card);color:var(--acc);border-color:rgba(230,126,34,.3);border-bottom-color:var(--card)}
+
+.panel{display:none;background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:0 8px 8px 8px;padding:30px;min-height:600px}
+.panel.active{display:block}
+
+.chart-row{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+.chart-box{background:rgba(0,0,0,.2);border-radius:8px;padding:16px;flex:1;min-width:280px}
+.chart-box h4{font-size:13px;color:var(--dim);margin-bottom:10px}
+.chart-box canvas{width:100%;height:200px}
+
+.metric-card{background:rgba(0,0,0,.2);border-radius:12px;padding:20px 24px;text-align:center;min-width:150px}
+.metric-card .value{font-size:36px;font-weight:700;margin-bottom:4px}
+.metric-card .label{font-size:12px;color:var(--dim)}
+.metric-card.green .value{color:var(--green)}
+.metric-card.gold .value{color:var(--gold)}
+.metric-card.red .value{color:var(--red)}
+
+.status-row{display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+
+.input-group{margin-bottom:14px}
+.input-group label{display:block;font-size:12px;color:var(--dim);margin-bottom:4px}
+.input-group input{width:100%;padding:8px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.3);color:var(--txt);font-size:14px;font-family:inherit}
+
+.btn{padding:10px 28px;background:var(--acc);color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:600;font-family:inherit}
+.btn:hover{background:#d35400}
+.result-card{background:rgba(0,0,0,.25);border-radius:10px;padding:16px 20px;margin-bottom:10px;border-left:3px solid var(--acc)}
+.result-card h5{font-size:15px;color:var(--acc);margin-bottom:6px}
+.result-card .range{font-size:12px;color:var(--dim)}
+
+.slider-group{margin-bottom:16px}
+.slider-group label{display:flex;justify-content:space-between;font-size:13px;color:var(--txt);margin-bottom:4px}
+.slider-group label span{color:var(--acc);font-weight:600}
+.slider-group input[type=range]{width:100%}
+
+.chat-area{background:rgba(0,0,0,.3);border-radius:10px;padding:20px;min-height:300px;margin-bottom:16px;font-size:13px;line-height:1.9}
+.chat-area .q{color:var(--blue);margin-bottom:12px}
+.chat-area .a{color:var(--txt);margin-bottom:16px;padding-left:12px;border-left:3px solid var(--acc)}
+.chat-area .steps{font-size:12px;color:var(--dim);margin:6px 0}
+
+.table-wrap{overflow-x:auto}
+.table-wrap table{width:100%;border-collapse:collapse;font-size:12px}
+.table-wrap th{background:rgba(0,0,0,.3);padding:8px 12px;text-align:left;color:var(--acc);font-weight:600}
+.table-wrap td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.04)}
+
+.footer{text-align:center;color:var(--dim);font-size:12px;margin-top:40px;padding:20px;border-top:1px solid rgba(255,255,255,.06)}
+.footer a{color:var(--blue);text-decoration:none}
+
+@media(max-width:768px){
+  .sidebar{display:none}
+  .main{margin-left:0;padding:16px}
+  .tabs{flex-wrap:nowrap;overflow-x:auto}
+  .tab-btn{white-space:nowrap;font-size:11px;padding:8px 12px}
+  .chart-row{flex-direction:column}
+}
+
+/* Back button */
+.back-btn{position:fixed;top:16px;right:24px;z-index:200;padding:8px 16px;border-radius:6px;background:rgba(13,31,53,.85);border:1px solid rgba(255,255,255,.1);color:var(--dim);text-decoration:none;font-size:12px;transition:all .3s}
+.back-btn:hover{color:var(--txt);border-color:var(--acc)}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <h3>光伏废水智能运维</h3>
+  <a href="#tab1" class="active" onclick="switchTab(0)">📊 监控总览</a>
+  <a href="#tab2" onclick="switchTab(1)">🧠 加药推荐</a>
+  <a href="#tab3" onclick="switchTab(2)">📐 参数优选</a>
+  <a href="#tab4" onclick="switchTab(3)">⚙️ 控制调参</a>
+  <a href="#tab5" onclick="switchTab(4)">🔧 设备监测</a>
+  <a href="#tab6" onclick="switchTab(5)">💬 AI助手</a>
+  <a href="#tab7" onclick="switchTab(6)">📈 成本看板</a>
+  <a href="#tab8" onclick="switchTab(7)">📱 推送设置</a>
+  <div style="margin-top:20px;padding:12px 20px;font-size:11px;color:var(--dim);border-top:1px solid rgba(255,255,255,.06)">
+    刘明海 硕士学位论文<br>导师: 黄正文 教授<br>某新能源公司中控室<br>202X年X月部署
+  </div>
+</div>
+
+<a class="back-btn" href="index.html">← 返回主站</a>
+
+<div class="main">
+
+<!-- =============== TAB 1: 监控总览 =============== -->
+<div class="panel active" id="panel0">
+  <h2>📊 监控总览</h2>
+  <div class="subtitle">六大水质指标实时监控 · 每5分钟刷新 · 工序切换标注 · 超标三色预警</div>
+  <div class="status-row">
+    <div class="metric-card green"><div class="value">正常</div><div class="label">系统状态</div></div>
+    <div class="metric-card green"><div class="value">6/6</div><div class="label">指标达标</div></div>
+    <div class="metric-card gold"><div class="value">48.2</div><div class="label">COD mg/L (预警线50)</div></div>
+    <div class="metric-card green"><div class="value">4.1</div><div class="label">NH₃-N mg/L (达标)</div></div>
+  </div>
+  <div class="chart-row">
+    <div class="chart-box"><h4>pH · COD · NH₃-N 24h趋势</h4><canvas id="c1a"></canvas></div>
+    <div class="chart-box"><h4>TDS · F⁻ · SiO₂ 24h趋势</h4><canvas id="c1b"></canvas></div>
+  </div>
+</div>
+
+<!-- =============== TAB 2: 加药推荐 =============== -->
+<div class="panel" id="panel1">
+  <h2>🧠 加药推荐</h2>
+  <div class="subtitle">Stacked Ensemble 模型集成 · 输入水质 → 一键获取四药建议量及95%置信区间</div>
+  <div style="display:flex;gap:30px;flex-wrap:wrap">
+    <div style="flex:1;min-width:280px">
+      <div class="input-group"><label>含氟废水流量 (m³/h)</label><input type="number" value="12.5" id="inFlow"></div>
+      <div class="input-group"><label>F⁻ 浓度 (mg/L)</label><input type="number" value="10.2" id="inF"></div>
+      <div class="input-group"><label>pH</label><input type="number" value="6.8" id="inPH"></div>
+      <div class="input-group"><label>COD (mg/L)</label><input type="number" value="1850" id="inCOD"></div>
+      <div class="input-group"><label>NH₃-N (mg/L)</label><input type="number" value="320" id="inNH"></div>
+      <div class="input-group"><label>TDS (mg/L)</label><input type="number" value="2800" id="inTDS"></div>
+      <button class="btn" onclick="getRecommend()">获取加药推荐</button>
+    </div>
+    <div style="flex:1;min-width:300px" id="dosingResult">
+      <p style="color:var(--dim);margin-top:40px">点击按钮获取推荐结果</p>
+    </div>
+  </div>
+</div>
+
+<!-- =============== TAB 3: 参数优选 =============== -->
+<div class="panel" id="panel2">
+  <h2>📐 参数优选</h2>
+  <div class="subtitle">GRA-TOPSIS 多目标优选 · 五维权重滑块交互 · 雷达图实时反馈</div>
+  <div style="display:flex;gap:30px;flex-wrap:wrap">
+    <div style="flex:1;min-width:280px">
+      <div class="slider-group"><label>COD去除率 <span id="w1v">20%</span></label><input type="range" min="0" max="100" value="20" id="w1" oninput="updateRadar()"></div>
+      <div class="slider-group"><label>NH₃-N去除率 <span id="w2v">20%</span></label><input type="range" min="0" max="100" value="20" id="w2" oninput="updateRadar()"></div>
+      <div class="slider-group"><label>吨水药剂成本 <span id="w3v">20%</span></label><input type="range" min="0" max="100" value="20" id="w3" oninput="updateRadar()"></div>
+      <div class="slider-group"><label>吨水电耗 <span id="w4v">20%</span></label><input type="range" min="0" max="100" value="20" id="w4" oninput="updateRadar()"></div>
+      <div class="slider-group"><label>污泥产量 <span id="w5v">20%</span></label><input type="range" min="0" max="100" value="20" id="w5" oninput="updateRadar()"></div>
+    </div>
+    <div style="flex:1;min-width:300px">
+      <canvas id="radarCanvas" width="400" height="400"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- =============== TAB 4: 控制调参 =============== -->
+<div class="panel" id="panel3">
+  <h2>⚙️ 控制调参</h2>
+  <div class="subtitle">PSO-模糊PID自适应控制 · 三联PID性能对比 · 参数导出</div>
+  <div class="chart-box" style="margin-bottom:20px"><h4>PSO迭代收敛曲线 (50代)</h4><canvas id="c4a"></canvas></div>
+  <div class="chart-box" style="margin-bottom:20px"><h4>三联PID 阶跃响应对比</h4><canvas id="c4b"></canvas></div>
+  <div class="table-wrap">
+    <table><tr><th>指标</th><th>标准PID</th><th>手动模糊PID</th><th>PSO-模糊PID</th></tr>
+    <tr><td>超调量</td><td>28.5%</td><td>15.2%</td><td style="color:var(--green)">8.3%</td></tr>
+    <tr><td>稳态误差</td><td>4.2%</td><td>2.1%</td><td style="color:var(--green)">1.1%</td></tr>
+    <tr><td>调节时间(min)</td><td>18.5</td><td>12.3</td><td style="color:var(--green)">7.8</td></tr>
+    <tr><td>泵启停(次/天)</td><td>58</td><td>32</td><td style="color:var(--green)">9</td></tr></table>
+  </div>
+  <button class="btn" style="margin-top:14px">导出参数至PLC</button>
+</div>
+
+<!-- =============== TAB 5: 设备监测 =============== -->
+<div class="panel" id="panel4">
+  <h2>🔧 设备监测</h2>
+  <div class="subtitle">RO膜跨膜压差衰减曲线 · 反洗倒计时 · 浓水回用率追踪</div>
+  <div class="status-row">
+    <div class="metric-card green"><div class="value">1.28</div><div class="label">TMP 跨膜压差 (bar)</div></div>
+    <div class="metric-card"><div class="value" style="color:var(--purple)">2.5天</div><div class="label">反洗倒计时</div></div>
+    <div class="metric-card green"><div class="value">67%</div><div class="label">浓水回用率</div></div>
+  </div>
+  <div class="chart-row">
+    <div class="chart-box"><h4>TMP 24h衰减曲线</h4><canvas id="c5a"></canvas></div>
+    <div class="chart-box"><h4>浓水回用率 7日趋势</h4><canvas id="c5b"></canvas></div>
+  </div>
+</div>
+
+<!-- =============== TAB 6: AI助手 =============== -->
+<div class="panel" id="panel5">
+  <h2>💬 AI助手</h2>
+  <div class="subtitle">RAG知识检索 + 本地LLM · 自然语言运维问答 · 历史案例引用</div>
+  <div class="chat-area">
+    <div class="q"><b>🧑 操作工:</b> 出水COD今天1860，怎么处理？</div>
+    <div class="a">
+      <b>🤖 运维助手:</b> 建议排查顺序：<br><br>
+      <span class="steps">① 检查UASB进水pH（知识条目#12：历史记录显示pH&lt;6.5时COD去除率下降约40%，当前进水pH需优先确认）</span>
+      <span class="steps">② 检查好氧池DO（知识条目#5：DO&lt;1.8mg/L时NH₃-N和COD去除率同步下降，建议将DO提升至2.5mg/L并监测2小时）</span>
+      <span class="steps">③ 检查PAC加药泵是否堵塞（知识条目#23：上次堵塞记录需回溯确认加药流量是否骤降）</span>
+      <span class="steps">④ 确认切片车间排水量（知识条目#8：过去3次COD偏高事件中2次与切片车间临时增产相关）</span>
+      <span class="steps">⑤ 如上述步骤均无异常，建议取样送检确认COD检测仪是否校准正常</span>
+    </div>
+  </div>
+  <div style="display:flex;gap:10px">
+    <input style="flex:1;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.3);color:var(--txt);font-size:14px;font-family:inherit" placeholder="输入运维问题...">
+    <button class="btn">发送</button>
+  </div>
+</div>
+
+<!-- =============== TAB 7: 成本看板 =============== -->
+<div class="panel" id="panel6">
+  <h2>📈 成本看板</h2>
+  <div class="subtitle">吨水成本实时追踪 · 本月节省金额 · 药剂消耗趋势</div>
+  <div class="status-row">
+    <div class="metric-card green"><div class="value">2.85</div><div class="label">吨水成本 (元/m³)</div></div>
+    <div class="metric-card gold"><div class="value">3,420</div><div class="label">本月累计节省 (元)</div></div>
+    <div class="metric-card"><div class="value" style="color:var(--blue)">↑12%</div><div class="label">药剂效率提升</div></div>
+  </div>
+  <div class="chart-row">
+    <div class="chart-box"><h4>吨水成本 7日趋势</h4><canvas id="c7a"></canvas></div>
+    <div class="chart-box"><h4>药剂消耗逐日趋势</h4><canvas id="c7b"></canvas></div>
+  </div>
+</div>
+
+<!-- =============== TAB 8: 推送设置 =============== -->
+<div class="panel" id="panel7">
+  <h2>📱 推送设置</h2>
+  <div class="subtitle">企业微信Webhook实时推送 · 三种触发条件 · 推送历史记录</div>
+  <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:24px">
+    <div style="background:rgba(0,0,0,.25);padding:16px 20px;border-radius:10px;flex:1;min-width:200px">
+      <h4 style="color:var(--green);margin-bottom:8px">✅ COD超标推送</h4>
+      <p style="font-size:12px;color:var(--dim)">触发条件: COD > 50 mg/L<br>本月推送: 3次<br>平均延迟: 18秒</p>
+    </div>
+    <div style="background:rgba(0,0,0,.25);padding:16px 20px;border-radius:10px;flex:1;min-width:200px">
+      <h4 style="color:var(--green);margin-bottom:8px">✅ NH₃-N超标推送</h4>
+      <p style="font-size:12px;color:var(--dim)">触发条件: NH₃-N > 5 mg/L<br>本月推送: 1次<br>平均延迟: 15秒</p>
+    </div>
+    <div style="background:rgba(0,0,0,.25);padding:16px 20px;border-radius:10px;flex:1;min-width:200px">
+      <h4 style="color:var(--gold);margin-bottom:8px">⚠ RO膜预警推送</h4>
+      <p style="font-size:12px;color:var(--dim)">触发条件: TMP > 1.92 bar<br>本月推送: 0次</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>光伏废水智能运维浏览页 — 刘明海 硕士学位论文 · 第六章</p>
+  <p>导师：黄正文 教授 · 成都大学环境工程系 ｜ 某新能源公司中控室部署运行</p>
+  <p><a href="index.html">返回主站</a> · © 全部作品版权登记</p>
+</div>
+
+</div>
+
+<script>
+// ==== Tab Switching ====
+function switchTab(i){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sidebar a').forEach(a=>a.classList.remove('active'));
+  document.getElementById('panel'+i).classList.add('active');
+  document.querySelectorAll('.sidebar a')[i].classList.add('active');
+}
+
+// ==== Canvas Chart Helper ====
+function lineChart(canvasId, datasets, labels, yMax, thresholds){
+  var c=document.getElementById(canvasId); if(!c)return;
+  var ctx=c.getContext('2d'); var w=c.parentElement.clientWidth-32; var h=200;
+  c.width=w; c.height=h; ctx.clearRect(0,0,w,h);
+  var colors=['#3498db','#2ecc71','#e74c3c','#9b59b6','#f0a500','#1abc9c'];
+  var pad=40; var cw=w-2*pad; var ch=h-2*pad;
+  // Grid
+  ctx.strokeStyle='rgba(255,255,255,.04)'; ctx.lineWidth=1;
+  for(var i=0;i<=4;i++){var gy=pad+ch*i/4; ctx.beginPath(); ctx.moveTo(pad,gy); ctx.lineTo(pad+cw,gy); ctx.stroke()}
+  // Threshold lines
+  if(thresholds){thresholds.forEach(function(t){var ty=pad+ch-ch*t/yMax;ctx.strokeStyle=t.color||'rgba(231,76,60,.4)';ctx.setLineDash([5,5]);ctx.beginPath();ctx.moveTo(pad,ty);ctx.lineTo(pad+cw,ty);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=t.color||'#e74c3c';ctx.fillText(t.label,pad+cw-40,ty-4)})}
+  // Data lines
+  datasets.forEach(function(ds,di){ctx.strokeStyle=ds.color||colors[di%6];ctx.lineWidth=2;ctx.beginPath();var pts=ds.data;for(var j=0;j<pts.length;j++){var x=pad+cw*j/(pts.length-1);var y=pad+ch-ch*pts[j]/yMax;if(j==0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.stroke()});
+  // X labels
+  ctx.fillStyle='#667'; ctx.font='10px Microsoft YaHei'; ctx.textAlign='center';
+  if(labels)labels.forEach(function(l,i){ctx.fillText(l,pad+cw*i/(labels.length-1),h-4)})
+  // Y labels
+  ctx.textAlign='right';
+  for(var i=0;i<=4;i++){ctx.fillText(Math.round(yMax*i/4),pad-8,pad+ch-ch*i/4+4)}
+}
+
+// ==== Tab 1: Monitor Overview ====
+function drawTab1(){
+  var labels=['00:00','04:00','08:00','12:00','16:00','20:00','24:00'];
+  lineChart('c1a',[{color:'#3498db',data:[6.8,6.9,7.0,6.7,6.5,6.6,6.8]},{color:'#2ecc71',data:[1850,1920,2100,2480,1860,1750,1820]},{color:'#e74c3c',data:[320,340,380,450,310,290,305]}],labels,2500,[{y:50,color:'#e74c3c'}]); // COD threshold
+  lineChart('c1b',[{color:'#9b59b6',data:[2800,2900,3100,3500,2700,2600,2750]},{color:'#f0a500',data:[10.2,11.5,12.8,14.1,9.8,8.5,9.2]},{color:'#1abc9c',data:[150,160,175,195,145,140,152]}],labels,4000)
+}
+setTimeout(drawTab1,200);
+
+// ==== Tab 2: Dosing Recommendation ====
+function getRecommend(){
+  var html='<h4 style="color:var(--acc);margin-bottom:12px">推荐加药量 (kg/h)</h4>';
+  [{name:'PAC',v:8.5,lo:7.2,hi:9.8},{name:'PAM',v:2.3,lo:1.8,hi:2.8},{name:'石灰',v:15.2,lo:13.5,hi:16.9},{name:'硫酸',v:4.1,lo:3.5,hi:4.7}].forEach(function(d){
+    html+='<div class="result-card"><h5>'+d.name+'</h5><div style="font-size:28px;font-weight:700;color:var(--acc)">'+d.v+' <span style="font-size:12px;color:var(--dim)">kg/h</span></div><div class="range">95% CI: ['+d.lo+' - '+d.hi+'] ｜ 操作工 <button class="btn" style="padding:4px 14px;font-size:12px">采纳</button></div></div>';
+  });
+  document.getElementById('dosingResult').innerHTML=html;
+}
+
+// ==== Tab 3: Radar Chart ====
+function drawRadar(w1,w2,w3,w4,w5){
+  var c=document.getElementById('radarCanvas'); if(!c)return;
+  var ctx=c.getContext('2d'); var cx=200,cy=200,r=150;
+  ctx.clearRect(0,0,400,400);
+  var labels=['COD\n去除率','NH₃-N\n去除率','药剂\n成本','电耗','污泥\n产量'];
+  var angles=[-Math.PI/2]; for(var i=1;i<5;i++)angles.push(angles[i-1]+2*Math.PI/5);
+  // Grid
+  for(var l=1;l<=3;l++){ctx.strokeStyle='rgba(255,255,255,.06)';ctx.lineWidth=1;ctx.beginPath();
+    for(var i=0;i<5;i++){var x=cx+r*l/3*Math.cos(angles[i]),y=cy+r*l/3*Math.sin(angles[i]);i==0?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.closePath();ctx.stroke()}
+  // Axes
+  for(var i=0;i<5;i++){ctx.strokeStyle='rgba(255,255,255,.08)';ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+r*Math.cos(angles[i]),cy+r*Math.sin(angles[i]));ctx.stroke();
+    ctx.fillStyle='#667';ctx.font='11px Microsoft YaHei';ctx.textAlign='center';
+    ctx.fillText(labels[i],cx+(r+30)*Math.cos(angles[i]),cy+(r+30)*Math.sin(angles[i]))}
+  // Data
+  var total=w1+w2+w3+w4+w5; var vals=[w1/total,w2/total,w3/total,w4/total,w5/total];
+  ctx.fillStyle='rgba(230,126,34,.2)';ctx.strokeStyle='#e67e22';ctx.lineWidth=2;ctx.beginPath();
+  for(var i=0;i<5;i++){var x=cx+r*vals[i]*Math.cos(angles[i]),y=cy+r*vals[i]*Math.sin(angles[i]);i==0?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.closePath();ctx.fill();ctx.stroke()
+}
+function updateRadar(){
+  var w=[1,2,3,4,5].map(function(i){return parseInt(document.getElementById('w'+i).value)||0});
+  w.forEach(function(v,i){document.getElementById('w'+(i+1)+'v').textContent=v+'%'});
+  drawRadar(w[0],w[1],w[2],w[3],w[4]);
+}
+setTimeout(function(){drawRadar(20,20,20,20,20)},300);
+
+// ==== Tab 4: PSO & Triple PID ====
+function drawTab4(){
+  var pso=[]; for(var i=0;i<=50;i++)pso.push(45*Math.exp(-i*0.06)+5+Math.random()*3);
+  lineChart('c4a',[{color:'#3498db',data:pso}],Array.from({length:51},function(_,i){return i%10==0?i:''}),50);
+  // Triple PID
+  var labels=[]; for(var i=0;i<=30;i++)labels.push(i%5==0?i+'min':'');
+  var setpoint=Array(31).fill(1);
+  var stdPID=[0,0.05,0.3,0.7,1.3,1.4,1.35,1.25,1.15,1.08,1.04,1.02,1.01,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0];
+  var fuzzyPID=[0,0.02,0.2,0.55,1.1,1.18,1.15,1.1,1.06,1.03,1.01,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0];
+  var psoFuzzy=[0,0,0.1,0.35,0.85,1.05,1.08,1.06,1.03,1.01,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0];
+  lineChart('c4b',[{color:'#e74c3c',data:stdPID},{color:'#f0a500',data:fuzzyPID},{color:'#2ecc71',data:psoFuzzy}],labels,1.5);
+}
+setTimeout(drawTab4,400);
+
+// ==== Tab 5: Equipment ====
+function drawTab5(){
+  var labels=[]; for(var i=0;i<=24;i+=2)labels.push(i+':00');
+  lineChart('c5a',[{color:'#e74c3c',data:[1.15,1.16,1.18,1.19,1.21,1.22,1.24,1.26,1.27,1.29,1.30,1.32,1.33]}],labels,2.0,[{y:1.72,color:'#f0a500'},{y:2.30,color:'#e74c3c'}]);
+  var dlabels=['周一','周二','周三','周四','周五','周六','周日'];
+  lineChart('c5b',[{color:'#2ecc71',data:[68,65,70,67,72,69,67]}],dlabels,80,[{y:60,color:'#f0a500'}]);
+}
+setTimeout(drawTab5,500);
+
+// ==== Tab 7: Cost ====
+function drawTab7(){
+  var dlabels=['周一','周二','周三','周四','周五','周六','周日'];
+  lineChart('c7a',[{color:'#e67e22',data:[2.90,2.95,2.82,2.78,2.85,2.80,2.85]}],dlabels,3.5);
+  lineChart('c7b',[{color:'rgba(52,152,219,.6)',data:[8.5,8.8,8.2,7.9,8.0,7.8,7.6]},{color:'rgba(46,204,113,.6)',data:[2.3,2.5,2.2,2.0,2.1,1.9,1.8]}],dlabels,10);
+}
+setTimeout(drawTab7,600);
+</script>
+</body>
+</html>
