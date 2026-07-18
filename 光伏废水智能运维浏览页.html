@@ -112,7 +112,7 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
 <a class="back-btn" href="index.html">◀ 返回主站</a>
 
 <div class="main">
-<div class="url-bar">zhengwen69.github.io/cdu-gufei-web-demo/&#20809;&#20239;&#24223;&#27700;&#26234;&#33021;&#36816;&#32500;&#27983;&#35272;&#39029;.html</div>
+<div class="url-bar">zhengwen69.github.io/cdu-gufei-web-demo/ 光伏废水智能运维浏览页</div>
 
 <!-- =============== TAB 1: 监控总览 =============== -->
 <div class="panel vis" id="panel0">
@@ -265,13 +265,16 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
 
 <script>
 // ==== Tab Switching ====
-function switchTab(i){var ps=document.querySelectorAll('.panel');for(var j=0;j<ps.length;j++)ps[j].classList.remove('vis');var as=document.querySelectorAll('.sidebar a');for(var j=0;j<as.length;j++)as[j].classList.remove('sel');var ts=document.querySelectorAll('.tab-btn');for(var j=0;j<ts.length;j++)ts[j].classList.remove('sel');document.getElementById('panel'+i).classList.add('vis');as[i].classList.add('sel');ts[i].classList.add('sel');if(window.innerWidth<=768)document.getElementById('sidebar').classList.remove('open');document.getElementById('sbOverlay').style.display='none'}
+function switchTab(i){var ps=document.querySelectorAll('.panel');for(var j=0;j<ps.length;j++)ps[j].classList.remove('vis');var as=document.querySelectorAll('.sidebar a');for(var j=0;j<as.length;j++)as[j].classList.remove('sel');var ts=document.querySelectorAll('.tab-btn');for(var j=0;j<ts.length;j++)ts[j].classList.remove('sel');document.getElementById('panel'+i).classList.add('vis');as[i].classList.add('sel');ts[i].classList.add('sel');if(window.innerWidth<=768)document.getElementById('sidebar').classList.remove('open');document.getElementById('sbOverlay').style.display='none';setTimeout(function(){if(i==0)drawTab1();if(i==2)drawRadar(20,20,20,20,20);if(i==3)drawTab4();if(i==4)drawTab5();if(i==6)drawTab7();},150)}
 function toggleSidebar(){var sb=document.getElementById('sidebar');var ov=document.getElementById('sbOverlay');sb.classList.toggle('open');if(sb.classList.contains('open')){ov.style.display='block'}else{ov.style.display='none'}}
 
 // ==== Canvas Chart Helper ====
 function lineChart(canvasId, datasets, labels, yMax, thresholds){
   var c=document.getElementById(canvasId); if(!c)return;
-  var ctx=c.getContext('2d'); var w=c.parentElement.clientWidth-32; var h=200;
+  var ctx=c.getContext('2d'); var w=c.parentElement.clientWidth-32;
+  if(w<100) w=c.parentElement.parentElement.clientWidth-32; // fallback for hidden panels
+  if(w<100) w=600; // absolute fallback
+  var h=200;
   c.width=w; c.height=h; ctx.clearRect(0,0,w,h);
   var colors=['#3498db','#2ecc71','#e74c3c','#9b59b6','#f0a500','#1abc9c'];
   var pad=40; var cw=w-2*pad; var ch=h-2*pad;
