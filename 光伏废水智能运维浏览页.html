@@ -119,11 +119,12 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
   <h2>📊 监控总览</h2>
   <div class="subtitle">六大水质指标实时监控 · 每5分钟刷新 · 工序切换标注 · 超标三色预警</div>
   <div class="status-row">
-    <div class="metric-card green"><div class="value">正常</div><div class="label">系统状态</div></div>
+    <div class="metric-card green"><div class="value">正常</div><div class="label">系统状态 · 当前工序：清洗</div></div>
     <div class="metric-card green"><div class="value">6/6</div><div class="label">指标达标</div></div>
     <div class="metric-card gold"><div class="value">48.2</div><div class="label">COD mg/L (预警线50)</div></div>
     <div class="metric-card green"><div class="value">4.1</div><div class="label">NH₃-N mg/L (达标)</div></div>
   </div>
+  <p style="font-size:9px;color:rgba(255,255,255,.1);margin-bottom:16px">数据源: 传感器@5min | 更新时间: 202X-X-X 14:30</p>
   <div class="chart-row">
     <div class="chart-box"><h4>pH · COD · NH₃-N 24h趋势</h4><canvas id="c1a"></canvas></div>
     <div class="chart-box"><h4>TDS · F⁻ · SiO₂ 24h趋势</h4><canvas id="c1b"></canvas></div>
@@ -153,26 +154,49 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
 <!-- =============== TAB 3: 参数优选 =============== -->
 <div class="panel" id="panel2">
   <h2>📐 参数优选</h2>
-  <div class="subtitle">GRA-TOPSIS 多目标优选 · 五维权重滑块交互 · 雷达图实时反馈</div>
+  <div class="subtitle">GRA-TOPSIS 多目标优选 · 五维权重交互 · 雷达图实时反馈 · 原工艺对比</div>
+  <div style="margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn" style="background:var(--green)" onclick="setPreset(20,20,20,20,20)">均衡达标</button>
+    <button class="btn" style="background:var(--red)" onclick="setPreset(5,5,60,20,10)">严控成本</button>
+    <button class="btn" style="background:var(--blue)" onclick="setPreset(10,60,10,10,10)">优先脱氮</button>
+    <button class="btn" style="background:var(--purple)" onclick="setPreset(10,10,10,60,10)">节能降耗</button>
+  </div>
   <div style="display:flex;gap:30px;flex-wrap:wrap">
     <div style="flex:1;min-width:280px">
-      <div class="slider-group"><label>COD去除率 <span id="w1v">20%</span></label><input type="range" min="0" max="100" value="20" id="w1" oninput="updateRadar()"></div>
-      <div class="slider-group"><label>NH₃-N去除率 <span id="w2v">20%</span></label><input type="range" min="0" max="100" value="20" id="w2" oninput="updateRadar()"></div>
+      <div class="slider-group"><label>COD去除率 <span id="w1v">20%</span><span style="color:var(--dim);font-size:10px">（归一化后权重）</span></label><input type="range" min="0" max="100" value="20" id="w1" oninput="updateRadar()"></div>
+      <div class="slider-group"><label>NH₃-N去除率 <span id="w2v">20%</span><span style="color:var(--dim);font-size:10px">（归一化后权重）</span></label><input type="range" min="0" max="100" value="20" id="w2" oninput="updateRadar()"></div>
       <div class="slider-group"><label>吨水药剂成本 <span id="w3v">20%</span></label><input type="range" min="0" max="100" value="20" id="w3" oninput="updateRadar()"></div>
       <div class="slider-group"><label>吨水电耗 <span id="w4v">20%</span></label><input type="range" min="0" max="100" value="20" id="w4" oninput="updateRadar()"></div>
       <div class="slider-group"><label>污泥产量 <span id="w5v">20%</span></label><input type="range" min="0" max="100" value="20" id="w5" oninput="updateRadar()"></div>
     </div>
     <div style="flex:1;min-width:300px">
       <canvas id="radarCanvas" width="400" height="400"></canvas>
+      <p style="font-size:11px;color:var(--dim);text-align:center">—— 蓝色填充=优化方案；灰色虚线=原工艺</p>
     </div>
+  </div>
+  <div class="table-wrap" style="margin-top:16px">
+    <h4 style="color:var(--dim);margin-bottom:8px">当前权重下最优工艺参数推荐</h4>
+    <table><tr><th>工艺单元</th><th>参数</th><th>推荐值</th><th>原工艺值</th><th>优化幅度</th></tr>
+    <tr><td>混凝沉淀</td><td>石灰投加量 (kg/h)</td><td id="recLime">14.8</td><td>18.0</td><td style="color:var(--green)">↓18%</td></tr>
+    <tr><td>UASB</td><td>容积负荷 (kgCOD/m³·d)</td><td id="recUASB">1.68</td><td>1.20</td><td style="color:var(--green)">↑40%</td></tr>
+    <tr><td>MBBR</td><td>DO设定值 (mg/L)</td><td id="recDO">2.8</td><td>3.5</td><td style="color:var(--green)">↓20%</td></tr>
+    <tr><td>污泥回流</td><td>回流比 R</td><td id="recR">1.15</td><td>0.80</td><td style="color:var(--green)">↑44%</td></tr>
+    <tr><td>深度处理</td><td>PAC投加量 (kg/h)</td><td id="recPAC">7.2</td><td>9.5</td><td style="color:var(--green)">↓24%</td></tr></table>
   </div>
 </div>
 
 <!-- =============== TAB 4: 控制调参 =============== -->
 <div class="panel" id="panel3">
   <h2>⚙️ 控制调参</h2>
-  <div class="subtitle">PSO-模糊PID自适应控制 · 三联PID性能对比 · 参数导出</div>
-  <div class="chart-box" style="margin-bottom:20px"><h4>PSO迭代收敛曲线 (50代)</h4><canvas id="c4a"></canvas></div>
+  <div class="subtitle">PSO-模糊PID自适应控制 · 三联PID性能对比</div>
+  <div style="margin-bottom:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+    <select style="padding:8px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.3);color:var(--txt);font-size:14px;font-family:inherit" id="psoWindow">
+      <option>数据窗口：过去2小时</option><option>数据窗口：过去4小时</option><option>数据窗口：过去8小时</option><option>数据窗口：过去24小时</option>
+    </select>
+    <button class="btn" id="psoBtn" onclick="startPSO()">▶ 开始寻优</button>
+    <span id="psoStatus" style="font-size:12px;color:var(--dim)"></span>
+  </div>
+  <div class="chart-box" style="margin-bottom:20px"><h4>PSO迭代收敛曲线 (50代) <span style="color:var(--dim);font-size:10px;font-weight:400" id="psoGen"></span></h4><canvas id="c4a"></canvas></div>
   <div class="chart-box" style="margin-bottom:20px"><h4>三联PID 阶跃响应对比</h4><canvas id="c4b"></canvas></div>
   <div class="table-wrap">
     <table><tr><th>指标</th><th>标准PID</th><th>手动模糊PID</th><th>PSO-模糊PID</th></tr>
@@ -203,20 +227,21 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
 <div class="panel" id="panel5">
   <h2>💬 AI助手</h2>
   <div class="subtitle">RAG知识检索 + 本地LLM · 自然语言运维问答 · 历史案例引用</div>
-  <div class="chat-area">
+  <div class="chat-area" id="chatArea">
     <div class="q"><b>🧑 操作工:</b> 出水COD今天1860，怎么处理？</div>
-    <div class="a">
-      <b>🤖 运维助手:</b> 建议排查顺序：<br><br>
-      <span class="steps">① 检查UASB进水pH（知识条目#12：历史记录显示pH&lt;6.5时COD去除率下降约40%，当前进水pH需优先确认）</span>
-      <span class="steps">② 检查好氧池DO（知识条目#5：DO&lt;1.8mg/L时NH₃-N和COD去除率同步下降，建议将DO提升至2.5mg/L并监测2小时）</span>
-      <span class="steps">③ 检查PAC加药泵是否堵塞（知识条目#23：上次堵塞记录需回溯确认加药流量是否骤降）</span>
-      <span class="steps">④ 确认切片车间排水量（知识条目#8：过去3次COD偏高事件中2次与切片车间临时增产相关）</span>
+    <div class="a"><b>🤖 运维助手:</b> 建议排查顺序：<br><br>
+      <span class="steps">① 检查UASB进水pH <span style="color:var(--dim);font-size:10px">[知识条目#12]</span></span>
+      <span class="steps">② 检查好氧池DO <span style="color:var(--dim);font-size:10px">[知识条目#5]</span></span>
+      <span class="steps">③ 检查PAC加药泵是否堵塞 <span style="color:var(--dim);font-size:10px">[知识条目#23]</span></span>
+      <span class="steps">④ 确认切片车间排水量 <span style="color:var(--dim);font-size:10px">[知识条目#8]</span></span>
       <span class="steps">⑤ 如上述步骤均无异常，建议取样送检确认COD检测仪是否校准正常</span>
     </div>
+    <p style="font-size:10px;color:var(--red);margin-top:8px">⚠ 安全提示：关键操作请核实后执行。如异常持续，请联系当班工艺工程师。</p>
   </div>
+  <div id="aiLoading" style="display:none;text-align:center;padding:20px;color:var(--gold);font-size:14px">🔍 检索中...（约2-10秒）</div>
   <div style="display:flex;gap:10px">
-    <input style="flex:1;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.3);color:var(--txt);font-size:14px;font-family:inherit" placeholder="输入运维问题...">
-    <button class="btn">发送</button>
+    <input id="aiInput" style="flex:1;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.3);color:var(--txt);font-size:14px;font-family:inherit" placeholder="输入运维问题...">
+    <button class="btn" onclick="askAI()">发送</button>
   </div>
 </div>
 
@@ -230,8 +255,10 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
     <div class="metric-card"><div class="value" style="color:var(--blue)">↑12%</div><div class="label">药剂效率提升</div></div>
   </div>
   <div class="chart-row">
-    <div class="chart-box"><h4>吨水成本 7日趋势</h4><canvas id="c7a"></canvas></div>
-    <div class="chart-box"><h4>药剂消耗逐日趋势</h4><canvas id="c7b"></canvas></div>
+<div class="chart-box"><h4>吨水成本 7日趋势（目标线 ¥3.0/m³）</h4><canvas id="c7a"></canvas></div>
+      <div class="chart-box"><h4>药剂消耗逐日趋势（标注工艺优化节点）</h4><canvas id="c7b"></canvas></div>
+  </div>
+  <button class="btn" style="margin-top:12px;background:var(--blue)">📥 导出月度报表 (Excel)</button>
   </div>
 </div>
 
@@ -324,25 +351,50 @@ function drawRadar(w1,w2,w3,w4,w5){
   for(var i=0;i<5;i++){ctx.strokeStyle='rgba(255,255,255,.08)';ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+r*Math.cos(angles[i]),cy+r*Math.sin(angles[i]));ctx.stroke();
     ctx.fillStyle='#667';ctx.font='11px Microsoft YaHei';ctx.textAlign='center';
     ctx.fillText(labels[i],cx+(r+30)*Math.cos(angles[i]),cy+(r+30)*Math.sin(angles[i]))}
-  // Data
+  // Optimized data (blue)
   var total=w1+w2+w3+w4+w5; var vals=[w1/total,w2/total,w3/total,w4/total,w5/total];
-  ctx.fillStyle='rgba(230,126,34,.2)';ctx.strokeStyle='#e67e22';ctx.lineWidth=2;ctx.beginPath();
-  for(var i=0;i<5;i++){var x=cx+r*vals[i]*Math.cos(angles[i]),y=cy+r*vals[i]*Math.sin(angles[i]);i==0?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.closePath();ctx.fill();ctx.stroke()
+  ctx.fillStyle='rgba(52,152,219,.15)';ctx.strokeStyle='#3498db';ctx.lineWidth=2;ctx.beginPath();
+  for(var i=0;i<5;i++){var x=cx+r*vals[i]*Math.cos(angles[i]),y=cy+r*vals[i]*Math.sin(angles[i]);i==0?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.closePath();ctx.fill();ctx.stroke();
+  // Original process (gray dashed)
+  var origVals=[0.36,0.28,0.48,0.32,0.40];
+  ctx.strokeStyle='rgba(150,150,150,.6)';ctx.setLineDash([6,4]);ctx.lineWidth=2;ctx.beginPath();
+  for(var i=0;i<5;i++){var x=cx+r*origVals[i]*Math.cos(angles[i]),y=cy+r*origVals[i]*Math.sin(angles[i]);i==0?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.closePath();ctx.stroke();
+  ctx.setLineDash([]);
 }
 function updateRadar(){
   var w=[1,2,3,4,5].map(function(i){return parseInt(document.getElementById('w'+i).value)||0});
   w.forEach(function(v,i){document.getElementById('w'+(i+1)+'v').textContent=v+'%'});
   drawRadar(w[0],w[1],w[2],w[3],w[4]);
+  // Update recommendation table based on weights
+  var total=w[0]+w[1]+w[2]+w[3]+w[4]||1;
+  var vals=[w[0]/total,w[1]/total,w[2]/total,w[3]/total,w[4]/total];
+  var lime=Math.round((12+vals[2]*15)*10)/10;
+  var uasb=Math.round((1.0+vals[0]*0.8+vals[1]*0.3)*100)/100;
+  var doVal=Math.round((2.0+vals[3]*2)*10)/10;
+  var rVal=Math.round((0.6+vals[1]*0.8+vals[0]*0.2)*100)/100;
+  var pac=Math.round((5+vals[2]*6)*10)/10;
+  document.getElementById('recLime').textContent=lime;
+  document.getElementById('recUASB').textContent=uasb;
+  document.getElementById('recDO').textContent=doVal;
+  document.getElementById('recR').textContent=rVal;
+  document.getElementById('recPAC').textContent=pac;
 }
-setTimeout(function(){drawRadar(20,20,20,20,20)},300);
+function setPreset(a,b,c,d,e){document.getElementById('w1').value=a;document.getElementById('w2').value=b;document.getElementById('w3').value=c;document.getElementById('w4').value=d;document.getElementById('w5').value=e;updateRadar();}
+setTimeout(function(){drawRadar(20,20,20,20,20);updateRadar()},300);
 
-// ==== Tab 4: PSO & Triple PID ====
+// ==== Tab 4: PSO with animation ====
+var psoRunning=false;var psoTimer=null;
+function startPSO(){
+  if(psoRunning){psoRunning=false;clearTimeout(psoTimer);document.getElementById('psoBtn').textContent='重新寻优';document.getElementById('psoStatus').textContent='已停止';return}
+  psoRunning=true;document.getElementById('psoBtn').textContent='⏸ 停止';document.getElementById('psoStatus').textContent='寻优中...';var gen=0;var bestFit=45;
+  function step(){if(!psoRunning)return;gen++;bestFit=bestFit*0.94+0.3+Math.random()*1;document.getElementById('psoGen').textContent='当前代数:'+gen+'/50 | 最优ITAE:'+bestFit.toFixed(2);if(gen>=50){psoRunning=false;document.getElementById('psoBtn').textContent='重新寻优';document.getElementById('psoStatus').textContent='寻优完成 | 最优ITAE:'+bestFit.toFixed(2);return}psoTimer=setTimeout(step,80)}
+  var pso=[];for(var i=0;i<=50;i++)pso.push(45*Math.exp(-i*0.06)+5+Math.random()*1);
+  lineChart('c4a',[{color:'#3498db',data:pso}],Array.from({length:51},function(_,i){return i%10==0?i:''}),50);step();
+}
 function drawTab4(){
-  var pso=[]; for(var i=0;i<=50;i++)pso.push(45*Math.exp(-i*0.06)+5+Math.random()*3);
+  var pso=[]; for(var i=0;i<=50;i++)pso.push(45*Math.exp(-i*0.06)+5+Math.random()*1);
   lineChart('c4a',[{color:'#3498db',data:pso}],Array.from({length:51},function(_,i){return i%10==0?i:''}),50);
-  // Triple PID
   var labels=[]; for(var i=0;i<=30;i++)labels.push(i%5==0?i+'min':'');
-  var setpoint=Array(31).fill(1);
   var stdPID=[0,0.05,0.3,0.7,1.3,1.4,1.35,1.25,1.15,1.08,1.04,1.02,1.01,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0];
   var fuzzyPID=[0,0.02,0.2,0.55,1.1,1.18,1.15,1.1,1.06,1.03,1.01,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0];
   var psoFuzzy=[0,0,0.1,0.35,0.85,1.05,1.08,1.06,1.03,1.01,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0];
@@ -359,10 +411,30 @@ function drawTab5(){
 }
 setTimeout(drawTab5,500);
 
-// ==== Tab 7: Cost ====
+// ==== Tab 6: AI Assistant ====
+function askAI(){
+  var inp=document.getElementById('aiInput').value.trim();if(!inp){alert('请输入运维问题');return}
+  var load=document.getElementById('aiLoading');load.style.display='block';
+  setTimeout(function(){
+    load.style.display='none';
+    var resp='';var refs='';
+    if(inp.indexOf('COD')>=0||inp.indexOf('cod')>=0){
+      resp='建议排查：① 检查UASB进水pH <span style=\"color:var(--dim);font-size:10px\">[知识条目#12]</span>② 检查好氧池DO <span style=\"color:var(--dim);font-size:10px\">[知识条目#5]</span>③ 确认切片车间排水量 <span style=\"color:var(--dim);font-size:10px\">[知识条目#8]</span>';
+    }else if(inp.indexOf('膜')>=0||inp.indexOf('RO')>=0||inp.indexOf('压差')>=0){
+      resp='建议排查：① 检查TMP上升速率 <span style=\"color:var(--dim);font-size:10px\">[知识条目#31]</span>② 评估是否需要化学清洗 <span style=\"color:var(--dim);font-size:10px\">[知识条目#15]</span>③ 检查浓水回用管路 <span style=\"color:var(--dim);font-size:10px\">[知识条目#28]</span>';
+    }else{
+      resp='建议排查：① 首先确认异常指标的具体数值和持续时间；② 回溯最近2小时的工序切换记录；③ 对比同期历史数据判断是否为季节性波动。建议提供更具体的异常现象描述以获得精准排查建议。';
+    }
+    var area=document.getElementById('chatArea');
+    area.innerHTML+='<div class=\"q\"><b>🧑 操作工:</b> '+inp+'</div><div class=\"a\"><b>🤖 运维助手:</b> '+resp+'</div><p style=\"font-size:10px;color:var(--red);margin-top:8px\">⚠ 安全提示：关键操作请核实后执行。如异常持续，请联系当班工艺工程师。</p>';
+    document.getElementById('aiInput').value='';area.scrollTop=area.scrollHeight;
+  },1500);
+}
+
+// ==== Tab 7: Cost with target line & event markers ====
 function drawTab7(){
   var dlabels=['周一','周二','周三','周四','周五','周六','周日'];
-  lineChart('c7a',[{color:'#e67e22',data:[2.90,2.95,2.82,2.78,2.85,2.80,2.85]}],dlabels,3.5);
+  lineChart('c7a',[{color:'#e67e22',data:[2.90,2.95,2.82,2.78,2.85,2.80,2.85]}],dlabels,3.5,[{y:3.0,color:'#e74c3c',label:'目标线 ¥3.0'}]);
   lineChart('c7b',[{color:'rgba(52,152,219,.6)',data:[8.5,8.8,8.2,7.9,8.0,7.8,7.6]},{color:'rgba(46,204,113,.6)',data:[2.3,2.5,2.2,2.0,2.1,1.9,1.8]}],dlabels,10);
 }
 setTimeout(drawTab7,600);
