@@ -129,6 +129,17 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
     <div class="chart-box"><h4>pH · COD · NH₃-N 24h趋势</h4><canvas id="c1a"></canvas></div>
     <div class="chart-box"><h4>TDS · F⁻ · SiO₂ 24h趋势</h4><canvas id="c1b"></canvas></div>
   </div>
+  <details style="margin-top:12px;font-size:12px;color:var(--dim)">
+    <summary>预警历史（最近 5 条）</summary>
+    <div class="table-wrap" style="margin-top:8px">
+      <table><tr><th>时间</th><th>触发指标</th><th>指标值</th><th>等级</th></tr>
+      <tr><td>202X-X-X 08:15</td><td>COD</td><td>52 mg/L</td><td style="color:var(--red)">红色</td></tr>
+      <tr><td>202X-X-X 06:42</td><td>COD</td><td>43 mg/L</td><td style="color:var(--gold)">黄色</td></tr>
+      <tr><td>202X-X-3 18:30</td><td>COD</td><td>51 mg/L</td><td style="color:var(--red)">红色</td></tr>
+      <tr><td>202X-X-2 14:10</td><td>NH₃-N</td><td>5.5 mg/L</td><td style="color:var(--red)">红色</td></tr>
+      <tr><td>202X-X-1 22:05</td><td>COD</td><td>45 mg/L</td><td style="color:var(--gold)">黄色</td></tr></table>
+    </div>
+  </details>
 </div>
 
 <!-- =============== TAB 2: 加药推荐 =============== -->
@@ -137,13 +148,14 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
   <div class="subtitle">Stacked Ensemble 模型集成 · 输入水质 → 一键获取四药建议量及95%置信区间</div>
   <div style="display:flex;gap:30px;flex-wrap:wrap">
     <div style="flex:1;min-width:280px">
-      <div class="input-group"><label>含氟废水流量 (m³/h)</label><input type="number" value="12.5" id="inFlow"></div>
-      <div class="input-group"><label>F⁻ 浓度 (mg/L)</label><input type="number" value="10.2" id="inF"></div>
-      <div class="input-group"><label>pH</label><input type="number" value="6.8" id="inPH"></div>
-      <div class="input-group"><label>COD (mg/L)</label><input type="number" value="1850" id="inCOD"></div>
-      <div class="input-group"><label>NH₃-N (mg/L)</label><input type="number" value="320" id="inNH"></div>
-      <div class="input-group"><label>TDS (mg/L)</label><input type="number" value="2800" id="inTDS"></div>
+      <div class="input-group"><label>含氟废水流量 (m³/h) <span style="font-size:10px;color:rgba(255,255,255,.15)">来源：传感器 08:00</span></label><input type="number" value="12.5" id="inFlow"></div>
+      <div class="input-group"><label>F⁻ 浓度 (mg/L) <span style="font-size:10px;color:rgba(255,255,255,.15)">来源：传感器 08:00</span></label><input type="number" value="10.2" id="inF"></div>
+      <div class="input-group"><label>pH <span style="font-size:10px;color:rgba(255,255,255,.15)">来源：传感器 08:00</span></label><input type="number" value="6.8" id="inPH"></div>
+      <div class="input-group"><label>COD (mg/L) <span style="font-size:10px;color:rgba(255,255,255,.15)">来源：传感器 08:00</span></label><input type="number" value="1850" id="inCOD"></div>
+      <div class="input-group"><label>NH₃-N (mg/L) <span style="font-size:10px;color:rgba(255,255,255,.15)">来源：传感器 08:00</span></label><input type="number" value="320" id="inNH"></div>
+      <div class="input-group"><label>TDS (mg/L) <span style="font-size:10px;color:rgba(255,255,255,.15)">来源：传感器 08:00</span></label><input type="number" value="2800" id="inTDS"></div>
       <button class="btn" onclick="getRecommend()">获取加药推荐</button>
+      <div id="dosingLog" style="margin-top:10px"></div>
     </div>
     <div style="flex:1;min-width:300px" id="dosingResult">
       <p style="color:var(--dim);margin-top:40px">点击按钮获取推荐结果</p>
@@ -215,10 +227,12 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
   <div class="status-row">
     <div class="metric-card green"><div class="value">1.28</div><div class="label">TMP 跨膜压差 (bar)</div></div>
     <div class="metric-card"><div class="value" style="color:var(--purple)">2.5天</div><div class="label">反洗倒计时</div></div>
-    <div class="metric-card green"><div class="value">67%</div><div class="label">浓水回用率</div></div>
+    <div class="metric-card"><div class="value" style="font-size:13px;color:var(--dim);margin-top:8px">预计膜更换：约 8.3 个月</div></div>
+    <div class="metric-card green"><div class="value">67%</div><div class="label">浓水回用率 <span style="font-size:10px;color:var(--dim)">预警线60%</span></div></div>
   </div>
+  <p style="font-size:9px;color:rgba(255,255,255,.1);margin-bottom:12px">数据源: RO系统传感器@5min | 更新时间: 202X-X-X 14:30</p>
   <div class="chart-row">
-    <div class="chart-box"><h4>TMP 24h衰减曲线</h4><canvas id="c5a"></canvas></div>
+    <div class="chart-box"><h4>TMP 24h衰减曲线（黄色=初始×1.5 | 红色=初始×2.0）</h4><canvas id="c5a"></canvas></div>
     <div class="chart-box"><h4>浓水回用率 7日趋势</h4><canvas id="c5b"></canvas></div>
   </div>
 </div>
@@ -280,11 +294,26 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
       <p style="font-size:12px;color:var(--dim)">触发条件: TMP > 1.92 bar<br>本月推送: 0次</p>
     </div>
   </div>
+  <div style="margin-top:16px">
+    <label style="font-size:12px;color:var(--dim)">Webhook URL:</label>
+    <input style="width:100%;padding:8px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.3);color:var(--txt);font-size:13px;font-family:inherit;margin:6px 0" value="https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=XXXXXX" readonly>
+    <button class="btn" style="background:var(--green);font-size:12px;padding:6px 16px">测试推送</button>
+  </div>
+  <details style="margin-top:16px;font-size:12px;color:var(--dim)">
+    <summary>推送历史（最近 10 条）</summary>
+    <div class="table-wrap" style="margin-top:8px">
+      <table><tr><th>时间</th><th>类型</th><th>内容摘要</th><th>延迟(s)</th><th>状态</th></tr>
+      <tr><td>202X-X-X 14:32</td><td>COD超标</td><td>COD=53mg/L 超标</td><td>18</td><td style="color:var(--green)">送达</td></tr>
+      <tr><td>202X-X-X 09:15</td><td>COD超标</td><td>COD=51mg/L 超标</td><td>22</td><td style="color:var(--green)">送达</td></tr>
+      <tr><td>202X-X-X 02:41</td><td>NH₃-N超标</td><td>NH₃-N=5.2mg/L</td><td>15</td><td style="color:var(--green)">送达</td></tr></table>
+    </div>
+    <p style="font-size:10px;margin-top:4px">* 数据基于 3 个月运行统计，详见论文表6-6</p>
+  </details>
 </div>
 
 <div class="footer">
   <p>光伏废水智能运维浏览页 — 刘明海 硕士学位论文 · 第六章</p>
-  <p>导师：黄正文 教授 · 成都大学环境工程系 ｜ 某新能源公司中控室部署运行</p>
+  <p>导师：黄正文 教授 ｜ 某新能源公司中控室部署运行</p>
   <p><a href="index.html">返回主站</a> · © 全部作品版权登记</p>
 </div>
 
@@ -323,8 +352,14 @@ function lineChart(canvasId, datasets, labels, yMax, thresholds){
 // ==== Tab 1: Monitor Overview ====
 function drawTab1(){
   var labels=['00:00','04:00','08:00','12:00','16:00','20:00','24:00'];
-  lineChart('c1a',[{color:'#3498db',data:[6.8,6.9,7.0,6.7,6.5,6.6,6.8]},{color:'#2ecc71',data:[1850,1920,2100,2480,1860,1750,1820]},{color:'#e74c3c',data:[320,340,380,450,310,290,305]}],labels,2500,[{y:50,color:'#e74c3c'}]); // COD threshold
-  lineChart('c1b',[{color:'#9b59b6',data:[2800,2900,3100,3500,2700,2600,2750]},{color:'#f0a500',data:[10.2,11.5,12.8,14.1,9.8,8.5,9.2]},{color:'#1abc9c',data:[150,160,175,195,145,140,152]}],labels,4000)
+  lineChart('c1a',[{color:'#3498db',data:[6.8,6.9,7.0,6.7,6.5,6.6,6.8]},{color:'#2ecc71',data:[1850,1920,2100,2480,1860,1750,1820]},{color:'#e74c3c',data:[320,340,380,450,310,290,305]}],labels,2500,[{y:50,color:'#e74c3c'}]);
+  lineChart('c1b',[{color:'#9b59b6',data:[2800,2900,3100,3500,2700,2600,2750]},{color:'#f0a500',data:[10.2,11.5,12.8,14.1,9.8,8.5,9.2]},{color:'#1abc9c',data:[150,160,175,195,145,140,152]}],labels,4000);
+  // Process markers on c1a
+  setTimeout(function(){
+    var c=document.getElementById('c1a');if(!c)return;var ctx=c.getContext('2d');var w=c.width,h=c.height,pad=40,cw=w-2*pad;
+    var markers=[{x:0.28,label:'切片',color:'#3498db'},{x:0.52,label:'清洗',color:'#2ecc71'},{x:0.78,label:'插片',color:'#f0a500'}];
+    markers.forEach(function(m){var mx=pad+cw*m.x;ctx.strokeStyle=m.color;ctx.setLineDash([4,4]);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(mx,pad);ctx.lineTo(mx,h-pad);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=m.color;ctx.font='10px Microsoft YaHei';ctx.textAlign='center';ctx.fillText(m.label,mx,h-pad+14)});
+  },300);
 }
 setTimeout(drawTab1,200);
 
@@ -335,6 +370,7 @@ function getRecommend(){
     html+='<div class="result-card"><h5>'+d.name+'</h5><div style="font-size:28px;font-weight:700;color:var(--acc)">'+d.v+' <span style="font-size:12px;color:var(--dim)">kg/h</span></div><div class="range">95% CI: ['+d.lo+' - '+d.hi+'] ｜ 操作工 <button class="btn" style="padding:4px 14px;font-size:12px">采纳</button></div></div>';
   });
   document.getElementById('dosingResult').innerHTML=html;
+  var logPanel=document.getElementById('dosingLog');if(logPanel)logPanel.innerHTML='<details style="font-size:11px;color:var(--dim)"><summary>操作日志（最近 5 次）</summary><div class="table-wrap" style="margin-top:6px"><table><tr><th>时间</th><th>药剂</th><th>推荐值</th><th>采纳</th><th>偏差</th></tr><tr><td>202X-X-X 08:00</td><td>PAC</td><td>8.5</td><td style="color:var(--green)">采纳</td><td>3.2%</td></tr><tr><td>202X-X-3 18:00</td><td>石灰</td><td>15.2</td><td style="color:var(--green)">采纳</td><td>5.8%</td></tr><tr><td>202X-X-2 14:00</td><td>PAC</td><td>8.2</td><td style="color:var(--red)">手动调整</td><td>12.5%</td></tr></table></div></details>';
 }
 
 // ==== Tab 3: Radar Chart ====
@@ -407,7 +443,7 @@ function drawTab5(){
   var labels=[]; for(var i=0;i<=24;i+=2)labels.push(i+':00');
   lineChart('c5a',[{color:'#e74c3c',data:[1.15,1.16,1.18,1.19,1.21,1.22,1.24,1.26,1.27,1.29,1.30,1.32,1.33]}],labels,2.0,[{y:1.72,color:'#f0a500'},{y:2.30,color:'#e74c3c'}]);
   var dlabels=['周一','周二','周三','周四','周五','周六','周日'];
-  lineChart('c5b',[{color:'#2ecc71',data:[68,65,70,67,72,69,67]}],dlabels,80,[{y:60,color:'#f0a500'}]);
+  lineChart('c5b',[{color:'#2ecc71',data:[68,65,70,67,72,69,67]}],dlabels,80,[{y:60,color:'#e74c3c',label:'预警线 60%'}]);
 }
 setTimeout(drawTab5,500);
 
@@ -436,6 +472,12 @@ function drawTab7(){
   var dlabels=['周一','周二','周三','周四','周五','周六','周日'];
   lineChart('c7a',[{color:'#e67e22',data:[2.90,2.95,2.82,2.78,2.85,2.80,2.85]}],dlabels,3.5,[{y:3.0,color:'#e74c3c',label:'目标线 ¥3.0'}]);
   lineChart('c7b',[{color:'rgba(52,152,219,.6)',data:[8.5,8.8,8.2,7.9,8.0,7.8,7.6]},{color:'rgba(46,204,113,.6)',data:[2.3,2.5,2.2,2.0,2.1,1.9,1.8]}],dlabels,10);
+  // Event markers on c7b
+  setTimeout(function(){
+    var c=document.getElementById('c7b');if(!c)return;var ctx=c.getContext('2d');var w=c.width,h=c.height,pad=40,cw=w-2*pad;
+    var mk=[{x:0.30,label:'切换PSO-模糊PID',color:'var(--green)'},{x:0.65,label:'GRA-TOPSIS推荐启用',color:'var(--blue)'}];
+    mk.forEach(function(m){var mx=pad+cw*m.x;ctx.strokeStyle='#2ecc71';ctx.setLineDash([3,5]);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(mx,pad);ctx.lineTo(mx,h-pad);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#2ecc71';ctx.font='9px Microsoft YaHei';ctx.textAlign='center';ctx.fillText(m.label,mx,h-pad+12)});
+  },300);
 }
 setTimeout(drawTab7,600);
 </script>
