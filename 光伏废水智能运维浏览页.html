@@ -125,6 +125,15 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
     <div class="metric-card green"><div class="value">4.1</div><div class="label">NH₃-N mg/L (达标)</div></div>
   </div>
   <p style="font-size:9px;color:rgba(255,255,255,.1);margin-bottom:16px">数据源: 传感器@5min | 更新时间: 202X-X-X 14:30</p>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;padding:12px 16px;background:rgba(0,0,0,.2);border-radius:8px;align-items:center">
+    <span style="font-size:12px;color:var(--dim);margin-right:8px">传感器状态:</span>
+    <div style="display:flex;align-items:center;gap:6px;font-size:11px" id="s-pH"><span style="width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block"></span> pH</div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:11px" id="s-COD"><span style="width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block"></span> COD</div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:11px" id="s-NH3"><span style="width:10px;height:10px;border-radius:50%;background:var(--gold);display:inline-block"></span> NH₃-N</div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:11px" id="s-TDS"><span style="width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block"></span> TDS</div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:11px" id="s-F"><span style="width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block"></span> F⁻</div>
+    <span style="font-size:10px;color:rgba(255,255,255,.08);margin-left:auto">校准状态基于传感器自检规则</span>
+  </div>
   <div class="chart-row">
     <div class="chart-box"><h4>pH · COD · NH₃-N 24h趋势</h4><canvas id="c1a"></canvas></div>
     <div class="chart-box"><h4>TDS · F⁻ · SiO₂ 24h趋势</h4><canvas id="c1b"></canvas></div>
@@ -233,7 +242,52 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
   <p style="font-size:9px;color:rgba(255,255,255,.1);margin-bottom:12px">数据源: RO系统传感器@5min | 更新时间: 202X-X-X 14:30</p>
   <div class="chart-row">
     <div class="chart-box"><h4>TMP 24h衰减曲线（黄色=初始×1.5 | 红色=初始×2.0）</h4><canvas id="c5a"></canvas></div>
-    <div class="chart-box"><h4>浓水回用率 7日趋势</h4><canvas id="c5b"></canvas></div>
+    <div class="chart-box"><h4>浓水回用率 7日趋势（红色=预警线60%）</h4><canvas id="c5b"></canvas></div>
+  </div>
+  <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,.08)">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:8px;flex-wrap:wrap">
+      <h2 style="margin:0;font-size:20px">🔧 加药泵工况监测</h2>
+      <span style="font-size:11px;color:var(--dim)">三项预警：累计运行>4000h | 日启停>20次 | 容积效率下降>15%</span>
+      <select id="pumpSelect" onchange="drawPumpTrend()" style="margin-left:auto;padding:6px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.3);color:var(--txt);font-size:12px;font-family:inherit">
+        <option>石灰泵</option><option>硫酸泵</option><option>PAC泵</option><option>PAM泵</option>
+      </select>
+    </div>
+    <p style="font-size:10px;color:rgba(255,255,255,.06);margin-bottom:16px">数据源: PLC计数器@5min</p>
+    <div class="status-row" style="margin-bottom:16px">
+      <div class="metric-card" style="min-width:140px">
+        <div class="value" style="font-size:24px;color:var(--gold)">3850<span style="font-size:11px;color:var(--dim)">h</span></div>
+        <div class="label">石灰泵·累计运行</div><div style="font-size:9px;color:var(--gold)">⚠ 接近更换</div>
+        <hr style="border-color:rgba(255,255,255,.04);margin:5px 0">
+        <div style="font-size:12px;color:var(--green)">8<span style="font-size:9px;color:var(--dim)">次/天</span></div><div class="label">日启停 ✅</div>
+        <hr style="border-color:rgba(255,255,255,.04);margin:5px 0">
+        <div style="font-size:12px;color:var(--green)">-5.2<span style="font-size:9px;color:var(--dim)">%</span></div><div class="label">容积效率 ✅</div>
+      </div>
+      <div class="metric-card" style="min-width:140px">
+        <div class="value" style="font-size:24px;color:var(--green)">2100<span style="font-size:11px;color:var(--dim)">h</span></div>
+        <div class="label">硫酸泵·累计运行</div><div style="font-size:9px;color:var(--green)">🟢 正常</div>
+        <hr style="border-color:rgba(255,255,255,.04);margin:5px 0">
+        <div style="font-size:12px;color:var(--green)">5<span style="font-size:9px;color:var(--dim)">次/天</span></div><div class="label">日启停 ✅</div>
+        <hr style="border-color:rgba(255,255,255,.04);margin:5px 0">
+        <div style="font-size:12px;color:var(--green)">-3.8<span style="font-size:9px;color:var(--dim)">%</span></div><div class="label">容积效率 ✅</div>
+      </div>
+      <div class="metric-card" style="min-width:140px">
+        <div class="value" style="font-size:24px;color:var(--green)">980<span style="font-size:11px;color:var(--dim)">h</span></div>
+        <div class="label">PAC泵·累计运行</div><div style="font-size:9px;color:var(--green)">🟢 正常</div>
+        <hr style="border-color:rgba(255,255,255,.04);margin:5px 0">
+        <div style="font-size:12px;color:var(--green)">6<span style="font-size:9px;color:var(--dim)">次/天</span></div><div class="label">日启停 ✅</div>
+        <hr style="border-color:rgba(255,255,255,.04);margin:5px 0">
+        <div style="font-size:12px;color:var(--green)">-1.2<span style="font-size:9px;color:var(--dim)">%</span></div><div class="label">容积效率 ✅</div>
+      </div>
+      <div class="metric-card" style="min-width:140px">
+        <div class="value" style="font-size:24px;color:var(--green)">1520<span style="font-size:11px;color:var(--dim)">h</span></div>
+        <div class="label">PAM泵·累计运行</div><div style="font-size:9px;color:var(--green)">🟢 正常</div>
+        <hr style="border-color:rgba(255,255,255,.04);margin:5px 0">
+        <div style="font-size:12px;color:var(--green)">4<span style="font-size:9px;color:var(--dim)">次/天</span></div><div class="label">日启停 ✅</div>
+        <hr style="border-color:rgba(255,255,255,.04);margin:5px 0">
+        <div style="font-size:12px;color:var(--green)">-2.5<span style="font-size:9px;color:var(--dim)">%</span></div><div class="label">容积效率 ✅</div>
+      </div>
+    </div>
+    <div class="chart-row"><div class="chart-box"><h4>选定泵 7日启停趋势（黄=15次正常线 红=20次预警线）</h4><canvas id="c5c"></canvas></div></div>
   </div>
 </div>
 
@@ -293,6 +347,14 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
       <h4 style="color:var(--gold);margin-bottom:8px">⚠ RO膜预警推送</h4>
       <p style="font-size:12px;color:var(--dim)">触发条件: TMP > 1.92 bar<br>本月推送: 0次</p>
     </div>
+    <div style="background:rgba(0,0,0,.25);padding:16px 20px;border-radius:10px;flex:1;min-width:200px">
+      <h4 style="color:var(--gold);margin-bottom:8px">🔧 加药泵维护提醒</h4>
+      <p style="font-size:12px;color:var(--dim)">触发: 运行>4000h / 启停>20 / 效率↓>15%<br>本月推送: 1次<br>接收: 操作工+维护班组</p>
+    </div>
+    <div style="background:rgba(0,0,0,.25);padding:16px 20px;border-radius:10px;flex:1;min-width:200px">
+      <h4 style="color:var(--blue);margin-bottom:8px">📡 传感器校准提醒</h4>
+      <p style="font-size:12px;color:var(--dim)">触发: 周偏差>10% 或 逾期>7天<br>本月推送: 0次<br>接收: 当班操作工</p>
+    </div>
   </div>
   <div style="margin-top:16px">
     <label style="font-size:12px;color:var(--dim)">Webhook URL:</label>
@@ -304,6 +366,7 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
     <div class="table-wrap" style="margin-top:8px">
       <table><tr><th>时间</th><th>类型</th><th>内容摘要</th><th>延迟(s)</th><th>状态</th></tr>
       <tr><td>202X-X-X 14:32</td><td>COD超标</td><td>COD=53mg/L 超标</td><td>18</td><td style="color:var(--green)">送达</td></tr>
+      <tr><td>202X-X-X 16:20</td><td>加药泵维护</td><td>石灰泵运行3850h接近更换周期</td><td>18</td><td style="color:var(--green)">送达</td></tr>
       <tr><td>202X-X-X 09:15</td><td>COD超标</td><td>COD=51mg/L 超标</td><td>22</td><td style="color:var(--green)">送达</td></tr>
       <tr><td>202X-X-X 02:41</td><td>NH₃-N超标</td><td>NH₃-N=5.2mg/L</td><td>15</td><td style="color:var(--green)">送达</td></tr></table>
     </div>
@@ -321,7 +384,7 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
 
 <script>
 // ==== Tab Switching ====
-function switchTab(i){var ps=document.querySelectorAll('.panel');for(var j=0;j<ps.length;j++)ps[j].classList.remove('vis');var as=document.querySelectorAll('.sidebar a');for(var j=0;j<as.length;j++)as[j].classList.remove('sel');var ts=document.querySelectorAll('.tab-btn');for(var j=0;j<ts.length;j++)ts[j].classList.remove('sel');document.getElementById('panel'+i).classList.add('vis');as[i].classList.add('sel');ts[i].classList.add('sel');if(window.innerWidth<=768)document.getElementById('sidebar').classList.remove('open');document.getElementById('sbOverlay').style.display='none';setTimeout(function(){if(i==0)drawTab1();if(i==2)drawRadar(20,20,20,20,20);if(i==3)drawTab4();if(i==4)drawTab5();if(i==6)drawTab7();},150)}
+function switchTab(i){var ps=document.querySelectorAll('.panel');for(var j=0;j<ps.length;j++)ps[j].classList.remove('vis');var as=document.querySelectorAll('.sidebar a');for(var j=0;j<as.length;j++)as[j].classList.remove('sel');var ts=document.querySelectorAll('.tab-btn');for(var j=0;j<ts.length;j++)ts[j].classList.remove('sel');document.getElementById('panel'+i).classList.add('vis');as[i].classList.add('sel');ts[i].classList.add('sel');if(window.innerWidth<=768)document.getElementById('sidebar').classList.remove('open');document.getElementById('sbOverlay').style.display='none';setTimeout(function(){if(i==0)drawTab1();if(i==2)drawRadar(20,20,20,20,20);if(i==3)drawTab4();if(i==4){drawTab5();setTimeout(drawPumpTrend,200)}if(i==6)drawTab7();},150)}
 function toggleSidebar(){var sb=document.getElementById('sidebar');var ov=document.getElementById('sbOverlay');sb.classList.toggle('open');if(sb.classList.contains('open')){ov.style.display='block'}else{ov.style.display='none'}}
 
 // ==== Canvas Chart Helper ====
@@ -446,6 +509,16 @@ function drawTab5(){
   lineChart('c5b',[{color:'#2ecc71',data:[68,65,70,67,72,69,67]}],dlabels,80,[{y:60,color:'#e74c3c',label:'预警线 60%'}]);
 }
 setTimeout(drawTab5,500);
+
+// ==== Tab 5: Pump Trend ====
+var pumpData={石灰泵:[8,7,9,6,8,5,8],硫酸泵:[5,4,6,3,5,4,5],PAC泵:[6,5,7,4,6,5,6],PAM泵:[4,3,5,2,4,3,4]};
+function drawPumpTrend(){
+  var pump=document.getElementById('pumpSelect').value;
+  var dlabels=['周一','周二','周三','周四','周五','周六','周日'];
+  var data=pumpData[pump]||pumpData['石灰泵'];
+  lineChart('c5c',[{color:'#f0a500',data:data}],dlabels,25,[{y:15,color:'#f0a500',label:'正常上限 15次'},{y:20,color:'#e74c3c',label:'预警线 20次'}]);
+}
+setTimeout(drawPumpTrend,550);
 
 // ==== Tab 6: AI Assistant ====
 function askAI(){
