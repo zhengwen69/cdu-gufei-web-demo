@@ -103,7 +103,7 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
   <a href="#tab7" onclick="switchTab(6)">📈 成本看板</a>
   <a href="#tab8" onclick="switchTab(7)">📱 推送设置</a>
   <div class="sidebar-info">
-    刘明海 硕士学位论文<br>导师: 黄正文 教授<br>某新能源公司中控室<br>202X年X月部署
+    产教融合 硕士学位论文产出<br>指导老师: 黄正文 教授<br>光伏废水智能运维浏览页<br>设计与工程应用<br>2026年07月18日开发
   </div>
 </div>
 
@@ -121,10 +121,10 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
   <div class="status-row">
     <div class="metric-card green"><div class="value">正常</div><div class="label">系统状态 · 当前工序：清洗</div></div>
     <div class="metric-card green"><div class="value">6/6</div><div class="label">指标达标</div></div>
-    <div class="metric-card gold"><div class="value">48.2</div><div class="label">COD mg/L (预警线50)</div></div>
-    <div class="metric-card green"><div class="value">4.1</div><div class="label">NH₃-N mg/L (达标)</div></div>
+    <div class="metric-card gold"><div class="value" id="dynCodVal">48.2</div><div class="label">COD mg/L (预警线50)</div></div>
+    <div class="metric-card green"><div class="value" id="dynNhVal">4.1</div><div class="label">NH₃-N mg/L (达标)</div></div>
   </div>
-  <p style="font-size:9px;color:rgba(255,255,255,.1);margin-bottom:16px">数据源: 传感器@5min | 更新时间: 202X-X-X 14:30</p>
+  <p style="font-size:9px;color:rgba(255,255,255,.1);margin-bottom:16px" id="dynSrc1">数据源: 传感器@5min | 更新时间: 202X-X-X 14:30</p>
   <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;padding:12px 16px;background:rgba(0,0,0,.2);border-radius:8px;align-items:center">
     <span style="font-size:12px;color:var(--dim);margin-right:8px">传感器状态:</span>
     <div style="display:flex;align-items:center;gap:6px;font-size:11px" id="s-pH"><span style="width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block"></span> pH</div>
@@ -157,12 +157,12 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
   <div class="subtitle">Stacked Ensemble 模型集成 · 输入水质 → 一键获取四药建议量及95%置信区间</div>
   <div style="display:flex;gap:30px;flex-wrap:wrap">
     <div style="flex:1;min-width:280px">
-      <div class="input-group"><label>含氟废水流量 (m³/h) <span style="font-size:10px;color:rgba(255,255,255,.15)">来源：传感器 08:00</span></label><input type="number" value="12.5" id="inFlow"></div>
-      <div class="input-group"><label>F⁻ 浓度 (mg/L) <span style="font-size:10px;color:rgba(255,255,255,.15)">来源：传感器 08:00</span></label><input type="number" value="10.2" id="inF"></div>
-      <div class="input-group"><label>pH <span style="font-size:10px;color:rgba(255,255,255,.15)">来源：传感器 08:00</span></label><input type="number" value="6.8" id="inPH"></div>
-      <div class="input-group"><label>COD (mg/L) <span style="font-size:10px;color:rgba(255,255,255,.15)">来源：传感器 08:00</span></label><input type="number" value="1850" id="inCOD"></div>
-      <div class="input-group"><label>NH₃-N (mg/L) <span style="font-size:10px;color:rgba(255,255,255,.15)">来源：传感器 08:00</span></label><input type="number" value="320" id="inNH"></div>
-      <div class="input-group"><label>TDS (mg/L) <span style="font-size:10px;color:rgba(255,255,255,.15)">来源：传感器 08:00</span></label><input type="number" value="2800" id="inTDS"></div>
+      <div class="input-group"><label>含氟废水流量 (m³/h) <span style="font-size:10px;color:rgba(255,255,255,.15)" id="srcFlow">来源：传感器 08:00</span></label><input type="number" value="12.5" id="inFlow"></div>
+      <div class="input-group"><label>F⁻ 浓度 (mg/L) <span style="font-size:10px;color:rgba(255,255,255,.15)" id="srcF">来源：传感器 08:00</span></label><input type="number" value="10.2" id="inF"></div>
+      <div class="input-group"><label>pH <span style="font-size:10px;color:rgba(255,255,255,.15)" id="srcPh">来源：传感器 08:00</span></label><input type="number" value="6.8" id="inPH"></div>
+      <div class="input-group"><label>COD (mg/L) <span style="font-size:10px;color:rgba(255,255,255,.15)" id="srcCod">来源：传感器 08:00</span></label><input type="number" value="1850" id="inCOD"></div>
+      <div class="input-group"><label>NH₃-N (mg/L) <span style="font-size:10px;color:rgba(255,255,255,.15)" id="srcNh">来源：传感器 08:00</span></label><input type="number" value="320" id="inNH"></div>
+      <div class="input-group"><label>TDS (mg/L) <span style="font-size:10px;color:rgba(255,255,255,.15)" id="srcTds">来源：传感器 08:00</span></label><input type="number" value="2800" id="inTDS"></div>
       <button class="btn" onclick="getRecommend()">获取加药推荐</button>
       <div id="dosingLog" style="margin-top:10px"></div>
     </div>
@@ -234,7 +234,7 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
   <h2>🔧 设备监测</h2>
   <div class="subtitle">RO膜跨膜压差衰减曲线 · 反洗倒计时 · 浓水回用率追踪</div>
   <div class="status-row">
-    <div class="metric-card green"><div class="value">1.28</div><div class="label">TMP 跨膜压差 (bar)</div></div>
+    <div class="metric-card green"><div class="value" id="dynTmp">1.28</div><div class="label">TMP 跨膜压差 (bar)</div></div>
     <div class="metric-card"><div class="value" style="color:var(--purple)">2.5天</div><div class="label">反洗倒计时</div></div>
     <div class="metric-card"><div class="value" style="font-size:13px;color:var(--dim);margin-top:8px">预计膜更换：约 8.3 个月</div></div>
     <div class="metric-card green"><div class="value">67%</div><div class="label">浓水回用率 <span style="font-size:10px;color:var(--dim)">预警线60%</span></div></div>
@@ -318,8 +318,8 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
   <h2>📈 成本看板</h2>
   <div class="subtitle">吨水成本实时追踪 · 本月节省金额 · 药剂消耗趋势</div>
   <div class="status-row">
-    <div class="metric-card green"><div class="value">2.85</div><div class="label">吨水成本 (元/m³)</div></div>
-    <div class="metric-card gold"><div class="value">3,420</div><div class="label">本月累计节省 (元)</div></div>
+    <div class="metric-card green"><div class="value" id="dynCost">2.85</div><div class="label">吨水成本 (元/m³)</div></div>
+    <div class="metric-card gold"><div class="value" id="dynSave">3,420</div><div class="label">本月累计节省 (元)</div></div>
     <div class="metric-card"><div class="value" style="color:var(--blue)">↑12%</div><div class="label">药剂效率提升</div></div>
   </div>
   <div class="chart-row">
@@ -375,14 +375,39 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
 </div>
 
 <div class="footer">
-  <p>光伏废水智能运维浏览页 — 刘明海 硕士学位论文 · 第六章</p>
-  <p>导师：黄正文 教授 ｜ 某新能源公司中控室部署运行</p>
+  <p>光伏废水智能运维浏览页 — 产教融合 硕士学位论文产出 · 第六章</p>
+  <p>指导老师：黄正文 教授 ｜ 2026年07月18日开发</p>
   <p><a href="index.html">返回主站</a> · © 全部作品版权登记</p>
 </div>
 
 </div>
 
 <script>
+// ==== Daily Auto-Refresh Data ====
+var SEED=0;
+function dateSeed(){var d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate()}
+function srand(){SEED=(SEED*16807)%2147483647;return(SEED-1)/2147483646}
+function randRange(lo,hi){return lo+srand()*(hi-lo)}
+function dailyRefresh(){
+  var today=dateSeed();var last=localStorage.getItem('lastDate')||0;
+  if(last==today)return;SEED=today;localStorage.setItem('lastDate',today);
+}
+dailyRefresh();
+
+// Dynamic time display
+var now=new Date();var timeStr=now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate()+' '+now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
+function getUpdateLabel(){return '数据源: 传感器@5min | 更新时间: '+timeStr}
+function getSourceLabel(){return '来源：传感器 '+now.getHours()+':00'}
+
+// Dynamic data generators
+var pHdata=[],codData=[],nhData=[],tdsData=[],fData=[],sioData=[];
+for(var i=0;i<7;i++){pHdata.push(Math.round(randRange(6.5,7.0)*10)/10);codData.push(Math.round(randRange(1750,2550)));nhData.push(Math.round(randRange(280,460)));tdsData.push(Math.round(randRange(2600,3600)));fData.push(Math.round(randRange(8.0,14.5)*10)/10);sioData.push(Math.round(randRange(140,200)))}
+var dynCod=Math.round(randRange(44,54));var dynNh=Math.round(randRange(3.5,6.0)*10)/10;
+var dynFlow=Math.round(randRange(11,14)*10)/10;var dynF=Math.round(randRange(8,12)*10)/10;
+var dynPh=Math.round(randRange(6.5,7.2)*10)/10;var dynInCod=Math.round(randRange(1700,2100));var dynInNh=Math.round(randRange(280,400));var dynInTds=Math.round(randRange(2500,3200));
+var dynTmp=Math.round(randRange(1.20,1.35)*100)/100;var dynReuse=Math.round(randRange(63,73));
+var dynCost=Math.round(randRange(2.75,2.95)*100)/100;var dynSave=Math.round(randRange(3000,3800));
+
 // ==== Tab Switching ====
 function switchTab(i){var ps=document.querySelectorAll('.panel');for(var j=0;j<ps.length;j++)ps[j].classList.remove('vis');var as=document.querySelectorAll('.sidebar a');for(var j=0;j<as.length;j++)as[j].classList.remove('sel');var ts=document.querySelectorAll('.tab-btn');for(var j=0;j<ts.length;j++)ts[j].classList.remove('sel');document.getElementById('panel'+i).classList.add('vis');as[i].classList.add('sel');ts[i].classList.add('sel');if(window.innerWidth<=768)document.getElementById('sidebar').classList.remove('open');document.getElementById('sbOverlay').style.display='none';setTimeout(function(){if(i==0)drawTab1();if(i==2)drawRadar(20,20,20,20,20);if(i==3)drawTab4();if(i==4){drawTab5();setTimeout(drawPumpTrend,200)}if(i==6)drawTab7();},150)}
 function toggleSidebar(){var sb=document.getElementById('sidebar');var ov=document.getElementById('sbOverlay');sb.classList.toggle('open');if(sb.classList.contains('open')){ov.style.display='block'}else{ov.style.display='none'}}
@@ -415,8 +440,8 @@ function lineChart(canvasId, datasets, labels, yMax, thresholds){
 // ==== Tab 1: Monitor Overview ====
 function drawTab1(){
   var labels=['00:00','04:00','08:00','12:00','16:00','20:00','24:00'];
-  lineChart('c1a',[{color:'#3498db',data:[6.8,6.9,7.0,6.7,6.5,6.6,6.8]},{color:'#2ecc71',data:[1850,1920,2100,2480,1860,1750,1820]},{color:'#e74c3c',data:[320,340,380,450,310,290,305]}],labels,2500,[{y:50,color:'#e74c3c'}]);
-  lineChart('c1b',[{color:'#9b59b6',data:[2800,2900,3100,3500,2700,2600,2750]},{color:'#f0a500',data:[10.2,11.5,12.8,14.1,9.8,8.5,9.2]},{color:'#1abc9c',data:[150,160,175,195,145,140,152]}],labels,4000);
+  lineChart('c1a',[{color:'#3498db',data:pHdata},{color:'#2ecc71',data:codData},{color:'#e74c3c',data:nhData}],labels,2500,[{y:50,color:'#e74c3c'}]);
+  lineChart('c1b',[{color:'#9b59b6',data:tdsData},{color:'#f0a500',data:fData},{color:'#1abc9c',data:sioData}],labels,4000);
   // Process markers on c1a
   setTimeout(function(){
     var c=document.getElementById('c1a');if(!c)return;var ctx=c.getContext('2d');var w=c.width,h=c.height,pad=40,cw=w-2*pad;
@@ -425,6 +450,25 @@ function drawTab1(){
   },300);
 }
 setTimeout(drawTab1,200);
+// Apply daily dynamic data
+setTimeout(function(){
+  // Update time labels
+  var tl=getUpdateLabel();var sl=getSourceLabel();
+  var el=document.getElementById('dynSrc1');if(el)el.textContent=tl;
+  ['srcFlow','srcF','srcPh','srcCod','srcNh','srcTds'].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent=sl});
+  // Update metric cards
+  var cv=document.getElementById('dynCodVal');if(cv)cv.textContent=dynCod;
+  var nv=document.getElementById('dynNhVal');if(nv)nv.textContent=dynNh;
+  // Update inputs
+  document.getElementById('inFlow').value=dynFlow;document.getElementById('inF').value=dynF;
+  document.getElementById('inPH').value=dynPh;document.getElementById('inCOD').value=dynInCod;
+  document.getElementById('inNH').value=dynInNh;document.getElementById('inTds').value=dynInTds;
+  // Update Tab5 TMP label if present
+  if(document.getElementById('dynTmp'))document.getElementById('dynTmp').textContent=dynTmp;
+  // Update Tab7 cost
+  if(document.getElementById('dynCost'))document.getElementById('dynCost').textContent=dynCost;
+  if(document.getElementById('dynSave'))document.getElementById('dynSave').textContent=Math.round(dynSave);
+},50);
 
 // ==== Tab 2: Dosing Recommendation ====
 function getRecommend(){
@@ -504,9 +548,11 @@ setTimeout(drawTab4,400);
 // ==== Tab 5: Equipment ====
 function drawTab5(){
   var labels=[]; for(var i=0;i<=24;i+=2)labels.push(i+':00');
-  lineChart('c5a',[{color:'#e74c3c',data:[1.15,1.16,1.18,1.19,1.21,1.22,1.24,1.26,1.27,1.29,1.30,1.32,1.33]}],labels,2.0,[{y:1.72,color:'#f0a500'},{y:2.30,color:'#e74c3c'}]);
+  var tmpBase=dynTmp;var tmpData=[];for(var i=0;i<13;i++){tmpData.push(Math.round((tmpBase-0.15+srand()*0.15)*100)/100)}
+  lineChart('c5a',[{color:'#e74c3c',data:tmpData}],labels,2.0,[{y:Math.round(tmpBase*1.5*100)/100,color:'#f0a500'},{y:Math.round(tmpBase*2.0*100)/100,color:'#e74c3c'}]);
   var dlabels=['周一','周二','周三','周四','周五','周六','周日'];
-  lineChart('c5b',[{color:'#2ecc71',data:[68,65,70,67,72,69,67]}],dlabels,80,[{y:60,color:'#e74c3c',label:'预警线 60%'}]);
+  var reuseData=[];for(var i=0;i<7;i++)reuseData.push(Math.round(dynReuse+randRange(-4,4)));
+  lineChart('c5b',[{color:'#2ecc71',data:reuseData}],dlabels,80,[{y:60,color:'#e74c3c',label:'预警线 60%'}]);
 }
 setTimeout(drawTab5,500);
 
@@ -543,8 +589,10 @@ function askAI(){
 // ==== Tab 7: Cost with target line & event markers ====
 function drawTab7(){
   var dlabels=['周一','周二','周三','周四','周五','周六','周日'];
-  lineChart('c7a',[{color:'#e67e22',data:[2.90,2.95,2.82,2.78,2.85,2.80,2.85]}],dlabels,3.5,[{y:3.0,color:'#e74c3c',label:'目标线 ¥3.0'}]);
-  lineChart('c7b',[{color:'rgba(52,152,219,.6)',data:[8.5,8.8,8.2,7.9,8.0,7.8,7.6]},{color:'rgba(46,204,113,.6)',data:[2.3,2.5,2.2,2.0,2.1,1.9,1.8]}],dlabels,10);
+  var costData=[];for(var i=0;i<7;i++)costData.push(Math.round((dynCost-0.1+randRange(-0.05,0.12))*100)/100);
+  lineChart('c7a',[{color:'#e67e22',data:costData}],dlabels,3.5,[{y:3.0,color:'#e74c3c',label:'目标线 ¥3.0'}]);
+  var drugData1=[],drugData2=[];for(var i=0;i<7;i++){drugData1.push(Math.round(randRange(7.5,9.0)*10)/10);drugData2.push(Math.round(randRange(1.8,2.6)*10)/10)}
+  lineChart('c7b',[{color:'rgba(52,152,219,.6)',data:drugData1},{color:'rgba(46,204,113,.6)',data:drugData2}],dlabels,10);
   // Event markers on c7b
   setTimeout(function(){
     var c=document.getElementById('c7b');if(!c)return;var ctx=c.getContext('2d');var w=c.width,h=c.height,pad=40,cw=w-2*pad;
