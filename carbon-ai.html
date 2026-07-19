@@ -72,7 +72,12 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
 .table-wrap td{padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.03)}
 .footer{text-align:center;color:var(--dim);font-size:11px;margin-top:30px;padding:16px;border-top:1px solid rgba(255,255,255,.06);line-height:1.8}
 .footer a{color:var(--acc);text-decoration:none}
-.note{font-size:9px;color:rgba(255,255,255,.06);margin-top:6px;line-height:1.5}
+.intro-panel{background:rgba(0,184,148,.05);border:1px solid rgba(0,184,148,.15);border-radius:8px;margin-bottom:14px;overflow:hidden}
+.intro-hdr{padding:10px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;transition:background .2s}
+.intro-hdr:hover{background:rgba(0,184,148,.06)}
+.intro-body{padding:0 16px 14px;transition:all .3s}
+.intro-body.collapsed{display:none}
+.intr-sel{background:rgba(0,184,148,.2)!important;border-color:var(--acc)!important;color:#fff!important}
 .counter{text-align:center;padding:12px;background:rgba(0,0,0,.2);border-radius:8px;margin:10px 0}
 .counter .cd{font-size:36px;font-weight:700;color:var(--acc);display:inline}
 .counter .cl{font-size:12px;color:var(--dim);display:inline;margin-left:8px}
@@ -185,6 +190,28 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
 
 <!-- ===== TAB 3: 零碳山海·大嵛山岛 ===== -->
 <div class="panel vis" id="panel2">
+<div class="intro-panel" id="introPanel">
+  <div class="intro-hdr" onclick="toggleIntro()">
+    <span style="font-size:13px;color:var(--acc)">🏝️ 大嵛山岛文旅废弃物 AI 碳评智算及零碳能源方案 ｜ 全国大学生零碳科技创新大赛 · 赛道二：零碳山海 ｜ 指导教师：徐青 副教授等</span>
+    <span id="introToggle" style="font-size:12px;color:var(--dim);cursor:pointer">收起 ▲</span>
+  </div>
+  <div class="intro-body" id="introBody">
+    <div style="display:flex;gap:6px;margin-bottom:10px">
+      <button class="btn-sm intr-sel" id="introBtn0" onclick="showIntroTab(0)">📖 浏览页简介</button>
+      <button class="btn-sm" id="introBtn1" onclick="showIntroTab(1)">📋 操作说明</button>
+    </div>
+    <div id="introTab0" style="font-size:12px;color:var(--dim);line-height:1.9">
+      <p>本项目以茶枝与厨余混合厌氧发酵产沼替代民宿 LPG 灶台，通过 AI 碳评智算引擎实现输入原料量到碳减排量的一键核算，构建大嵛山岛文旅废弃物的零碳闭环。</p>
+      <p>浏览页含四个功能 Tab：<b>零碳山海</b>（默认首页，三区一屏综合展示）、<b>厨余碳评</b>（核心计算引擎，IPCC+协同增效）、<b>方法论</b>（FAHP/GRA/TOPSIS/SHAP 学术溯源）、<b>迁移溯源</b>（稻秸秆碳评模型，论文 §4-5 资产）。页面内置星空粒子背景、碳足迹桑基图、五步计算动画和碳减排实时计数器。</p>
+    </div>
+    <div id="introTab1" style="display:none;font-size:12px;color:var(--dim);line-height:1.9">
+      <p><b>Tab 切换</b>：点击左侧侧边栏标签或顶部 Tab 按钮切换功能页面。移动端点击右上角 ☰ 汉堡菜单展开侧边栏。</p>
+      <p><b>碳评计算</b>：在输入框中调整参数（茶枝量/厨余量/温度/协同系数），点击 [🤖 AI 碳评智算] 按钮，观察数字跳动动画和图表更新。</p>
+      <p><b>结果解读</b>：碳评智算值为综合评分（0-100），雷达图展示资源值/碳排当量/经济效益三维评估，碳减排计数器页面打开后自动跳动。</p>
+      <p><b>其他功能</b>：厨余 Tab 含碳足迹桑基图和路径对比柱状图；方法论 Tab 点击卡片展开公式；迁移溯源 Tab 含论文方法溯源说明。</p>
+    </div>
+  </div>
+</div>
 <div class="counter"><span class="cd" id="liveCO2">0.00</span><span class="cl">kgCO₂ 自方案运行以来累计碳减排（实时模拟）</span></div>
 <div class="row">
   <div class="col" style="flex:2;min-width:300px">
@@ -350,6 +377,20 @@ setTimeout(function(){typeAI();drawCompareBar();liveCO2=30.7*30;document.getElem
 
 // ==== Init ====
 setTimeout(function(){drawRiceRadar(50,50,50);drawCompareBar()},600);
+// ==== Intro Panel ====
+function toggleIntro(){
+  var b=document.getElementById('introBody');var t=document.getElementById('introToggle');
+  b.classList.toggle('collapsed');t.textContent=b.classList.contains('collapsed')?'展开 ▼':'收起 ▲';
+  localStorage.setItem('introCollapsed',b.classList.contains('collapsed')?'1':'0');
+}
+function showIntroTab(i){
+  document.getElementById('introTab0').style.display=i==0?'block':'none';
+  document.getElementById('introTab1').style.display=i==0?'none':'block';
+  document.getElementById('introBtn0').classList.toggle('intr-sel',i==0);
+  document.getElementById('introBtn1').classList.toggle('intr-sel',i==1);
+}
+// Init: restore collapsed state
+setTimeout(function(){if(localStorage.getItem('introCollapsed')=='1')toggleIntro()},100);
 </script>
 </body>
 </html>
