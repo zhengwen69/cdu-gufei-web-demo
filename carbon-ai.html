@@ -108,10 +108,10 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
 <div class="sidebar" id="sidebar">
   <h3>AI 碳评智算</h3>
   <div class="slogan">产教融合 · 硕士学位论文产出</div>
-  <a class="sel" onclick="switchTab(0)">🌾 稻秸秆碳评</a>
+  <a class="sel" onclick="switchTab(2)">🏝️ 零碳山海</a>
   <a onclick="switchTab(1)">🍲 厨余碳评</a>
-  <a onclick="switchTab(2)">🏝️ 零碳山海</a>
   <a onclick="switchTab(3)">📚 方法论</a>
+  <a onclick="switchTab(0)">🔄 迁移溯源</a>
   <div class="sidebar-info">产教融合 硕士学位论文产出<br>一种废弃物资源化碳评<br>智算方法的研究及应用<br>附录A · Web端计算资源<br>指导教师：徐青 副教授等<br>2026年07月</div>
 </div>
 <button class="sb-toggle" onclick="toggleSidebar()">☰</button>
@@ -120,10 +120,13 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
 
 <div class="main">
 
-<!-- ===== TAB 1: 稻秸秆碳评 ===== -->
-<div class="panel vis" id="panel0">
-<h2>🌾 稻秸秆碳评智算 <span style="font-size:11px;color:var(--dim)">论文 §4-5 全量方法</span></h2>
+<!-- ===== TAB 0 (migration trace): 稻秸秆碳评 ===== -->
+<div class="panel" id="panel0">
+<h2>🔄 迁移溯源：稻秸秆碳评智算 <span style="font-size:11px;color:var(--dim)">论文 §4-5 全量方法</span></h2>
 <div class="sub">输入 5 参数 → FAHP 模糊层次分析 → GRA-TOPSIS 多目标优选 → 碳评智算值</div>
+<div style="background:rgba(0,0,0,.15);border-left:3px solid var(--acc);padding:12px 16px;border-radius:6px;margin-bottom:14px;font-size:12px;color:var(--dim);line-height:1.8">
+本碳评智算所涉方法源自课题组成员指导之硕士学位论文《一种农业废弃物稻秸秆资源化碳评智算方法的研究及应用》（§3 方法论、§4-5 碳评模型、附录A Web 端计算资源原型），由徐青副教授指导完成迁移性研究与应用于全国大学生零碳科技创新大赛。在线浏览页 carbon-ai.html 中稻秸秆碳评 Tab 与方法论溯源 Tab 为该论文的学术资产，为评审专家提供学术深度参考。
+</div>
 <div class="row">
   <div class="col">
     <div class="inp"><label>秸秆年产量 (吨/年)</label><input type="number" value="5000" id="rStraw"></div>
@@ -181,7 +184,7 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg)
 </div>
 
 <!-- ===== TAB 3: 零碳山海·大嵛山岛 ===== -->
-<div class="panel" id="panel2">
+<div class="panel vis" id="panel2">
 <div class="counter"><span class="cd" id="liveCO2">0.00</span><span class="cl">kgCO₂ 自方案运行以来累计碳减排（实时模拟）</span></div>
 <div class="row">
   <div class="col" style="flex:2;min-width:300px">
