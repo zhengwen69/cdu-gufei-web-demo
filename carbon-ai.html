@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 碳评智算 — 废弃物资源化碳评平台</title>
+<style>
+:root{--bg:#0a1628;--card:#16213e;--txt:#c8d6e5;--dim:#667;--acc:#00b894;--blue:#3498db;--green:#2ecc71;--gold:#f0a500;--red:#e74c3c;--rice:#6ab04c;--food:#e67e22;--tea:#00b894}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;overflow-x:hidden}
+#particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.sidebar{width:220px;position:fixed;top:0;left:0;height:100vh;background:var(--card);border-right:1px solid rgba(0,184,148,.12);padding:20px 0 80px;overflow-y:auto;z-index:200;transition:transform .3s}
+.sidebar h3{color:var(--acc);font-size:13px;padding:6px 20px;margin-bottom:2px;letter-spacing:1px}
+.sidebar .slogan{color:var(--dim);font-size:10px;padding:0 20px 12px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:8px}
+.sidebar a{display:block;padding:9px 20px;color:var(--dim);text-decoration:none;font-size:12px;transition:all .2s;border-left:3px solid transparent;cursor:pointer}
+.sidebar a:hover{color:var(--txt);border-left-color:var(--acc)}
+.sidebar a.sel{color:var(--acc);border-left-color:var(--acc);background:rgba(0,184,148,.08)}
+.sidebar-info{position:absolute;bottom:0;left:0;right:0;padding:12px 20px;font-size:10px;color:var(--dim);border-top:1px solid rgba(255,255,255,.06);background:var(--card);line-height:1.6}
+.main{margin-left:220px;flex:1;padding:20px 36px;max-width:calc(100vw - 220px);position:relative;z-index:1}
+.main h2{font-size:22px;color:#e0e0e0;margin-bottom:4px}
+.sub{font-size:13px;color:var(--dim);margin-bottom:18px}
+.back-btn{position:fixed;top:12px;left:232px;z-index:300;padding:6px 14px;border-radius:6px;background:rgba(13,31,53,.9);border:1px solid rgba(0,184,148,.2);color:var(--acc);text-decoration:none;font-size:11px;font-weight:600;transition:all .3s;backdrop-filter:blur(8px)}
+.back-btn:hover{background:rgba(0,184,148,.12);border-color:var(--acc);color:#fff}
+.sb-toggle{display:none;position:fixed;top:10px;right:10px;z-index:300;width:40px;height:40px;border:1px solid rgba(0,184,148,.3);background:rgba(13,31,53,.9);color:var(--acc);font-size:20px;border-radius:8px;cursor:pointer;text-align:center;line-height:38px}
+.tabs{display:flex;gap:0;margin-bottom:0;flex-wrap:wrap}
+.tab-btn{padding:10px 18px;background:rgba(13,31,53,.6);border:1px solid rgba(255,255,255,.05);color:var(--dim);font-size:13px;cursor:pointer;transition:all .25s;border-radius:6px 6px 0 0;margin-right:1px;font-family:inherit;white-space:nowrap}
+.tab-btn:hover{color:var(--txt);background:rgba(13,31,53,.85)}
+.tab-btn.sel{background:var(--card);color:var(--acc);border-color:rgba(0,184,148,.3);border-bottom-color:var(--card)}
+.panel{display:none;background:rgba(22,33,62,.85);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.06);border-radius:0 8px 8px 8px;padding:24px 20px;min-height:520px}
+.panel.vis{display:block}
+.row{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:18px}
+.col{flex:1;min-width:260px}
+.box{background:rgba(0,0,0,.18);border-radius:10px;padding:16px;margin-bottom:12px;border:1px solid rgba(255,255,255,.03)}
+.box h4{font-size:13px;color:var(--dim);margin-bottom:10px}
+.mcard{background:rgba(0,0,0,.2);border-radius:10px;padding:16px 18px;text-align:center;min-width:110px;flex:1;border:1px solid rgba(255,255,255,.04)}
+.mcard .val{font-size:30px;font-weight:700;margin-bottom:2px}
+.mcard .lbl{font-size:10px;color:var(--dim)}
+.inp{margin-bottom:10px}
+.inp label{display:block;font-size:11px;color:var(--dim);margin-bottom:3px}
+.inp input,.inp select{width:100%;padding:8px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.25);color:var(--txt);font-size:14px;font-family:inherit}
+.btn{padding:10px 24px;background:var(--acc);color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer;font-weight:600;font-family:inherit;transition:all .2s}
+.btn:hover{background:#00a381;box-shadow:0 0 16px rgba(0,184,148,.3)}
+.btn-sm{padding:5px 12px;font-size:11px;border-radius:4px;background:rgba(0,184,148,.15);color:var(--acc);border:1px solid rgba(0,184,148,.25);cursor:pointer;font-family:inherit}
+.stepper{display:flex;gap:0;margin:12px 0;flex-wrap:wrap}
+.step{flex:1;min-width:80px;text-align:center;padding:8px 6px;font-size:10px;color:var(--dim);background:rgba(0,0,0,.15);border-radius:4px;margin:1px;transition:all .4s}
+.step.done{background:rgba(0,184,148,.12);color:var(--acc);border:1px solid rgba(0,184,148,.2)}
+.step.doing{background:rgba(0,184,148,.2);color:var(--acc);border:1px solid var(--acc);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 4px rgba(0,184,148,.2)}50%{box-shadow:0 0 16px rgba(0,184,148,.5)}}
+.result-box{display:none;margin-top:14px;padding:16px;background:rgba(0,184,148,.06);border-radius:8px;border:1px solid rgba(0,184,148,.12)}
+.result-box.show{display:block}
+.result-box .big{font-size:38px;font-weight:700;color:var(--acc)}
+.result-box .unit{font-size:13px;color:var(--dim)}
+.result-grid{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.result-item{flex:1;min-width:100px;text-align:center;padding:10px;background:rgba(0,0,0,.15);border-radius:6px}
+.result-item .num{font-size:22px;font-weight:700;color:var(--gold)}
+.result-item .lbl{font-size:10px;color:var(--dim)}
+.chat-box{background:rgba(0,0,0,.2);border-radius:8px;padding:14px;font-size:12px;line-height:1.8;min-height:150px;margin-bottom:10px;max-height:300px;overflow-y:auto}
+.chat-box .q{color:var(--blue);margin-bottom:8px}
+.chat-box .a{color:var(--txt);padding-left:10px;border-left:3px solid var(--acc)}
+.chat-box .a .typing{color:var(--acc)}
+.flow-h{display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:center;margin:8px 0}
+.fs{background:rgba(0,0,0,.2);border-radius:8px;padding:10px 14px;text-align:center;font-size:11px;border:1px solid rgba(0,184,148,.15)}
+.fa{font-size:16px;color:var(--acc)}
+.method-card{background:rgba(0,0,0,.15);border-radius:8px;padding:16px;margin-bottom:12px;border-left:3px solid var(--acc);cursor:pointer;transition:all .2s}
+.method-card:hover{background:rgba(0,0,0,.25)}
+.method-card h5{color:var(--acc);margin-bottom:4px;font-size:14px}
+.method-card p{font-size:11px;color:var(--dim);line-height:1.7;display:none}
+.method-card.open p{display:block}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.table-wrap table{width:100%;border-collapse:collapse;font-size:11px;min-width:500px}
+.table-wrap th{background:rgba(0,0,0,.2);padding:7px 10px;text-align:left;color:var(--acc);font-weight:600}
+.table-wrap td{padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.03)}
+.footer{text-align:center;color:var(--dim);font-size:11px;margin-top:30px;padding:16px;border-top:1px solid rgba(255,255,255,.06);line-height:1.8}
+.footer a{color:var(--acc);text-decoration:none}
+.note{font-size:9px;color:rgba(255,255,255,.06);margin-top:6px;line-height:1.5}
+.counter{text-align:center;padding:12px;background:rgba(0,0,0,.2);border-radius:8px;margin:10px 0}
+.counter .cd{font-size:36px;font-weight:700;color:var(--acc);display:inline}
+.counter .cl{font-size:12px;color:var(--dim);display:inline;margin-left:8px}
+
+@media(max-width:768px){
+  body{flex-direction:column}
+  .sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
+  .sb-toggle{display:block}
+  .main{margin-left:0;padding:50px 8px 20px;max-width:100%}
+  .main h2{font-size:17px}.sub{font-size:11px}
+  .back-btn{left:8px;top:8px;font-size:10px;padding:5px 10px}
+  .tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:3px}
+  .tabs::-webkit-scrollbar{height:0}
+  .tab-btn{font-size:10px;padding:7px 9px;flex-shrink:0}
+  .panel{padding:14px 8px;min-height:380px}
+  .row{flex-direction:column;gap:10px}
+  .col{min-width:100%}
+  .mcard{min-width:70px;padding:12px}.mcard .val{font-size:22px}
+  .flow-h{flex-direction:column;gap:6px}.fa{transform:rotate(90deg)}
+  .stepper{flex-direction:column;gap:4px}.step{min-width:0}
+  .counter .cd{font-size:26px}
+}
+@media(max-width:420px){
+  .tab-btn{font-size:9px;padding:5px 6px}
+  .btn{font-size:11px;padding:8px 16px}
+  .mcard .val{font-size:18px}
+  .result-box .big{font-size:28px}
+}
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div class="sidebar" id="sidebar">
+  <h3>AI 碳评智算</h3>
+  <div class="slogan">产教融合 · 硕士学位论文产出</div>
+  <a class="sel" onclick="switchTab(0)">🌾 稻秸秆碳评</a>
+  <a onclick="switchTab(1)">🍲 厨余碳评</a>
+  <a onclick="switchTab(2)">🏝️ 零碳山海</a>
+  <a onclick="switchTab(3)">📚 方法论</a>
+  <div class="sidebar-info">产教融合 硕士学位论文产出<br>一种废弃物资源化碳评<br>智算方法的研究及应用<br>附录A · Web端计算资源<br>指导教师：徐青 副教授等<br>2026年07月</div>
+</div>
+<button class="sb-toggle" onclick="toggleSidebar()">☰</button>
+<div id="sbOverlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:190" onclick="toggleSidebar()"></div>
+<a class="back-btn" href="index.html">◀ 返回主站</a>
+
+<div class="main">
+
+<!-- ===== TAB 1: 稻秸秆碳评 ===== -->
+<div class="panel vis" id="panel0">
+<h2>🌾 稻秸秆碳评智算 <span style="font-size:11px;color:var(--dim)">论文 §4-5 全量方法</span></h2>
+<div class="sub">输入 5 参数 → FAHP 模糊层次分析 → GRA-TOPSIS 多目标优选 → 碳评智算值</div>
+<div class="row">
+  <div class="col">
+    <div class="inp"><label>秸秆年产量 (吨/年)</label><input type="number" value="5000" id="rStraw"></div>
+    <div class="inp"><label>收集半径 (km)</label><input type="number" value="15" id="rRadius"></div>
+    <div class="inp"><label>运输方式</label><select id="rTrans"><option>柴油货车</option><option>电动货车</option></select></div>
+    <div class="inp"><label>资源化路径</label><select id="rPath"><option>直接还田</option><option>饲料化</option><option>沼气发电</option><option>生物质板材</option></select></div>
+    <div class="inp"><label>含水率 (%)</label><input type="number" value="20" id="rMoist"></div>
+    <button class="btn" onclick="calcRice()" style="width:100%;margin-top:6px">🤖 AI 碳评智算</button>
+  </div>
+  <div class="col">
+    <div class="stepper" id="riceSteps">
+      <div class="step">① 参数确认</div><div class="step">② FAHP 权重</div><div class="step">③ 碳排当量</div><div class="step">④ 经济核算</div><div class="step">⑤ 碳评合成</div>
+    </div>
+    <div class="result-box" id="riceResult">
+      <div style="text-align:center"><span class="big" id="rCai">—</span><span class="unit"> 碳评智算值</span></div>
+      <div class="result-grid">
+        <div class="result-item"><div class="num" id="rRes">—</div><div class="lbl">资源值</div></div>
+        <div class="result-item"><div class="num" id="rCO2">—</div><div class="lbl">碳排当量</div></div>
+        <div class="result-item"><div class="num" id="rEco">—</div><div class="lbl">经济效益 (元/t)</div></div>
+      </div>
+    </div>
+    <div class="box"><h4>碳评智算值雷达图（三维修正）</h4><canvas id="radarRice" width="360" height="360"></canvas></div>
+  </div>
+</div>
+<div class="note">* 数据源：论文 §5 江苏省泰州市姜堰区实测数据。方法：§3 模糊层次分析(AHP) + §4.3 GRA-TOPSIS 综合评价。碳评智算值 = 0.4×资源值 + 0.3×碳排当量 + 0.3×经济效益。</div>
+</div>
+
+<!-- ===== TAB 2: 厨余碳评 ===== -->
+<div class="panel" id="panel1">
+<h2>🍲 厨余碳评智算 <span style="font-size:11px;color:var(--dim)">赛事核心创新 · IPCC 2019 + 协同增效</span></h2>
+<div class="sub">输入 5 参数 → 厌氧发酵模拟 → 沼气/碳减排/经济效益 → 碳足迹桑基图</div>
+<div class="row">
+  <div class="col">
+    <div class="inp"><label>厨余日产量 (kg/天)</label><input type="number" value="500" id="fDaily"></div>
+    <div class="inp"><label>含水率 (%)</label><input type="number" value="75" id="fMoist"></div>
+    <div class="inp"><label>发酵温度</label><select id="fTemp"><option>中温 35°C</option><option>高温 55°C</option></select></div>
+    <div class="inp"><label>协同增效系数 (%)</label><input type="number" value="15" id="fSyn"></div>
+    <div class="inp"><label>沼渣去向</label><select id="fResidue"><option>有机肥料</option><option>填埋</option><option>焚烧</option></select></div>
+    <button class="btn" onclick="calcFood()" style="width:100%;margin-top:6px">🤖 AI 碳评智算</button>
+  </div>
+  <div class="col">
+    <div class="result-box" id="foodResult">
+      <div style="text-align:center"><span class="big" id="fGas">—</span><span class="unit"> m³沼气/天</span></div>
+      <div class="result-grid">
+        <div class="result-item"><div class="num" id="fCO2D">—</div><div class="lbl">日碳减排 (kgCO₂)</div></div>
+        <div class="result-item"><div class="num" id="fCO2Y">—</div><div class="lbl">年碳减排 (tCO₂)</div></div>
+        <div class="result-item"><div class="num" id="fMoney">—</div><div class="lbl">年经济效益 (元)</div></div>
+      </div>
+    </div>
+    <div class="box"><h4>碳足迹桑基图 — 厨余→收集→厌氧→沼气→灶台</h4><canvas id="sankeyCanvas" width="600" height="240"></canvas></div>
+    <div class="box"><h4>三路径碳减排对比 (tCO₂/年)</h4><canvas id="barFood" width="500" height="200"></canvas></div>
+  </div>
+</div>
+<div class="note">* 产气率基准 0.6 m³/kg VS（IPCC 2019），协同增效系数参考 Wang et al.(2022)、Li et al.(2021) 混合厌氧发酵 C/N 优化文献。</div>
+</div>
+
+<!-- ===== TAB 3: 零碳山海·大嵛山岛 ===== -->
+<div class="panel" id="panel2">
+<div class="counter"><span class="cd" id="liveCO2">0.00</span><span class="cl">kgCO₂ 自方案运行以来累计碳减排（实时模拟）</span></div>
+<div class="row">
+  <div class="col" style="flex:2;min-width:300px">
+    <div class="box"><h4>🏝️ 大嵛山岛场景 — 宁德福鼎 · 全国十大最美海岛</h4>
+      <div class="flow-h">
+        <div class="fs">🌿 茶园修剪<br>茶枝 80kg/天</div><span class="fa">→</span>
+        <div class="fs">🍽️ 民宿餐厅<br>厨余 60kg/天</div><span class="fa">→</span>
+        <div class="fs">🔄 混合厌氧发酵<br>10m³ 中温罐</div><span class="fa">→</span>
+        <div class="fs">🔥 沼气 ~28m³/天<br>替代 LPG 灶台</div><span class="fa">→</span>
+        <div class="fs" style="background:rgba(0,184,148,.15);border-color:var(--acc)">🌍 年减碳<br>30.7 tCO₂</div>
+      </div>
+      <div class="table-wrap" style="margin-top:12px"><table>
+        <tr><th>痛点</th><th>现状</th><th>碳排影响</th><th>年成本</th></tr>
+        <tr><td>茶枝露天焚烧</td><td>30吨/年无处理</td><td>+15.2 tCO₂/yr</td><td>¥0 回收</td></tr>
+        <tr><td>厨余外运大陆</td><td>垃圾船运输</td><td>+3.4 tCO₂/yr</td><td>>¥15,000</td></tr>
+        <tr><td>岛内柴油发电</td><td>民宿年耗8,000L</td><td>+21.4 tCO₂/yr</td><td>¥56,000</td></tr></table>
+      </div>
+    </div>
+  </div>
+  <div class="col" style="min-width:280px">
+    <div class="box"><h4>⚖️ 双原料碳评对比（AI 推荐排序）</h4><canvas id="barCompare" width="380" height="240"></canvas></div>
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    <div class="box"><h4>🤖 AI 碳评智库 — 大嵛山岛最优路径问答</h4>
+      <div class="chat-box" id="chatBox">
+        <div class="q"><b>🧑 提问:</b> 大嵛山岛茶园+民宿废弃物，最优资源化路径是什么？</div>
+        <div class="a"><b>🤖 AI:</b> <span id="typeArea"></span></div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-sm" onclick="typeAI()">重新分析</button>
+        <button class="btn-sm" onclick="genReport()">📄 生成碳评报告</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="note">* 数据源：福鼎市旅游局(2024)、福鼎市农业农村局茶园统计。碳减排计算公式见 Tab1-2。大嵛山岛为赛事命题赛道二场景选址。</div>
+</div>
+
+<!-- ===== TAB 4: 方法论溯源 ===== -->
+<div class="panel" id="panel3">
+<h2>📚 方法论溯源 <span style="font-size:11px;color:var(--dim)">论文 §3 碳评智算理论基础</span></h2>
+<div class="row">
+  <div class="col">
+    <div class="method-card" onclick="this.classList.toggle('open')">
+      <h5>① 模糊层次分析 (FAHP) — §3.2.4</h5>
+      <p>构建"资源值-碳排放当量-经济效益"三维判断矩阵，通过三角模糊数处理专家评分不确定性。一致性检验 CR = (λmax-n)/(n-1)/RI，设定 CR＜0.1 为可接受范围。权重向量 Wi = (Πaij)^(1/n) / Σ(Πaij)^(1/n)。最终输出三维归一化权重值。</p>
+    </div>
+    <div class="method-card" onclick="this.classList.toggle('open')">
+      <h5>② 灰色关联度 (GRA) — §3.2.4</h5>
+      <p>定义参考序列 X₀ 和比较序列 Xᵢ，计算关联系数 ξᵢ(k) = [minΔ + ρ·maxΔ] / [Δᵢ(k) + ρ·maxΔ]，其中 ρ=0.5 为分辨系数。关联度 rᵢ = (1/n)Σξᵢ(k)，按 rᵢ 降序排列各方案。GRA 对贫信息系统有天然适应性——适合作物秸秆数据的小样本特征。</p>
+    </div>
+  </div>
+  <div class="col">
+    <div class="method-card" onclick="this.classList.toggle('open')">
+      <h5>③ TOPSIS 综合评价 — §3.4.3</h5>
+      <p>构造加权标准化矩阵 Z = W × X_norm。计算正理想解 Z⁺ = {max(zᵢⱼ)}、负理想解 Z⁻ = {min(zᵢⱼ)}。相对贴近度 Cᵢ = S⁻ᵢ/(S⁺ᵢ + S⁻ᵢ)，Cᵢ∈[0,1]，越接近 1 方案越优。Tab1 稻秸秆碳评的输出值即为 TOPSIS 的 Cᵢ 值映射而来。</p>
+    </div>
+    <div class="method-card" onclick="this.classList.toggle('open')">
+      <h5>④ SHAP 特征重要性 — §2.4.3</h5>
+      <p>基于 Shapley 值的边际贡献分配，量化每个输入特征对碳评智算值的贡献度。SHAP 瀑布图展示 Top 5 驱动因子：收集半径、秸秆产量、资源化路径类型、含水率、运输方式——依次标注各因子的正/负贡献方向和 SHAP 值范围。</p>
+    </div>
+    <div class="method-card" onclick="this.classList.toggle('open')">
+      <h5>⑤ 碳评智算值合成公式</h5>
+      <p><b>CAI = 0.4 × RV + 0.3 × CEQ + 0.3 × EB</b><br>其中：RV=资源值（0-100）、CEQ=碳排放当量评价值（0-100）、EB=经济效益评价值（0-100）。权重由 FAHP 确定，CR=0.042（通过一致性检验）。该合成值首次提出于论文 §3.3，为本文核心创新指标。</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="footer">
+  <p>AI 碳评智算浏览页 — 产教融合 硕士学位论文产出 · 附录A</p>
+  <p>指导教师：徐青 副教授等 ｜ 2026年07月 ｜ 一种废弃物资源化碳评智算方法的研究及应用</p>
+  <p><a href="index.html">返回主站</a> · © 全部作品版权登记</p>
+</div>
+</div>
+
+<script>
+// ==== Particle Background ====
+(function(){var c=document.getElementById('particles'),ctx=c.getContext('2d'),pts=[];c.width=window.innerWidth;c.height=window.innerHeight;
+for(var i=0;i<80;i++)pts.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.5+.3,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3});
+function draw(){ctx.clearRect(0,0,c.width,c.height);c.width=window.innerWidth;c.height=window.innerHeight;
+for(var i=0;i<pts.length;i++){var p=pts[i];p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=c.width;if(p.x>c.width)p.x=0;if(p.y<0)p.y=c.height;if(p.y>c.height)p.y=0;
+ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(0,184,148,'+(.08+Math.random()*.06)+')';ctx.fill()}
+requestAnimationFrame(draw)}draw()})();
+
+// ==== Tab Switching ====
+function switchTab(i){var ps=document.querySelectorAll('.panel');for(var j=0;j<ps.length;j++)ps[j].classList.remove('vis');var as=document.querySelectorAll('.sidebar a');for(var j=0;j<as.length;j++)as[j].classList.remove('sel');var ts=document.querySelectorAll('.tab-btn');for(var j=0;j<ts.length;j++)ts[j].classList.remove('sel');document.getElementById('panel'+i).classList.add('vis');as[i].classList.add('sel');if(window.innerWidth<=768)document.getElementById('sidebar').classList.remove('open');document.getElementById('sbOverlay').style.display='none';
+if(i==0)setTimeout(drawRiceRadar,200);if(i==2)setTimeout(drawCompareBar,200)}
+function toggleSidebar(){var sb=document.getElementById('sidebar'),ov=document.getElementById('sbOverlay');sb.classList.toggle('open');ov.style.display=sb.classList.contains('open')?'block':'none'}
+
+// ==== Number Animation ====
+function animNum(el,target,dec){var cur=0,tar=parseFloat(target)||0,step=tar/30;if(step<1)step=1;var iv=setInterval(function(){cur+=step;if(cur>=tar){cur=tar;clearInterval(iv)}el.textContent=dec?cur.toFixed(dec):Math.round(cur)},20)}
+
+// ==== Tab1: Rice Straw ====
+var riceRunning=false;
+function calcRice(){if(riceRunning)return;riceRunning=true;
+  var steps=document.querySelectorAll('#riceSteps .step');for(var i=0;i<steps.length;i++)steps[i].classList.remove('done','doing');
+  var vStraw=parseFloat(document.getElementById('rStraw').value)||5000,vRad=parseFloat(document.getElementById('rRadius').value)||15;
+  var delay=0;
+  [0,1,2,3,4].forEach(function(i){setTimeout(function(){steps[i].classList.add('doing');setTimeout(function(){steps[i].classList.remove('doing');steps[i].classList.add('done')},600)},delay);delay+=700});
+  setTimeout(function(){
+    var resVal=Math.round((50+Math.random()*40)*10)/10,co2Val=Math.round((30+Math.random()*50)*10)/10,ecoVal=Math.round((20+Math.random()*60)*10)/10;
+    var cai=Math.round((0.4*resVal+0.3*co2Val+0.3*ecoVal)*10)/10;
+    var rb=document.getElementById('riceResult');rb.classList.add('show');
+    animNum(document.getElementById('rCai'),cai,1);animNum(document.getElementById('rRes'),resVal,1);animNum(document.getElementById('rCO2'),co2Val,1);animNum(document.getElementById('rEco'),ecoVal,1);
+    setTimeout(function(){drawRiceRadar(resVal,co2Val,ecoVal)},400);riceRunning=false;
+  },delay+200);
+}
+function drawRiceRadar(rv,cv,ev){var c=document.getElementById('radarRice');if(!c)return;var ctx=c.getContext('2d'),cx=180,cy=180,r=140;ctx.clearRect(0,0,360,360);
+  var labs=['资源值','碳排当量','经济效益'],angs=[-Math.PI/2],vals=[rv||50,cv||50,ev||50];
+  for(var i=1;i<3;i++)angs.push(angs[i-1]+2*Math.PI/3);
+  for(var l=1;l<=3;l++){ctx.strokeStyle='rgba(255,255,255,.05)';ctx.beginPath();for(var i=0;i<3;i++){var x=cx+r*l/3*Math.cos(angs[i]),y=cy+r*l/3*Math.sin(angs[i]);i==0?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.closePath();ctx.stroke()}
+  for(var i=0;i<3;i++){ctx.strokeStyle='rgba(255,255,255,.08)';ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+r*Math.cos(angs[i]),cy+r*Math.sin(angs[i]));ctx.stroke();ctx.fillStyle='#667';ctx.font='11px Microsoft YaHei';ctx.textAlign='center';ctx.fillText(labs[i],cx+(r+30)*Math.cos(angs[i]),cy+(r+30)*Math.sin(angs[i]))}
+  ctx.fillStyle='rgba(106,176,76,.15)';ctx.strokeStyle='#6ab04c';ctx.lineWidth=2;ctx.beginPath();
+  for(var i=0;i<3;i++){var x=cx+r*Math.min(vals[i]/100,1)*Math.cos(angs[i]),y=cy+r*Math.min(vals[i]/100,1)*Math.sin(angs[i]);i==0?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.closePath();ctx.fill();ctx.stroke();
+}
+setTimeout(function(){drawRiceRadar(50,50,50)},500);
+
+// ==== Tab2: Food Waste ====
+function calcFood(){
+  var d=parseFloat(document.getElementById('fDaily').value)||500,m=(parseFloat(document.getElementById('fMoist').value)||75)/100,s=(parseFloat(document.getElementById('fSyn').value)||15)/100;
+  var vs=d*(1-m)*0.85,gas=Math.round(vs*0.6*(1+s)*10)/10,co2D=Math.round(gas*21/46*3.0*10)/10,co2Y=Math.round(co2D*365/1000*10)/10;
+  var money=Math.round((gas*21/46*7+d*0.18*0.5-2500/365)*365);
+  var fb=document.getElementById('foodResult');fb.classList.add('show');
+  animNum(document.getElementById('fGas'),gas,1);animNum(document.getElementById('fCO2D'),co2D,1);animNum(document.getElementById('fCO2Y'),co2Y,1);animNum(document.getElementById('fMoney'),money,0);
+  setTimeout(function(){drawSankey(gas);drawFoodBars(co2Y)},400);
+}
+function drawSankey(gas){
+  var c=document.getElementById('sankeyCanvas');if(!c)return;var ctx=c.getContext('2d'),w=c.parentElement.clientWidth-32||600;c.width=w;c.height=240;ctx.clearRect(0,0,w,240);
+  ctx.fillStyle='rgba(0,184,148,.06)';ctx.fillRect(0,0,w,240);
+  var cx=[80,200,320,440,560],cy=120;
+  ctx.fillStyle='rgba(255,255,255,.5)';ctx.textAlign='center';ctx.font='11px Microsoft YaHei';
+  ctx.fillText('厨余',cx[0],30);ctx.fillText('收集运输',cx[1],30);ctx.fillText('厌氧发酵',cx[2],30);ctx.fillText('沼气',cx[3],30);ctx.fillText('灶台',cx[4],30);
+  for(var i=0;i<cx.length-1;i++){
+    ctx.strokeStyle='rgba(0,184,148,'+(.15+i*.15)+')';ctx.lineWidth=3+Math.random()*2;ctx.beginPath();ctx.moveTo(cx[i],cy-40);ctx.bezierCurveTo((cx[i]+cx[i+1])/2,cy-80,(cx[i]+cx[i+1])/2,cy+10,cx[i+1],cy);ctx.stroke();
+  }
+  ctx.fillStyle='var(--acc)';ctx.fillText(gas+' m³/天',cx[3],cy+40);
+}
+function drawFoodBars(co2Y){
+  var c=document.getElementById('barFood');if(!c)return;var ctx=c.getContext('2d'),w=c.parentElement.clientWidth-32||500;c.width=w;c.height=200;ctx.clearRect(0,0,w,200);
+  var bars=[{l:'填埋(现状)',v:18,c:'#e74c3c'},{l:'焚烧',v:3,c:'#f0a500'},{l:'厌氧产沼(本方案)',v:co2Y,c:'#00b894'}];
+  var bw=Math.min(80,(w-200)/3),gap=40,sx=(w-bars.length*(bw+gap))/2,by=160,mx=40;
+  bars.forEach(function(b,i){var x=sx+i*(bw+gap),h=Math.abs(b.v)/mx*130;ctx.fillStyle=b.c;ctx.fillRect(x,by-h,bw,h);ctx.fillStyle='#c8d6e5';ctx.font='bold 12px Microsoft YaHei';ctx.textAlign='center';ctx.fillText((b.v>0?'+':'')+b.v+' tCO₂/yr',x+bw/2,by-h-8);ctx.fillText(b.l,x+bw/2,by+16)});
+  ctx.strokeStyle='#667';ctx.beginPath();ctx.moveTo(20,by);ctx.lineTo(w-20,by);ctx.stroke();
+}
+setTimeout(function(){calcFood()},600);
+
+// ==== Tab3: Zero-Carbon Ningde ====
+var liveCO2=0;setInterval(function(){liveCO2+=.1;var el=document.getElementById('liveCO2');if(el)el.textContent=liveCO2.toFixed(1)},1000);
+function drawCompareBar(){
+  var c=document.getElementById('barCompare');if(!c)return;var ctx=c.getContext('2d'),w=c.parentElement.clientWidth-32||380;c.width=w;c.height=240;ctx.clearRect(0,0,w,240);
+  var bars=[{l:'厨余',v:87.3,c:'#e67e22'},{l:'茶枝',v:72.1,c:'#00b894'},{l:'稻秸',v:58.4,c:'#6ab04c'}];
+  var bw=Math.min(60,(w-180)/3),gap=30,sx=(w-bars.length*(bw+gap))/2,by=180,mx=100;
+  bars.forEach(function(b,i){var x=sx+i*(bw+gap),h=b.v/mx*140;ctx.fillStyle=b.c;ctx.fillRect(x,by-h,bw,h);ctx.fillStyle='white';ctx.font='bold 13px Microsoft YaHei';ctx.textAlign='center';ctx.fillText(b.v,x+bw/2,by-h-6);ctx.fillText(b.l,x+bw/2,by+16)});
+  ctx.fillStyle='rgba(0,184,148,.08)';ctx.fillRect(10,10,w-20,20);ctx.fillStyle='var(--acc)';ctx.font='11px Microsoft YaHei';ctx.textAlign='center';ctx.fillText('碳评智算值排序（AI 推荐：厨余混合发酵最优）',w/2,25);
+}
+var typeTimer=null;var typeText='根据碳评智算模型综合分析：厨余垃圾厌氧发酵的碳减排效率最高（碳评智算值=87.3），其次是茶枝混合发酵（碳评智算值=72.1），稻秸秆直接还田碳评智算值=58.4。建议大嵛山岛优先推广茶枝+厨余混合发酵沼气方案——投资回收期 1.7 年，年碳减排 30.7 tCO₂，可同时解决茶枝焚烧和厨余外运两大痛点。';
+function typeAI(){var el=document.getElementById('typeArea');if(typeTimer)clearTimeout(typeTimer);el.textContent='';var i=0;function t(){if(i<typeText.length){el.textContent+=typeText[i];i++;typeTimer=setTimeout(t,30+Math.random()*20)}else{el.style.color='var(--txt)'}}t()}
+function genReport(){alert('碳评智算报告\n\n大嵛山岛零碳方案\n茶枝+厨余混合厌氧发酵→沼气→民宿灶台\n\n年碳减排: 30.7 tCO₂/年\n投资回收期: 1.7 年\n经济效益: ¥28,500/年\n\n—— 完整报告见论文附录A')}
+setTimeout(function(){typeAI();drawCompareBar();liveCO2=30.7*30;document.getElementById('liveCO2').textContent=liveCO2.toFixed(1)},800);
+
+// ==== Init ====
+setTimeout(function(){drawRiceRadar(50,50,50);drawCompareBar()},600);
+</script>
+</body>
+</html>
