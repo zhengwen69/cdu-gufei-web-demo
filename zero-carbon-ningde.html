@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 碳评智算·大嵛山岛 — 零碳山海</title>
+<style>
+:root{--bg:#0a1628;--card:#16213e;--txt:#c8d6e5;--dim:#667;--acc:#00b894;--blue:#3498db;--green:#2ecc71;--gold:#f0a500;--red:#e74c3c;--sea:#1abc9c;--tea:#6ab04c}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex}
+.sidebar{width:220px;position:fixed;top:0;left:0;height:100vh;background:var(--card);border-right:1px solid rgba(0,184,148,.15);padding:20px 0;overflow-y:auto;z-index:200;transition:transform .3s}
+.sidebar h3{color:var(--acc);font-size:13px;padding:6px 20px;margin-bottom:4px;letter-spacing:1px}
+.sidebar .slogan{color:var(--dim);font-size:10px;padding:0 20px 12px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:8px}
+.sidebar a{display:block;padding:8px 20px;color:var(--dim);text-decoration:none;font-size:12px;transition:all .2s;border-left:3px solid transparent;cursor:pointer}
+.sidebar a:hover,.sidebar a:active{color:var(--txt);border-left-color:var(--acc)}
+.sidebar a.sel{color:var(--acc);border-left-color:var(--acc);background:rgba(0,184,148,.08)}
+.sidebar-info{position:absolute;bottom:0;left:0;right:0;padding:12px 20px;font-size:10px;color:var(--dim);border-top:1px solid rgba(255,255,255,.06);background:var(--card);line-height:1.6}
+.main{margin-left:220px;flex:1;padding:24px 40px;max-width:calc(100vw - 220px)}
+.main h2{font-size:22px;color:#e0e0e0;margin-bottom:4px}
+.subtitle{font-size:13px;color:var(--dim);margin-bottom:20px}
+.back-btn{position:fixed;top:12px;left:12px;z-index:300;padding:8px 16px;border-radius:8px;background:rgba(13,31,53,.9);border:1px solid rgba(0,184,148,.25);color:var(--acc);text-decoration:none;font-size:12px;font-weight:600;transition:all .3s;backdrop-filter:blur(8px)}
+.back-btn:hover{background:rgba(0,184,148,.12);border-color:var(--acc);color:#fff}
+.sb-toggle{display:none;position:fixed;top:12px;right:12px;z-index:300;width:44px;height:44px;border:1px solid rgba(0,184,148,.3);background:rgba(13,31,53,.9);color:var(--acc);font-size:22px;border-radius:10px;cursor:pointer;text-align:center;line-height:42px}
+.tabs{display:flex;gap:0;margin-bottom:0;flex-wrap:wrap}
+.tab-btn{padding:10px 18px;background:rgba(13,31,53,.6);border:1px solid rgba(255,255,255,.05);color:var(--dim);font-size:13px;cursor:pointer;transition:all .25s;border-radius:6px 6px 0 0;margin-right:2px;font-family:inherit;white-space:nowrap}
+.tab-btn:hover{color:var(--txt);background:rgba(13,31,53,.85)}
+.tab-btn.sel{background:var(--card);color:var(--acc);border-color:rgba(0,184,148,.3);border-bottom-color:var(--card)}
+.panel{display:none;background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:0 8px 8px 8px;padding:30px;min-height:500px}
+.panel.vis{display:block}
+.row{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+.box{background:rgba(0,0,0,.2);border-radius:10px;padding:18px;flex:1;min-width:260px}
+.box h4{font-size:13px;color:var(--dim);margin-bottom:12px}
+.box canvas{width:100%;height:220px}
+.mcard{background:rgba(0,0,0,.25);border-radius:12px;padding:18px 22px;text-align:center;min-width:130px;flex:1}
+.mcard .val{font-size:34px;font-weight:700;margin-bottom:2px}
+.mcard .lbl{font-size:11px;color:var(--dim)}
+.flow-steps{display:flex;align-items:center;gap:0;flex-wrap:wrap;justify-content:center;margin:16px 0}
+.flow-step{background:rgba(0,0,0,.3);border-radius:10px;padding:14px 20px;text-align:center;min-width:100px;font-size:12px;border:2px solid var(--acc)}
+.flow-arrow{font-size:20px;color:var(--acc);margin:0 4px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:12px;color:var(--dim);margin-bottom:4px}
+.input-group input{width:100%;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.3);color:var(--txt);font-size:15px;font-family:inherit}
+.btn{padding:10px 28px;background:var(--acc);color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:600;font-family:inherit}
+.btn:hover{background:#00a381}
+.result{background:rgba(0,184,148,.08);border-radius:10px;padding:20px;margin-top:16px;display:none;border:1px solid rgba(0,184,148,.15)}
+.result.show{display:block}
+.result .rval{font-size:32px;font-weight:700;color:var(--acc);display:inline}
+.result .runit{font-size:14px;color:var(--dim)}
+.result-grid{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px}
+.result-item{flex:1;min-width:140px;text-align:center;padding:12px;background:rgba(0,0,0,.2);border-radius:8px}
+.result-item .num{font-size:26px;font-weight:700;color:var(--gold)}
+.result-item .label{font-size:11px;color:var(--dim);margin-top:4px}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.table-wrap table{width:100%;border-collapse:collapse;font-size:12px;min-width:500px}
+.table-wrap th{background:rgba(0,0,0,.3);padding:8px 12px;text-align:left;color:var(--acc);font-weight:600}
+.table-wrap td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.04)}
+.footer{text-align:center;color:var(--dim);font-size:11px;margin-top:40px;padding:20px;border-top:1px solid rgba(255,255,255,.06);line-height:2}
+.footer a{color:var(--acc);text-decoration:none}
+.note{font-size:10px;color:rgba(255,255,255,.08);margin-top:8px;line-height:1.6}
+
+@media(max-width:768px){
+  body{flex-direction:column}
+  .sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
+  .sb-toggle{display:block}
+  .main{margin-left:0;padding:56px 10px 24px;max-width:100%}
+  .main h2{font-size:18px}.subtitle{font-size:12px}
+  .back-btn{top:10px;left:8px;padding:6px 12px;font-size:11px}
+  .tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tabs::-webkit-scrollbar{height:0}
+  .tab-btn{font-size:11px;padding:7px 10px;flex-shrink:0}
+  .panel{padding:16px 10px;min-height:400px}
+  .row{flex-direction:column}.box{min-width:100%}
+  .mcard{min-width:70px}.mcard .val{font-size:24px}
+  .flow-steps{flex-direction:column;gap:8px}.flow-arrow{transform:rotate(90deg)}
+}
+</style>
+</head>
+<body>
+<div class="sidebar" id="sidebar">
+  <h3>AI 碳评智算</h3>
+  <div class="slogan">大嵛山岛 · 零碳山海</div>
+  <a class="sel" onclick="switchTab(0)">🧮 碳评计算器</a>
+  <a onclick="switchTab(1)">🏝️ 大嵛山岛场景</a>
+  <a onclick="switchTab(2)">📊 减碳看板</a>
+  <a onclick="switchTab(3)">💼 推广复制</a>
+  <div class="sidebar-info">全国大学生零碳科技创新大赛<br>赛道二：零碳山海<br>宁德·大嵛山岛</div>
+</div>
+<button class="sb-toggle" onclick="toggleSidebar()">☰</button>
+<div id="sbOverlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:190" onclick="toggleSidebar()"></div>
+<a class="back-btn" href="index.html">◀ 返回主站</a>
+
+<div class="main">
+
+<!-- ===== TAB 1: 碳评计算器 ===== -->
+<div class="panel vis" id="panel0">
+<h2>🧮 碳评计算器</h2>
+<div class="subtitle">茶枝 + 厨余 → 混合厌氧发酵 → 沼气 → 民宿使用 → AI 一键核算减碳量</div>
+<div class="row">
+  <div style="flex:1;min-width:280px">
+    <div class="input-group"><label>茶枝日产量 (kg/天)</label><input type="number" value="80" id="vTea" step="1"></div>
+    <div class="input-group"><label>厨余日产量 (kg/天)</label><input type="number" value="60" id="vFood" step="1"></div>
+    <div class="input-group"><label>发酵温度 (°C) <span style="font-size:10px;color:var(--dim)">IPCC 2019: 中温35°C</span></label><input type="number" value="35" id="vTemp" step="1"></div>
+    <div class="input-group"><label>协同增效系数 (%) <span style="font-size:10px;color:var(--dim)">茶枝高碳+厨余高氮→C/N≈22:1</span></label><input type="number" value="15" id="vSyn" step="1"></div>
+    <button class="btn" onclick="calculate()" style="width:100%;margin-top:8px">🤖 AI 碳评智算</button>
+  </div>
+  <div style="flex:1;min-width:280px">
+    <div id="calcResult" class="result">
+      <div style="text-align:center;margin-bottom:16px">
+        <span style="font-size:14px;color:var(--dim)">日碳减排量</span><br>
+        <span class="rval" id="rCO2">—</span><span class="runit">kgCO₂/天</span>
+      </div>
+      <div class="result-grid">
+        <div class="result-item"><div class="num" id="rGas">—</div><div class="label">沼气产量 (m³/天)</div></div>
+        <div class="result-item"><div class="num" id="rYear">—</div><div class="label">年减排量 (tCO₂/年)</div></div>
+        <div class="result-item"><div class="num" id="rMoney">—</div><div class="label">年经济效益 (元)</div></div>
+      </div>
+    </div>
+    <div class="box" style="margin-top:16px">
+      <h4>碳评计算步骤</h4>
+      <div class="flow-steps" style="flex-direction:column;align-items:flex-start;gap:8px">
+        <span style="font-size:12px;color:var(--dim)">① 有效干物质 VS = 茶枝×(1-0.40)×0.85 + 厨余×(1-0.75)×0.85</span>
+        <span style="font-size:12px;color:var(--dim)">② 沼气量 Q = VS × 0.6 × (1+协同%)</span>
+        <span style="font-size:12px;color:var(--dim)">③ 碳减排 = Q × 21 ÷ 46 × 3.0</span>
+        <span style="font-size:12px;color:var(--dim)">④ 年减排 = 碳减排 × 365 ÷ 1000</span>
+        <span style="font-size:12px;color:var(--dim)">⑤ 年收益 = 年沼气价值 − 年处理成本</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="note">* 产气率基准值 0.6 m³/kg VS 参考 IPCC 2019 废弃物排放因子。协同增效系数参考 Wang et al.(2022)、Li et al.(2021) 混合厌氧发酵碳氮比优化文献。沼气热值 21 MJ/m³，替代 LPG (热值 46 MJ/kg, 碳排因子 3.0 kgCO₂/kg)。<br>* 下一步计划：在大嵛山岛民宿开展现场中试验证，获取实测产气率数据。</div>
+</div>
+
+<!-- ===== TAB 2: 大嵛山岛场景 ===== -->
+<div class="panel" id="panel1">
+<h2>🏝️ 大嵛山岛场景</h2>
+<div class="subtitle">全国十大最美海岛之一 · AAAA 景区 · 年游客 30 万+ · 宁德福鼎</div>
+
+<div class="row">
+  <div class="box" style="flex:2;min-width:350px">
+    <h4>🌿 废弃物来源 — 两个闭环原料</h4>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px">
+      <div style="flex:1;background:rgba(106,176,76,.08);border-radius:8px;padding:14px;border-left:3px solid var(--tea)">
+        <h5 style="color:var(--tea);margin-bottom:4px">🍃 茶园修剪茶枝</h5>
+        <p style="font-size:12px;color:var(--dim)">大嵛山岛茶园面积约 1200 亩<br>年均修剪量约 80 kg/天<br>目前处理方式：就地焚烧或堆放腐烂</p>
+      </div>
+      <div style="flex:1;background:rgba(26,188,156,.08);border-radius:8px;padding:14px;border-left:3px solid var(--sea)">
+        <h5 style="color:var(--sea);margin-bottom:4px">🍽️ 民宿餐厅厨余</h5>
+        <p style="font-size:12px;color:var(--dim)">岛上民宿约 60 家，餐厅 15 家<br>日均厨余约 60 kg/天<br>目前处理方式：垃圾船外运至大陆焚烧</p>
+      </div>
+    </div>
+    <h4>🔥 三大痛点</h4>
+    <table style="width:100%;font-size:12px;margin-bottom:12px">
+      <tr><td style="color:var(--red);width:60px">痛点一</td><td>废弃物外运成本高——垃圾船运费约 180 元/吨，年外运成本超 15 万元</td></tr>
+      <tr><td style="color:var(--gold)">痛点二</td><td>岛内柴油发电——民宿+餐厅年均消耗柴油约 8,000 升，碳排放约 21.4 tCO₂</td></tr>
+      <tr><td style="color:var(--dim)">痛点三</td><td>茶枝露天焚烧——每年修剪季节产生约 30 吨茶枝，部分就地焚烧，碳排放+空气质量下降</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="box" style="margin-bottom:16px">
+  <h4>🔄 零碳闭环流程图</h4>
+  <div class="flow-steps">
+    <div class="flow-step">🌿 茶园修剪<br>茶枝 80kg/天</div><span class="flow-arrow">→</span>
+    <div class="flow-step">🍽️ 民宿餐厅<br>厨余 60kg/天</div><span class="flow-arrow">→</span>
+    <div class="flow-step">🔄 混合厌氧<br>发酵罐</div><span class="flow-arrow">→</span>
+    <div class="flow-step">🔥 沼气<br>~28 m³/天</div><span class="flow-arrow">→</span>
+    <div class="flow-step">🏠 民宿灶台<br>替代 LPG</div><span class="flow-arrow">→</span>
+    <div class="flow-step" style="background:rgba(0,184,148,.15);border-color:var(--acc)">🌍 年减碳<br>~31 tCO₂</div>
+  </div>
+  <canvas id="flowCanvas" width="700" height="120" style="width:100%;margin-top:8px"></canvas>
+</div>
+
+<div class="note">数据源：福鼎市旅游局(2024)、福鼎市农业农村局茶园统计、大嵛山岛民宿协会调研数据。游客量/茶园面积/民宿数量为公开数据；日废弃物量为基于行业标准的模拟估算值。</div>
+</div>
+
+<!-- ===== TAB 3: 减碳看板 ===== -->
+<div class="panel" id="panel2">
+<h2>📊 减碳看板</h2>
+<div class="subtitle">12 个月碳减排累积曲线 · 碳减排对比 · ROI 回收期</div>
+
+<div class="status-row" style="display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap" id="dashboardCards">
+  <div class="mcard" style="border:1px solid rgba(0,184,148,.2)"><div class="val" style="color:var(--acc)">30.7</div><div class="lbl">年碳减排 (tCO₂/年)</div></div>
+  <div class="mcard" style="border:1px solid rgba(240,165,0,.2)"><div class="val" style="color:var(--gold)">28.5</div><div class="lbl">日产沼气 (m³/天)</div></div>
+  <div class="mcard" style="border:1px solid rgba(52,152,219,.2)"><div class="val" style="color:var(--blue)">21,800</div><div class="lbl">年替代 LPG 价值 (元)</div></div>
+  <div class="mcard" style="border:1px solid rgba(46,204,113,.2)"><div class="val" style="color:var(--green)">3.2</div><div class="lbl">投资回收期 (年)</div></div>
+</div>
+<div class="row">
+  <div class="box"><h4>12 个月碳减排累积曲线 (tCO₂)</h4><canvas id="cCum"></canvas></div>
+</div>
+<div class="row">
+  <div class="box"><h4>替代能源碳减排对比 (tCO₂/年)</h4><canvas id="cCompare"></canvas></div>
+</div>
+<div class="table-wrap">
+  <table><tr><th>类别</th><th>初始投资 (元)</th><th>年运营成本 (元)</th><th>年收益/节省 (元)</th><th>净年效益 (元)</th><th>回收期 (年)</th></tr>
+  <tr><td>厌氧发酵罐 (10m³)</td><td>35,000</td><td>2,000</td><td>—</td><td>—</td><td>—</td></tr>
+  <tr><td>沼气储气柜+管道</td><td>12,000</td><td>500</td><td>—</td><td>—</td><td>—</td></tr>
+  <tr><td>替代 LPG 节省</td><td>—</td><td>—</td><td>21,800</td><td>—</td><td>—</td></tr>
+  <tr><td>节省废弃物外运费</td><td>—</td><td>—</td><td>9,200</td><td>—</td><td>—</td></tr>
+  <tr style="font-weight:700;color:var(--acc)"><td>合计</td><td>47,000</td><td>2,500</td><td>31,000</td><td>28,500</td><td>1.7</td></tr></table>
+</div>
+<div class="note" style="margin-top:8px">碳减排因子来源：LPG 碳排放因子 3.0 kgCO₂/kg（IPCC 2006），垃圾外运油耗 0.15 L/吨·km，柴油碳排 2.68 kgCO₂/L。设备投资基于 10m³ 中温厌氧发酵罐市场调研均价。</div>
+</div>
+
+<!-- ===== TAB 4: 推广复制 ===== -->
+<div class="panel" id="panel3">
+<h2>💼 推广复制 — 从大嵛山岛到全国海岛文旅</h2>
+<div class="subtitle">三阶段推广路径 · 商业模式 · 碳交易潜力</div>
+
+<div class="box" style="margin-bottom:16px">
+  <h4>🚀 三阶段推广路径</h4>
+  <div style="display:flex;gap:12px;flex-wrap:wrap">
+    <div style="flex:1;min-width:200px;background:rgba(0,184,148,.05);padding:16px;border-radius:10px;border-top:3px solid var(--acc)">
+      <h5 style="color:var(--acc);margin-bottom:8px">Phase 1: 大嵛山岛试点 (2026-2027)</h5>
+      <p style="font-size:12px;color:var(--dim)">1 套 10m³ 发酵罐，服务 1-2 家民宿<br>年减碳 31 tCO₂，投资回收期 1.7 年<br>实地验证产气率数据</p>
+    </div>
+    <div style="flex:1;min-width:200px;background:rgba(240,165,0,.05);padding:16px;border-radius:10px;border-top:3px solid var(--gold)">
+      <h5 style="color:var(--gold);margin-bottom:8px">Phase 2: 宁德海岛群扩展(2027-2029)</h5>
+      <p style="font-size:12px;color:var(--dim)">三都澳、嵛山群岛、霞浦海岛群<br>预计 10-15 套安装<br>年减碳总量 ~400 tCO₂</p>
+    </div>
+    <div style="flex:1;min-width:200px;background:rgba(52,152,219,.05);padding:16px;border-radius:10px;border-top:3px solid var(--blue)">
+      <h5 style="color:var(--blue);margin-bottom:8px">Phase 3: 全国海岛文旅(2029+)</h5>
+      <p style="font-size:12px;color:var(--dim)">舟山群岛、涠洲岛、鼓浪屿、海南环岛<br>"AI 碳评智算"模块化输出<br>预计 100+ 套，年减碳 ~3000 tCO₂</p>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="box"><h4>💰 盈利模式</h4>
+    <div class="table-wrap">
+      <table><tr><th>模式</th><th>目标客户</th><th>收费</th><th>预估收入</th></tr>
+      <tr><td>设备销售+安装</td><td>海岛民宿经营者</td><td>5-8 万/套</td><td>Phase 2 预计 60-120 万</td></tr>
+      <tr><td>SaaS 碳评工具</td><td>地方政府文旅/环保部门</td><td>4,800 元/年</td><td>订阅制，持续收入</td></tr>
+      <tr><td>CCER 碳资产开发</td><td>碳交易市场</td><td>按减排量分成(20%)</td><td>碳价 60 元/tCO₂ 时，100 套年分成 3.6 万</td></tr></table>
+    </div>
+  </div>
+</div>
+
+<div class="box">
+  <h4>📈 碳交易潜力 (CCER 方法学 CM-072-V01)</h4>
+  <p style="font-size:12px;color:var(--dim);line-height:1.8">
+    本方案产生的碳减排量属于"有机废弃物厌氧处理"方法学范畴。2024 年 CCER 重启后，符合条件的厌氧发酵项目可申请备案。<br>
+    按保守碳价 60 元/tCO₂ 计算：大嵛山岛试点年碳减排 31 t × ¥60 = ¥1,860/年碳收益。<br>
+    扩展至全国 100 套后：3000 t × ¥60 = ¥18 万/年碳收益（按 20% 分成约 3.6 万/年）。<br>
+    随着碳市场扩容（预计 2028 年覆盖农业/废弃物行业），碳价上涨空间显著。
+  </p>
+</div>
+</div>
+
+<div class="footer">
+  <p>AI 碳评智算 · 大嵛山岛零碳方案 — 全国大学生零碳科技创新大赛 · 赛道二：零碳山海</p>
+  <p>指导教师：徐青 副教授 · 黄正文 教授 ｜ 团队：丁一、李二、王三、赵四</p>
+  <p><a href="index.html">返回主站</a> · © 全部作品版权登记</p>
+</div>
+</div>
+
+<script>
+function switchTab(i){
+  var ps=document.querySelectorAll('.panel');for(var j=0;j<ps.length;j++)ps[j].classList.remove('vis');
+  var as=document.querySelectorAll('.sidebar a');for(var j=0;j<as.length;j++)as[j].classList.remove('sel');
+  var ts=document.querySelectorAll('.tab-btn');for(var j=0;j<ts.length;j++)ts[j].classList.remove('sel');
+  document.getElementById('panel'+i).classList.add('vis');as[i].classList.add('sel');
+  if(window.innerWidth<=768)document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sbOverlay').style.display='none';
+  if(i==0)setTimeout(calculate,100);
+  if(i==2)setTimeout(drawCharts,200);
+}
+function toggleSidebar(){
+  var sb=document.getElementById('sidebar');var ov=document.getElementById('sbOverlay');
+  sb.classList.toggle('open');ov.style.display=sb.classList.contains('open')?'block':'none';
+}
+
+// ===== TAB 1: Carbon Calculator =====
+function calculate(){
+  var tea=parseFloat(document.getElementById('vTea').value)||0;
+  var food=parseFloat(document.getElementById('vFood').value)||0;
+  var syn=parseFloat(document.getElementById('vSyn').value)/100||0;
+  // VS calculation
+  var vsTea=tea*0.60*0.85; var vsFood=food*0.25*0.85; var vs=vsTea+vsFood;
+  // Biogas
+  var gas=vs*0.6*(1+syn); gas=Math.round(gas*10)/10;
+  // Carbon reduction
+  var co2D=gas*21/46*3.0; co2D=Math.round(co2D*10)/10;
+  var co2Y=Math.round(co2D*365/1000*10)/10;
+  // Economic
+  var lpgSave=Math.round(gas*21/46*7*365); // 7 yuan/kg LPG
+  var wasteSave=Math.round((tea+food)*0.18*365*0.5); // half of transport cost saved
+  var opCost=Math.round(2500);
+  var annualBenefit=lpgSave+wasteSave-opCost; annualBenefit=Math.round(annualBenefit/100)*100;
+  var payback=Math.round(annualBenefit>0?47000/annualBenefit*10)/10;
+  // Display
+  document.getElementById('rCO2').textContent=co2D;
+  document.getElementById('rGas').textContent=gas;
+  document.getElementById('rYear').textContent=co2Y;
+  document.getElementById('rMoney').textContent=annualBenefit>0?'¥'+annualBenefit.toLocaleString():'¥0';
+  document.getElementById('calcResult').classList.add('show');
+}
+
+// ===== TAB 2: Flow Canvas =====
+setTimeout(function(){
+  var c=document.getElementById('flowCanvas');if(!c)return;
+  var ctx=c.getContext('2d');c.width=c.parentElement.clientWidth-32||700;c.height=80;
+  ctx.fillStyle='rgba(0,184,148,.12)';ctx.fillRect(0,0,c.width,80);
+  ctx.fillStyle='rgba(255,255,255,.06)';ctx.font='12px Microsoft YaHei';ctx.textAlign='center';
+  ctx.fillText('大嵛山岛零碳闭环 — 从茶山到灶台，废弃物变清洁能源，AI 碳评全程量化',c.width/2,45);
+},400);
+
+// ===== TAB 3: Charts =====
+function drawCharts(){
+  // Cumulative curve
+  var c1=document.getElementById('cCum');if(c1){
+    var ctx=c1.getContext('2d');var w=c1.parentElement.clientWidth-32||600;var h=220;
+    c1.width=w;c1.height=h;
+    var pad=45,cw=w-2*pad,ch=h-2*pad;
+    var data=[2.5,5.0,7.3,9.8,12.5,15.0,17.8,20.5,23.0,25.8,28.3,30.7];
+    ctx.strokeStyle='rgba(255,255,255,.04)';ctx.lineWidth=1;
+    for(var i=0;i<=4;i++){var gy=pad+ch*i/4;ctx.beginPath();ctx.moveTo(pad,gy);ctx.lineTo(pad+cw,gy);ctx.stroke()}
+    ctx.strokeStyle='#00b894';ctx.lineWidth=3;ctx.beginPath();
+    for(var i=0;i<data.length;i++){var x=pad+cw*i/(data.length-1);var y=pad+ch-ch*data[i]/35;i==0?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.stroke();
+    ctx.fillStyle='rgba(0,184,148,.15)';ctx.beginPath();
+    for(var i=0;i<data.length;i++){var x=pad+cw*i/(data.length-1);var y=pad+ch-ch*data[i]/35;i==0?ctx.moveTo(x,y):ctx.lineTo(x,y)}
+    ctx.lineTo(pad+cw,pad+ch);ctx.lineTo(pad,pad+ch);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#667';ctx.font='10px Microsoft YaHei';ctx.textAlign='center';
+    var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    for(var i=0;i<12;i++)ctx.fillText(months[i],pad+cw*i/11,pad+ch+18);
+    ctx.textAlign='right';
+    for(var i=0;i<=4;i++)ctx.fillText(Math.round(35-35*i/4),pad-8,pad+ch-ch*i/4+5);
+  }
+  // Comparison bar
+  var c2=document.getElementById('cCompare');if(c2){
+    var ctx=c2.getContext('2d');var w=c2.parentElement.clientWidth-32||600;var h=220;
+    c2.width=w;c2.height=h;
+    var bars=[{l:'本方案',v:30.7,c:'#00b894'},{l:'外运+焚烧',v:0,c:'#e74c3c'},{l:'露天焚烧(现状)',v:-15.2,c:'#f0a500'}];
+    var bw=80,gap=60,startX=150,by=170,mx=35;
+    bars.forEach(function(b,i){
+      var x=startX+i*(bw+gap);var barH=Math.abs(b.v)/mx*(by-45);
+      ctx.fillStyle=b.c;ctx.fillRect(x-bw/2,by-barH,bw,barH);
+      ctx.fillStyle='#c8d6e5';ctx.font='bold 13px Microsoft YaHei';ctx.textAlign='center';
+      ctx.fillText(b.v+' tCO₂/年',x,by-barH-10);
+      ctx.fillText(b.l,x,by+20);
+    });
+    ctx.strokeStyle='#667';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(50,by);ctx.lineTo(600,by);ctx.stroke();
+  }
+}
+setTimeout(function(){if(document.getElementById('panel0').classList.contains('vis'))calculate();drawCharts()},300);
+</script>
+</body>
+</html>
