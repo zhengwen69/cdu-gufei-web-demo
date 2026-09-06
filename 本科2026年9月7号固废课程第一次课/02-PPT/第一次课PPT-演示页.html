@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第一次课 · 固体废弃物处理与处置 — 演示页</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:"Microsoft YaHei","PingFang SC",sans-serif;
+  background:#0a1628;color:#c8d6e5;overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:40px 60px}
+.slide{display:none;width:100%;max-width:1100px;height:100%;max-height:640px;flex-direction:column;justify-content:center;animation:fade .4s}
+.slide.active{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.slide .kicker{font-size:13px;letter-spacing:3px;color:#5b9bd5;margin-bottom:10px}
+.slide h1{font-size:40px;color:#fff;margin-bottom:14px;line-height:1.25}
+.slide h1 span{color:#2ecc71}
+.slide h2{font-size:30px;color:#e8ecef;margin-bottom:16px}
+.slide .sub{font-size:17px;color:#8899aa;margin-bottom:10px}
+.slide .motto{font-size:20px;font-weight:600;margin-top:8px}
+.slide .motto .a{color:#5b9bd5}.slide .motto .b{color:#2ecc71}
+.slide ul{list-style:none;margin-top:8px}
+.slide li{font-size:18px;line-height:1.9;color:#b8c4ce;padding:3px 0;position:relative;padding-left:24px}
+.slide li::before{content:"▸";position:absolute;left:0;color:#2ecc71}
+.slide li b{color:#e67e22}
+.slide .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
+.card{background:rgba(13,31,53,.85);border:1px solid rgba(91,155,213,.15);border-radius:12px;padding:20px 22px}
+.card .t{font-size:17px;font-weight:600;color:#7fb8e0;margin-bottom:8px}
+.card p{font-size:15px;line-height:1.8;color:#aabbcc}
+.card .s{color:#e67e22}
+.tag{display:inline-block;padding:2px 10px;border-radius:10px;font-size:12px;margin:2px 3px 2px 0}
+.tag.blue{background:rgba(91,155,213,.15);color:#5b9bd5}
+.tag.green{background:rgba(46,204,113,.15);color:#2ecc71}
+.tag.orange{background:rgba(230,126,34,.15);color:#e67e22}
+.big{font-size:44px;color:#fff;text-align:center;margin:16px 0}
+.big .g{color:#2ecc71}
+table{width:100%;border-collapse:collapse;margin-top:14px;font-size:15px}
+th{background:rgba(91,155,213,.12);color:#5b9bd5;padding:10px 12px;text-align:left;border-bottom:1px solid rgba(91,155,213,.2)}
+td{padding:10px 12px;color:#aabbcc;border-bottom:1px solid rgba(91,155,213,.06)}
+/* chrome */
+#chrome{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:center;gap:18px;background:rgba(13,31,53,.7);backdrop-filter:blur(6px);border-top:1px solid rgba(91,155,213,.12)}
+#chrome .pg{font-size:13px;color:#8899aa;min-width:60px;text-align:center}
+#chrome .bar{flex:1;max-width:400px;height:3px;background:rgba(91,155,213,.15);border-radius:2px;overflow:hidden}
+#chrome .bar i{display:block;height:100%;background:#2ecc71;width:0;transition:width .3s}
+#chrome button{background:rgba(91,155,213,.12);border:1px solid rgba(91,155,213,.2);color:#7fb8e0;padding:6px 16px;border-radius:8px;cursor:pointer;font-size:13px}
+#chrome button:hover{border-color:#5b9bd5;color:#fff}
+.back-btn{position:fixed;top:18px;left:18px;z-index:10;padding:6px 14px;border-radius:8px;background:rgba(13,31,53,.85);border:1px solid rgba(91,155,213,.2);color:#7fb8e0;text-decoration:none;font-size:13px}
+.back-btn:hover{color:#fff;border-color:#5b9bd5}
+.hint{position:fixed;top:18px;right:18px;font-size:11px;color:#445}
+@media (max-width:768px){#stage{padding:20px}.slide h1{font-size:26px}.slide li{font-size:14px}.big{font-size:30px}.card p{font-size:13px}}
+</style>
+</head>
+<body>
+<a class="back-btn" href="../03-浏览页/index.html">◀ 返回浏览页</a>
+<div class="hint">← → 或点击翻页</div>
+<div id="stage"></div>
+<div id="chrome">
+  <button id="prev">◀</button>
+  <div class="pg"><span id="cur">1</span> / <span id="total">52</span></div>
+  <div class="bar"><i id="prog"></i></div>
+  <button id="next">▶</button>
+</div>
+
+<script>
+var slides = [
+{k:'板块① · 开场',h:'<h1><span>固体废弃物处理与处置</span></h1><div class="sub">第一次课 · 见面课 · 绪论（一）</div><div class="sub">黄正文 教授 · 成都大学环境工程系 · 2026年9月7日</div><div class="motto"><span class="a">绿水青山＝金山银山</span> ｜ <span class="b">好好学习 天天向上</span></div>'},
+{k:'板块① · 导航',h:'<h2>本讲七件事</h2>',li:['浏览页展示（个人简介 / 素材库 / 大纲 / 法典AI变化）','学委考勤要求','翻转课堂 40 组布置','课程设计安排','作业＋AI 自习室','考核考试安排','第 1 周绪论面授']},
+{k:'板块① · 个人简介',h:'<h2>黄正文 · <span>点暇斋</span></h2>',li:['教授 · 博士 · 高级经济师','第三届全国优秀环境科技实业家 · 四川长城环境科学研究院院长','笔名「点暇斋」，网络纪实小说作者']},
+{k:'板块① · 为什么写小说',h:'<div class="big">固废课最缺的不是公式，<br>是<span class="g">真实的故事与场景</span></div>',li:['30 余年工程经历 → 纪实小说 → 教学素材']},
+{k:'板块① · 浏览页入口',h:'<h2>浏览页投屏</h2>',li:['展示 <b>03-浏览页/index.html</b>','个人简介 / 素材库 / 大纲解读 / 翻转课堂 / 课设 / 作业 / 考核 / 绪论 八个入口']},
+{k:'板块① · 素材库',h:'<h2>故事化素材库 · 读书改变命运秘笈</h2>',li:['七部纪实小说 · 两百万字 · 全部版权登记','素材编号 <b>S001-S021</b>（来源：故事素材母库）']},
+{k:'板块① · 素材示例',h:'<h2>三个素材</h2>',li:['<b>S001</b>《龙栖湾》渔村被填埋场包围 → 空间错配','<b>S015</b>《龙栖湾》砂轮厂老熔炉改造焚烧炉 → 技术错配·产品化','<b>S003</b>《龙栖湾》填埋场选址公众听证会 → 场景沉浸']},
+{k:'板块① · 素材铁律',h:'<h2>素材铁律</h2>',li:['所有教学案例只从小说母库取，标注 S 编号','不用网络通用案例 · 不用其他教材案例 · 不用第三方文章']},
+{k:'板块① · 两本大纲',h:'<h2>两本大纲</h2>',li:['<b>《固体废弃物处理与处置》</b> 专业核心课/必修 · 2学分32学时 · 第5学期','<b>《固废处理处置课程设计》</b> 专业拓展课/选修 · 1学分16实践学时']},
+{k:'板块① · 理论 vs 课设',h:'<h2>理论课 vs 课设</h2>',li:['理论课：原理 · 工艺 · 设备（九章）','课设：动手做一座厂（说明书＋计算书＋图纸）']},
+{k:'板块① · 两大时代背景',h:'<h2>两大时代背景</h2>',li:['① <b>《生态环境法典》</b> 2026.8.15 施行 · 五编1242条 · 整合10部单行法 · 三责同追','② <b>「十五五」七门必修课</b> ＋ AI智能体 ＋ 双碳']},
+{k:'板块① · 目标升级',h:'<div class="big">技术 ＋ <span class="g">法治合规</span> ＋ 数字智能</div>',li:['对应 4 课程目标：知识 / 设计 / 合规 / 智能']},
+{k:'板块② · 学委',h:'<h2>召集 4 班学委</h2>',li:['4 个行政班 → 4 位学委','请学委起立，大家认人']},
+{k:'板块② · 合班规则',h:'<h2>合班规则</h2>',li:['<b>合班一</b> = A班 + B班','<b>合班二</b> = C班 + D班','翻转课堂按「合班」为单位出组']},
+{k:'板块② · 考勤',h:'<h2>考勤三规矩</h2>',li:['每节课学委记考勤，每周汇总一张表','缺勤留痕：无故缺勤记平时成绩，请假走流程留假条','翻转课堂当周小组全员到齐，缺一扣分']},
+{k:'板块③ · 翻转课堂',h:'<h2>什么是翻转课堂</h2>',li:['第 <b>6-15 周</b>（国庆节后），10 周次','每次课 4 组上台分享（每合班 2 组）']},
+{k:'板块③ · 玩法',h:'<h2>玩法</h2>',li:['每次课：合班一 2 组 ＋ 合班二 2 组 ＝ 4 组','上讲台用 PPT 做「自学预习交流」']},
+{k:'板块③ · 核心要求',h:'<h2>核心要求</h2>',li:['不是念课本，是借 AI 围绕大纲自学、预习、整理成 PPT','站上讲台，讲给本班同学听']},
+{k:'板块③ · 为什么',h:'<h2>为什么这么做</h2>',li:['未来工程师：自己查 · 自己学 · 自己讲清','AI 是新同事，练「会用＋会识别它犯错」']},
+{k:'板块③ · 40组怎么来',h:'<div class="big">10 周 × 4 组 = <span class="g">40 组</span></div>',li:['按 9 章学时比例分配']},
+{k:'板块③ · 全覆盖',h:'<h2>全覆盖 9 章分配（40组）</h2>',li:['绪论 5 · 鉴别 4 · 收运 4 · 预处理 4 · 热处理 5','生物 4 · 资源化 5 · 危废 5 · 全过程 4 = 40 组','不重复 · 全覆盖 · 同章不同节错开']},
+{k:'板块③ · 每组硬要求',h:'<h2>每组硬要求</h2>',li:['做 PPT · 上讲台 · <b>8-10 分钟</b> ＋ 2 分钟提问','必须用 AI，标注 AI 生成处＋修正处＋AI 错误点','学委排一张公用排期表']},
+{k:'板块④ · 课设是什么',h:'<h2>课程设计是什么</h2>',li:['1 学分 / 16 实践学时','把理论变成图纸、说明书']},
+{k:'板块④ · 三目标',h:'<h2>三课程目标</h2>',li:['目标1：全周期全流程设计方法','目标2：规范成果（说明书＋计算书＋流程图＋平面图＋构筑物图）','目标3：AI 辅助设计＋理解 AI 局限']},
+{k:'板块④ · 命题方式',h:'<h2>命题方式（参照浏览页/小说素材）</h2>',li:['焚烧厂工艺设计 ← <b>S015</b> 焚烧炉','卫生填埋场设计 ← <b>S003</b> 选址听证','工业固废资源化 ← <b>S006-S008</b> 脱硫石膏 / <b>S021</b> 光伏除氟']},
+{k:'板块④ · 要求五点',h:'<h2>要求五点</h2>',li:['分组 2-3 人','说明书＋计算书＋图纸三件套','图纸符合制图标准，工艺流程图标注标高','说明书含任务、方案比选、工艺计算、平面高程布置','用 AI 须提交修改痕迹，逐条说明 AI 错在哪']},
+{k:'板块④ · 排版与截止',h:'<h2>排版与截止</h2>',li:['排版：A4 学院模板，图表有编号有标题，说明书在前附表附图集中','截止：<b>第 16 周周日前</b>（期末考试前一周）','正式任务书第 6 周前发']},
+{k:'板块⑤ · AI自习室',h:'<h2>AI 自习室 · 有序留痕</h2>',li:['批改的是「你会不会用 AI」，不是「AI 会不会写」']},
+{k:'板块⑤ · 作业分解',h:'<h2>作业分解</h2>',li:['按大纲知识点分解小作业，每章拆几道小题','每道题对应一个课程目标；基础/应用/拓展三层']},
+{k:'板块⑤ · 留痕四步法',h:'<h2>留痕四步法</h2>',li:['<b>1 布置</b>：下发任务＋评分标准','<b>2 AI初稿</b>：用 AI 生成第一稿','<b>3 人工修正</b>：逐条标出 AI 错误、改正','<b>4 留痕提交</b>：初稿＋修改痕迹＋终稿一起交']},
+{k:'板块⑤ · 为什么要留痕',h:'<h2>为什么要留痕</h2>',li:['大纲目标4：会用 AI ＋ 识别 AI 幻觉（15 分智能目标）','AI 会编法条、编鉴别结论、编参数，必须亲手抓出来']},
+{k:'板块⑥ · 总成绩',h:'<div class="big">过程性 <span class="g">50</span> ＋ 期末闭卷 <span class="g">50</span> ＝ 100</div>'},
+{k:'板块⑥ · 过程50',h:'<h2>过程 50 分解</h2>',li:['平时作业 / 课堂测试 <b>10</b>','课程设计 <b>25</b>','案例研讨 <b>15</b>']},
+{k:'板块⑥ · 达成度',h:'<h2>目标分值与达成度</h2>',li:['目标1知识 35 · 目标2设计 25 · 目标3合规 25 · 目标4智能 15 = 100','权重 0.35 / 0.25 / 0.25 / 0.15','每位同学成绩连着专业认证的未来']},
+{k:'板块⑦ · 绪论骨架',h:'<h2>绪论（一）骨架</h2>',li:['定义分类 → 三化原则 → 法典 → 七门必修课＋AI']},
+{k:'板块⑦ · 固废定义',h:'<h2>固体废物定义</h2>',li:['生产、生活等活动中产生的，丧失原有利用价值，或虽未丧失但被抛弃/放弃的固态、半固态及置于容器中的气态物品、物质']},
+{k:'板块⑦ · 课程灵魂',h:'<div class="big">「废物不废，<br>只是<span class="g">时间与空间的错配</span>」</div>'},
+{k:'板块⑦ · 一句话图景',h:'<h2>一句话图景</h2>',li:['一块「垃圾」换个时间 / 地点 / 账本，可能就是资源']},
+{k:'板块⑦ · 三大分类',h:'<h2>三大分类</h2>',li:['工业固体废物 ｜ 生活垃圾 ｜ 危险废物','危废（毒 / 腐 / 易燃 / 反应 / 感染）管理最严']},
+{k:'板块⑦ · 三化原则',h:'<div class="big"><span class="g">减量化 · 资源化 · 无害化</span></div>',li:['整门课的地基']},
+{k:'板块⑦ · 法典定位',h:'<h2>法典定位</h2>',li:['2026.8.15 施行 · 新中国第二部法典','五编 1242 条 · 整合 10 部单行法']},
+{k:'板块⑦ · 固废入法典',h:'<h2>固废入法典</h2>',li:['第二编 第六分编','三责同追：<b>行政 ＋ 民事 ＋ 刑事</b>']},
+{k:'板块⑦ · 对工程师意味着什么',h:'<h2>对工程师意味着什么</h2>',li:['不能再「只懂技术」','环评 / 三同时 / 排污许可，出问题追的是责任']},
+{k:'板块⑦ · 目标3',h:'<h2>目标3：法治合规</h2>',li:['技术方案必须嵌套合规框架']},
+{k:'板块⑦ · 七门必修课',h:'<h2>「十五五」七门必修课</h2>',li:['<b>环评 · 排污许可 · 三同时 · 清洁生产 · 环境披露</b>']},
+{k:'板块⑦ · 五道关口时序',h:'<h2>五道关口的时序</h2>',li:['环评（立项）→ 三同时（建设）→ 排污许可（投产前）→ 清洁生产（运行）→ 环境披露（持续）']},
+{k:'板块⑦ · 连续约束线',h:'<h2>一条连续约束线</h2>',li:['从摇篮到坟墓；第九章串起来复盘']},
+{k:'板块⑦ · AI干这些活',h:'<h2>AI 在固废行业干这些活</h2>',li:['智能台账 · 工艺寻优 · 固废鉴别 · 资源化方案生成 · 环境披露报表']},
+{k:'板块⑦ · AI幻觉',h:'<h2>AI 幻觉</h2>',li:['AI 会一本正经胡说：编法条、编鉴别结论','目标4 考「识别 AI 幻觉」']},
+{k:'板块⑦ · 小结',h:'<h2>小结四词</h2>',li:['定义分类 · 三化原则 · 法典 · 七门必修课＋AI']},
+{k:'板块⑦ · 思政收尾',h:'<div class="big"><span class="g">绿水青山就是金山银山</span><br>好好学习 天天向上</div>'},
+{k:'板块⑦ · 下次预告',h:'<h2>下次预告＋作业</h2>',li:['第 2 周：绪论（二）来源 / 八大危害 / 物化生特性 / 3C 管理','作业：用 AI 查「法典固废分编」，标出可疑点，下周课前交（留痕四步法首次练手）']}
+];
+
+var stage = document.getElementById('stage');
+var cur = 0, total = slides.length;
+document.getElementById('total').textContent = total;
+
+function render(i){
+  stage.innerHTML = '<div class="slide active"><div class="kicker">'+slides[i].k+'</div>'+slides[i].h+(slides[i].li?'<ul>'+slides[i].li.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>':'')+'</div>';
+  document.getElementById('cur').textContent = i+1;
+  document.getElementById('prog').style.width = ((i+1)/total*100)+'%';
+}
+function go(i){ if(i<0)i=0; if(i>total-1)i=total-1; cur=i; render(i); }
+document.getElementById('prev').onclick=function(){go(cur-1)};
+document.getElementById('next').onclick=function(){go(cur+1)};
+document.addEventListener('keydown',function(e){ if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1)} if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)} });
+render(0);
+</script>
+</body>
+</html>
