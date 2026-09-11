@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第二次课 · 固体废弃物处理与处置 — 演示页</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:"Microsoft YaHei","PingFang SC",sans-serif;
+  background:#0a1628;color:#c8d6e5;overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:40px 60px}
+.slide{display:none;width:100%;max-width:1100px;height:100%;max-height:640px;flex-direction:column;justify-content:center;animation:fade .4s}
+.slide.active{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.slide .kicker{font-size:13px;letter-spacing:3px;color:#5b9bd5;margin-bottom:10px}
+.slide h1{font-size:40px;color:#fff;margin-bottom:14px;line-height:1.25}
+.slide h1 span{color:#2ecc71}
+.slide h2{font-size:30px;color:#e8ecef;margin-bottom:16px}
+.slide .sub{font-size:17px;color:#8899aa;margin-bottom:10px}
+.slide .motto{font-size:20px;font-weight:600;margin-top:8px}
+.slide .motto .a{color:#5b9bd5}.slide .motto .b{color:#2ecc71}
+.slide ul{list-style:none;margin-top:8px}
+.slide li{font-size:18px;line-height:1.9;color:#b8c4ce;padding:3px 0;position:relative;padding-left:24px}
+.slide li::before{content:"▸";position:absolute;left:0;color:#2ecc71}
+.slide li b{color:#e67e22}
+.slide li .g{color:#2ecc71}
+.slide .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
+.card{background:rgba(13,31,53,.85);border:1px solid rgba(91,155,213,.15);border-radius:12px;padding:20px 22px}
+.card .t{font-size:17px;font-weight:600;color:#7fb8e0;margin-bottom:8px}
+.card p{font-size:15px;line-height:1.8;color:#aabbcc}
+.card .s{color:#e67e22}
+.tag{display:inline-block;padding:2px 10px;border-radius:10px;font-size:12px;margin:2px 3px 2px 0}
+.tag.blue{background:rgba(91,155,213,.15);color:#5b9bd5}
+.tag.green{background:rgba(46,204,113,.15);color:#2ecc71}
+.tag.orange{background:rgba(230,126,34,.15);color:#e67e22}
+.big{font-size:38px;color:#fff;text-align:center;margin:16px 0}
+.big .g{color:#2ecc71}
+table{width:100%;border-collapse:collapse;margin-top:14px;font-size:15px}
+th{background:rgba(91,155,213,.12);color:#5b9bd5;padding:10px 12px;text-align:left;border-bottom:1px solid rgba(91,155,213,.2)}
+td{padding:10px 12px;color:#aabbcc;border-bottom:1px solid rgba(91,155,213,.06)}
+#chrome{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:center;gap:18px;background:rgba(13,31,53,.7);backdrop-filter:blur(6px);border-top:1px solid rgba(91,155,213,.12)}
+#chrome .pg{font-size:13px;color:#8899aa;min-width:60px;text-align:center}
+#chrome .bar{flex:1;max-width:400px;height:3px;background:rgba(91,155,213,.15);border-radius:2px;overflow:hidden}
+#chrome .bar i{display:block;height:100%;background:#2ecc71;width:0;transition:width .3s}
+#chrome button{background:rgba(91,155,213,.12);border:1px solid rgba(91,155,213,.2);color:#7fb8e0;padding:6px 16px;border-radius:8px;cursor:pointer;font-size:13px}
+#chrome button:hover{border-color:#5b9bd5;color:#fff}
+.back-btn{position:fixed;top:18px;left:18px;z-index:10;padding:6px 14px;border-radius:8px;background:rgba(13,31,53,.85);border:1px solid rgba(91,155,213,.2);color:#7fb8e0;text-decoration:none;font-size:13px}
+.back-btn:hover{color:#fff;border-color:#5b9bd5}
+.hint{position:fixed;top:18px;right:18px;font-size:11px;color:#445}
+@media (max-width:768px){#stage{padding:20px}.slide h1{font-size:26px}.slide li{font-size:14px}.big{font-size:26px}.card p{font-size:13px}}
+</style>
+</head>
+<body>
+<a class="back-btn" href="../03-浏览页/index.html">◀ 返回浏览页</a>
+<div class="hint">← → 或点击翻页</div>
+<div id="stage"></div>
+<div id="chrome">
+  <button id="prev">◀</button>
+  <div class="pg"><span id="cur">1</span> / <span id="total">60</span></div>
+  <div class="bar"><i id="prog"></i></div>
+  <button id="next">▶</button>
+</div>
+
+<script>
+var slides = [
+{k:'板块① · 封面',h:'<h1><span>固体废弃物处理与处置</span></h1><div class="sub">第二次课 · 绪论（二）· 来源 / 八大危害 / 物化生特性 / 3C管理</div><div class="sub">黄正文 教授 · 成都大学环境工程系 · 2026年9月14日</div><div class="motto"><span class="a">绿水青山＝金山银山</span> ｜ <span class="b">好好学习 天天向上</span></div>'},
+{k:'板块① · 导航',h:'<h2>本讲六件事</h2>',li:['开场＋第 1 周作业反馈','固体废物来源','八大危害途径','物化生特性','3C 管理理念','小结＋作业＋预告']},
+{k:'板块① · 教学目标',h:'<h2>教学目标</h2>',li:['<b>知识</b>：四大来源 · 八大危害 · 四大参数 · 3C','<b>能力</b>：含水率 / 热值 / 库容 / B-C 四类计算','<b>素养</b>：技术离不开合规 · 数据容不得马虎']},
+{k:'板块① · 承接绪论一',h:'<h2>承接绪论（一）</h2>',li:['第 1 周骨架：定义 / 分类 / 三化原则 / 法典 / 七门必修课 / AI全景','本次补血肉：<b>来源 / 八大危害 / 特性 / 3C管理</b>','四个词是后面九章每一章的地基']},
+{k:'板块① · 作业反馈',h:'<h2>第 1 周作业反馈 · 留痕四步法</h2>',li:['普遍问题：标「可疑」≠「改对」','留痕第三步是「人工修正」：查到权威出处，改对，不是「觉得不对」']},
+{k:'板块① · AI幻觉演示',h:'<h2>AI 幻觉现场演示（2 例）</h2>',li:['错误①：AI 说「法典第三编规定危废」 → 实为<b>第二编第六分编</b>（编章节号）','错误②：AI 说「焚烧厂可不办排污许可」 → 实为<b>重点管理对象</b>（搞反）','目标4 的 15 分考「抓 AI 错误」']},
+{k:'板块② · 导语+勾连',h:'<h2>固体废物从哪来？</h2>',li:['<b>承前</b>：第 1 周「三大分类」（性质尺）→ 今日「四大来源」（来源尺）','<b>启后</b>：工业→第七章 / 农业·生活→第三六章 / 建筑→第七章','<b>旁通</b>：环评·排污许可属性台账 / AI属性初筛需人工复核']},
+{k:'板块② · 四大来源',h:'<div class="big">工业 · 农业 · <span class="g">城市生活</span> · 建筑</div>',li:['工业固体废物（ISW）· 农业固体废物 · 城市生活垃圾（MSW）· 建筑垃圾']},
+{k:'板块② · 工业细表',h:'<h2>工业固废 · 行业细表</h2>',li:['冶金→高炉渣/转炉渣/钢渣；电力→粉煤灰/炉渣/脱硫石膏','有色→赤泥/铜渣/铅锌渣；化工→电石渣/磷石膏/废催化剂；采矿→煤矸石/尾矿']},
+{k:'板块② · 工业三特征',h:'<h2>工业固废 · 三特征</h2>',li:['<b>产生量最大</b>（年数十亿吨量级）· <b>成分最复杂</b> · <b>行业间差异大</b>','对应第七章：按冶金渣 / 粉煤灰 / 化工渣分类讲']},
+{k:'板块② · 农业固废',h:'<h2>农业固废</h2>',li:['秸秆（年约 <b>7 亿吨</b>、利用率约 <b>33%</b>）· 畜禽粪便（数十亿吨量级）· 农膜（残留难回收）','特征：季节性强 · 来源分散 · 有机质高 → 第六章堆肥/厌氧']},
+{k:'板块② · 城市生活垃圾',h:'<h2>城市生活垃圾（MSW）</h2>',li:['组分：厨余（<b>40%–60%</b>）· 纸 · 塑料 · 织物 · 玻璃 · 金属 · 灰渣','人均 <b>0.5–1.2 kg/人·天</b>；受地区/季节/习惯影响（南湿北灰）']},
+{k:'板块② · 建筑垃圾',h:'<h2>建筑垃圾</h2>',li:['拆除垃圾 / 装修垃圾 / 工程渣土','特征：城镇化集中产生 · 量大（数十亿吨）· 可资源化（再生骨料 Recycled Aggregate）']},
+{k:'板块② · 三维度分类',h:'<h2>三维度分类对照（易混点）</h2>',li:['<b>按来源</b>（从哪来）· <b>按性质</b>（一般/危废 HW）· <b>按处理方式</b>（可回收/可堆肥/可燃/惰性）','例：废电池 → 生活 / 危废 / 有害垃圾','口诀：来源问「从哪来」，性质问「危不危险」，方式问「怎么处理」，各量各的']},
+{k:'板块② · 工业vs危废',h:'<h2>工业固废 vs 危险废物（集合图）</h2>',li:['危废 = 毒/腐/易燃/反应/感染等危害特性的<b>子集</b>，非并列第四类','预告：第二章鉴别 · <b>资源化产物不再属于固废</b>（法定边界）']},
+{k:'板块② · 互动①',h:'<h2>互动 ①（含答案）</h2>',li:['问：一节废电池，三把尺子分别是什么？','答：<b class="g">生活垃圾 / 危险废物 / 有害垃圾（单独回收）</b>']},
+{k:'板块② · 因果链',h:'<h2>来源 → 处理路线（因果链）</h2>',li:['来源决定组分 → 组分决定特性 → 特性决定处理方式','工业→资源化 / 农业→生物 / 生活→焚烧填埋 / 建筑→再生骨料']},
+{k:'板块② · 勾连收口',h:'<h2>四大模块总逻辑</h2>',li:['<b>从哪里来 → 会怎样害人 → 怎么认识它 → 怎么管好它</b>']},
+{k:'板块③ · 八字框架',h:'<div class="big">气 · 水 · 土 · 地<br><span class="g">卫生 · 灾害 · 景观 · 温室</span></div>',li:['前四污染环境 / 中二危害健康与安全 / 后二景观与气候']},
+{k:'板块③ · 污染大气',h:'<h2>① 污染大气</h2>',li:['三层机理：<b>粉尘扬散</b> ＋ <b>微生物产臭</b>（H₂S/NH₃/硫醇）＋ <b>焚烧VOCs/二噁英</b>']},
+{k:'板块③ · 污染水体',h:'<h2>② 污染水体</h2>',li:['雨水淋溶 → <b>渗滤液</b>（Leachate，COD 数万 mg/L、氨氮高）→ 地表水/地下水','最隐蔽、最难治理']},
+{k:'板块③ · 污染土壤',h:'<h2>③ 污染土壤</h2>',li:['重金属/POPs 入土 → 改pH / 坏结构 / 杀微生物 → 作物吸收 → 食物链放大']},
+{k:'板块③ · 占用土地',h:'<h2>④ 占用土地</h2>',li:['堆放 / 填埋直接占地；<b>填满容易恢复难</b>，封场后监控几十年；垃圾围城']},
+{k:'板块③ · 环境卫生',h:'<h2>⑤ 影响环境卫生</h2>',li:['蚊蝇鼠蟑滋生 · 传播消化道 / 呼吸道疾病 · 医疗废物更危险']},
+{k:'板块③ · 地质灾害',h:'<h2>⑥ 引发地质灾害</h2>',li:['尾矿库溃坝 · 垃圾堆体滑坡 · 填埋气爆炸']},
+{k:'板块③ · 视觉污染',h:'<h2>⑦ 视觉污染</h2>',li:['白色污染 · 垃圾散落 · 破坏市容与城市形象']},
+{k:'板块③ · 温室气体',h:'<h2>⑧ 温室气体排放</h2>',li:['填埋场厌氧产 <b>CH₄</b>，温室效应为 CO₂ 的 <b>25 倍</b>','预告：第六章填埋气 CCER 碳价值']},
+{k:'板块③ · 危害链',h:'<h2>危害链＋二次污染</h2>',li:['一个垃圾堆 → 渗滤液 → 地下水/土壤 → 作物/人体（连锁反应）','概念：<b>二次污染</b>（垃圾=一次污染源，渗滤液=二次污染）']},
+{k:'板块③ · S003+NIMBY',h:'<h2>S003 真实场景＋NIMBY</h2>',li:['<b>S003</b>《龙栖湾》：填埋场来了 → 杏树不结果 / 井水怪味 / 地不值钱 → 「敢让孩子喝吗」','邻避效应（Not In My Back Yard, <b>NIMBY</b>）']},
+{k:'板块③ · 互动②',h:'<h2>互动 ②（含答案）</h2>',li:['问：污染水体＋污染土壤的共同媒介？','答：<b class="g">渗滤液</b>']},
+{k:'板块③ · 危害勾连',h:'<h2>危害 → 防治 → 章节</h2>',li:['大气→焚烧烟气净化/覆盖防尘（<b>第五章</b>）','水土→填埋防渗/渗滤液处理（<b>第八章</b>）','温室→填埋气利用（<b>第六章</b>）；占地→源头减量/分类（<b>第三章</b>）']},
+{k:'板块④ · 导语',h:'<h2>物化生特性</h2>',li:['参数是后面章节算账的原料，不是背来摆着的','分物理 / 化学 / 生物三类']},
+{k:'板块④ · 物理总览',h:'<h2>物理特性总览</h2>',li:['含水率（Moisture Content）· 容重（Bulk Density）· 孔隙度（Porosity）· 粒径分布（PSD）']},
+{k:'板块④ · 含水率',h:'<h2>含水率</h2>',li:['湿基：水 / 湿垃圾 ×100%；干基：水 / 干物质','生活垃圾 <b>40%–60%</b>','决定：能否烧 / 运输划算否 / 渗滤液多少']},
+{k:'板块④ · 容重',h:'<h2>容重（堆积密度）</h2>',li:['原位 <b>0.3–0.6 t/m³</b>，压实 <b>0.8–1.0 t/m³</b>','决定：运输量 / 填埋库容（虚胖 → 压实）']},
+{k:'板块④ · 孔隙度+粒径',h:'<h2>孔隙度＋粒径分布</h2>',li:['孔隙度：影响通风供氧、渗滤液迁移','粒径分布：筛分；最大粒度（95%通过的最小筛孔）']},
+{k:'板块④ · 化学总览',h:'<h2>化学特性总览</h2>',li:['元素组成 · 热值（Heating Value）· 挥发分 · 灰分 · 毒性特性']},
+{k:'板块④ · 元素组成',h:'<h2>元素组成</h2>',li:['<b>C/H/O/N/S</b> ＋ Cl/F；C 决定热值；N/S/Cl 燃烧成 NOx/SO₂/HCl']},
+{k:'板块④ · 热值HHV/LHV',h:'<h2>热值：HHV vs LHV</h2>',li:['生活垃圾 LHV <b>3500–6500 kJ/kg</b>','高位 HHV：含冷凝水潜热；低位 LHV：扣水汽化潜热（工程实用）','类比「烧水」：<b>炉子吃不到水汽里的那点热</b>']},
+{k:'板块④ · 热值定量',h:'<h2>热值定量（汽化潜热＋换算）</h2>',li:['汽化潜热 ≈ <b>2260 kJ/kg</b>；1kg 氢生成 9kg 水','<b>LHV ≈ HHV − 2260 × (9H + W) / 100</b>（H 为氢%、W 为含水率%）']},
+{k:'板块④ · 例题①',h:'<h2>随堂例题 ①（含水率＋热值）</h2>',li:['例1：100kg 垃圾含水率60% → <b class="g">水60kg、干物质40kg</b>','例2：HHV=6500、H=5%、W=30% → <b class="g">LHV ≈ 4805 kJ/kg</b>']},
+{k:'板块④ · 挥发分灰分浸出',h:'<h2>挥发分＋灰分＋浸出毒性</h2>',li:['挥发分：550℃ 热解析出可燃有机组分','灰分：灼烧残余无机物','浸出毒性试验（Leaching Toxicity）→ 危废判定（第八章）']},
+{k:'板块④ · B/C比',h:'<h2>生物特性 B/C 比</h2>',li:['可生化性：<b>BOD₅/COD（B/C 比）</b>','阈值：<b>&gt;0.45</b> 易生化 / <b>0.3–0.45</b> 可生化 / <b>&lt;0.3</b> 难生化','致病性（Pathogenicity）：医疗废物']},
+{k:'板块④ · 例题②',h:'<h2>随堂例题 ②（B/C 判断）</h2>',li:['例3：BOD₅=18000、COD=40000 → <b class="g">B/C=0.45 → 可生物处理</b>']},
+{k:'板块④ · 参数决策链',h:'<h2>参数 → 工程决策链</h2>',li:['热值 → 自持燃烧（LHV≥3350）→ <b>第五章</b>','容重 → 运输/库容 → <b>第三、八章</b>','B/C → 生物处理 → <b>第六章</b>','浸出毒性 → 危废判定 → <b>第八章</b>']},
+{k:'板块④ · 互动③',h:'<h2>互动 ③（含答案）</h2>',li:['问：工程上为何用 LHV 不用 HHV？','答：<b class="g">水汽潜热炉子吃不到，HHV 会高估发电量</b>']},
+{k:'板块④ · 参数收口',h:'<h2>参数收口（思政＋AI）</h2>',li:['参数基本功 = 好好学习天天向上','AI 会编参数值，必须回教材 / 标准核对']},
+{k:'板块⑤ · 导语',h:'<h2>3C 管理理念</h2>',li:['讲了来源 / 危害 / 特性，现在讲怎么管']},
+{k:'板块⑤ · 3C定义',h:'<div class="big"><span class="g">Clean</span> · Cycle · Control</div>',li:['Clean 避免产生（源头）· Cycle 综合利用（过程）· Control 妥善处置（末端）','主线：源头 → 过程 → 末端']},
+{k:'板块⑤ · 三组辨析',h:'<h2>三化 / 3R / 3C 辨析（必考点）</h2>',li:['<b>三化</b>（减量/资源/无害）= 目标导向','<b>3R</b>（Reduce/Reuse/Recycle）= 操作导向（国际优先序）','<b>3C</b>（Clean/Cycle/Control）= 管理导向（全生命周期）']},
+{k:'板块⑤ · 优先序金字塔',h:'<h2>优先序金字塔</h2>',li:['塔尖：源头减量（Clean/减量化）','塔中：资源化循环（Cycle/Recycle）','塔底：末端无害化（Control/无害化）','能减就不循环，能循环就不填埋']},
+{k:'板块⑤ · EPR/LCA/无废',h:'<h2>扩展：EPR / LCA / 无废城市</h2>',li:['EPR 生产者责任延伸 · LCA 全生命周期评价 · Zero-Waste City 无废城市']},
+{k:'板块⑤ · 四维融入+互动④',h:'<h2>3C 四维融入＋互动④</h2>',li:['Clean→清洁生产（七门必修课）· Cycle→资源化碳价值（双碳）· Control→末端合规','互动④：三化/3R/3C 各是什么导向？→ <b class="g">目标/操作/管理</b>']},
+{k:'板块⑤ · 必考提示',h:'<h2>必考提示＋第9章预告</h2>',li:['三化/3R/3C 辨析：<b>期末简答/选择题必考</b>','三个词 = 第 9 章全过程管理灵魂']},
+{k:'板块⑥ · 小结',h:'<h2>全课小结（一句可背）</h2>',li:['固废从<b>四类来源</b>来，走<b>八条途径</b>害人，测<b>四类参数</b>认识它，用<b>3C 理念</b>管好它','总逻辑：从哪里来 → 怎样害人 → 怎么认识 → 怎么管']},
+{k:'板块⑥ · 术语',h:'<h2>双语术语速览</h2>',li:['SW/MSW/ISW/HW · LHV/HHV · Leachate · LFG · NIMBY · EPR']},
+{k:'板块⑥ · 作业',h:'<h2>第 2 周作业（留痕四步法）</h2>',li:['题①：AI 查「含水率/容重/低位热值」，逐条核对标错','题②：AI 生成「八大危害」，逐条人工修正','均下周课前交']},
+{k:'板块⑥ · 下次预告',h:'<h2>下次预告（第 3 周）</h2>',li:['第二章：来源、特性与鉴别','钩子：<b>资源化产物不再属于固废</b>（法定判定边界）']},
+{k:'板块⑥ · 思政收尾',h:'<div class="big"><span class="g">绿水青山就是金山银山</span><br>好好学习 天天向上</div>',li:['八大危害＝守的理由 · 参数基本功＝向上台阶']},
+{k:'板块⑥ · 结束',h:'<div class="big"><span class="g">谢谢</span></div>',li:['点暇斋 · 故事云驱动 · 素材母库 S001-S021']}
+];
+
+var stage = document.getElementById('stage');
+var cur = 0, total = slides.length;
+document.getElementById('total').textContent = total;
+
+function render(i){
+  stage.innerHTML = '<div class="slide active"><div class="kicker">'+slides[i].k+'</div>'+slides[i].h+(slides[i].li?'<ul>'+slides[i].li.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>':'')+'</div>';
+  document.getElementById('cur').textContent = i+1;
+  document.getElementById('prog').style.width = ((i+1)/total*100)+'%';
+}
+function go(i){ if(i<0)i=0; if(i>total-1)i=total-1; cur=i; render(i); }
+document.getElementById('prev').onclick=function(){go(cur-1)};
+document.getElementById('next').onclick=function(){go(cur+1)};
+document.addEventListener('keydown',function(e){ if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1)} if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)} });
+render(0);
+</script>
+</body>
+</html>
