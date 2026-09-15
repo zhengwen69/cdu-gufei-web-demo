@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>退役军人适应性培训 — 演示页</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:"Microsoft YaHei","PingFang SC",sans-serif;
+  background:#0a1628;color:#c8d6e5;overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:40px 60px}
+.slide{display:none;width:100%;max-width:1100px;height:100%;max-height:640px;flex-direction:column;justify-content:center;animation:fade .4s}
+.slide.active{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.slide .kicker{font-size:13px;letter-spacing:3px;color:#2e7d32;margin-bottom:10px}
+.slide h1{font-size:40px;color:#fff;margin-bottom:14px;line-height:1.25}
+.slide h1 span{color:#c9a227}
+.slide h2{font-size:30px;color:#e8ecef;margin-bottom:16px}
+.slide .sub{font-size:17px;color:#8899aa;margin-bottom:10px}
+.slide .motto{font-size:20px;font-weight:600;margin-top:8px}
+.slide .motto .a{color:#2e7d32}.slide .motto .b{color:#c9a227}
+.slide ul{list-style:none;margin-top:8px}
+.slide li{font-size:18px;line-height:1.9;color:#b8c4ce;padding:3px 0;position:relative;padding-left:24px}
+.slide li::before{content:"▸";position:absolute;left:0;color:#c9a227}
+.slide li b{color:#e67e22}
+.slide li .g{color:#2ecc71}
+.big{font-size:38px;color:#fff;text-align:center;margin:16px 0}
+.big .g{color:#c9a227}
+.big .gr{color:#2ecc71}
+.speak{display:inline-flex;align-items:center;gap:10px;margin-top:20px;padding:14px 26px;background:linear-gradient(135deg,#2e7d32,#43a047);border:none;border-radius:28px;color:#fff;font-size:19px;font-weight:600;cursor:pointer;letter-spacing:1px;box-shadow:0 6px 20px rgba(46,125,50,.35)}
+.speak:hover{transform:translateY(-2px)}
+.speak.playing{background:linear-gradient(135deg,#c62828,#e53935)}
+.speak .dot{width:9px;height:9px;border-radius:50%;background:#fff;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+table{width:100%;border-collapse:collapse;margin-top:14px;font-size:15px}
+th{background:rgba(46,125,50,.15);color:#2e7d32;padding:10px 12px;text-align:left;border-bottom:1px solid rgba(46,125,50,.2)}
+td{padding:10px 12px;color:#aabbcc;border-bottom:1px solid rgba(91,155,213,.06)}
+#chrome{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:center;gap:18px;background:rgba(13,31,53,.7);backdrop-filter:blur(6px);border-top:1px solid rgba(91,155,213,.12)}
+#chrome .pg{font-size:13px;color:#8899aa;min-width:60px;text-align:center}
+#chrome .bar{flex:1;max-width:400px;height:3px;background:rgba(91,155,213,.15);border-radius:2px;overflow:hidden}
+#chrome .bar i{display:block;height:100%;background:#c9a227;width:0;transition:width .3s}
+#chrome button{background:rgba(91,155,213,.12);border:1px solid rgba(91,155,213,.2);color:#7fb8e0;padding:6px 16px;border-radius:8px;cursor:pointer;font-size:13px}
+#chrome button:hover{border-color:#5b9bd5;color:#fff}
+.back-btn{position:fixed;top:18px;left:18px;z-index:10;padding:6px 14px;border-radius:8px;background:rgba(13,31,53,.85);border:1px solid rgba(91,155,213,.2);color:#7fb8e0;text-decoration:none;font-size:13px}
+.back-btn:hover{color:#fff;border-color:#5b9bd5}
+.hint{position:fixed;top:18px;right:18px;font-size:11px;color:#445}
+@media (max-width:768px){#stage{padding:20px}.slide h1{font-size:26px}.slide li{font-size:14px}.big{font-size:26px}}
+</style>
+</head>
+<body>
+<a class="back-btn" href="../03-浏览页/index.html">◀ 返回浏览页</a>
+<div class="hint">← → 或点击翻页</div>
+<div id="stage"></div>
+<div id="chrome">
+  <button id="prev">◀</button>
+  <div class="pg"><span id="cur">1</span> / <span id="total">56</span></div>
+  <div class="bar"><i id="prog"></i></div>
+  <button id="next">▶</button>
+</div>
+
+<script>
+var A1='战友们，欢迎回家。从今天起，你们脱下的，不仅是一身军装，更是一个曾经的身份；你们迎来的，不只是一张退役证，而是一整个需要重新丈量的江湖。军营教会你服从与坚守，社会要考你的，却是选择与担当。别慌，这场仗，我们一步一步打。国家已经为你铺好了第一层台阶，接下来，请看。';
+var A2='国家的托底，已经讲完。税收优惠、创业贷款、免费培训、专项招录——这些不是施舍，而是承认你曾经扛过的枪。但战友们，请记住：政策只能垫脚，不能替你走路。接下来，讲台上的人脱去长衫，讲讲他自己——一个农家子弟，是怎么几度跌倒、几度翻身，把烂牌一张一张打出去的。请看。';
+var A3='一辆卖掉的旧面包车，十二个人的遣散费，一座关门的砂轮厂。表面看，是一局败棋；细看，却是一笔资产。战友们请记住：你手里没有钱，不是问题；你手里有没有敢接硬骨头的胆量，才是问题。烂牌，也能打成黄金资产。下面这个故事，讲的是——怎么把手里一个东西，磨成能卖出去的单品。请看。';
+var A4='一台成本不到进口十分之一的焚烧炉，从2003年的非典，一路卖成了爆款。先求其有，再论其优——这八个字，是给所有等条件成熟再动手的人的一记提醒。但会做一个单品，还不够；能把自己的本事，变成一个可复制的产品，才是下一步。下面，讲加盟。请看。';
+var A5='品牌授权、技术培训、设备供应、运营督导——四块拼起来，只有一句话：把自己变成标准品。战友们，军队给了你最稀缺的东西——标准化的纪律。这是你做连锁、做加盟、做团队，别人学都学不来的底子。下一个话题，讲AI时代，怎么把这份稀缺，放大成你的个人IP。请看。';
+var A6='从零收购，到单品，到标准品，再到个人IP——一条路，四个台阶。战友们，军装脱了，军魂还在；枪交了，你这个人，就是最后的资产。AI时代，经历就是资产，人人都能做成IP。回去之后，从今天讲的第一件小事做起——去见一个人，读一页书，发一条朋友圈。行动，是唯一不骗人的金句。前程似锦，来日方长。谢谢。';
+
+var slides = [
+{k:'板块① · 封面',h:'<h1><span>退役军人角色转换</span>与职场心理建设</h1><div class="sub">经济形势 · 就业创业应对策略</div><div class="sub">黄正文 教授 · 成都大学环境工程系 · 2026年9月20日</div><div class="motto"><span class="a">脱下军装不是退场</span> ｜ <span class="b">是换一个战场</span></div>'},
+{k:'板块① · 导航',h:'<h2>本课六个板块</h2>',li:['开场破冰＋角色转换','经济形势＋政策地图','案例① 资产零收购','案例② 焚烧炉单品','案例③ 品牌加盟','案例④ 自媒体AI-IP＋行动清单']},
+{k:'板块① · 培训目的',h:'<h2>培训目的</h2>',li:['贯彻党的二十届四中全会精神，<b>即退即训、全员参与</b>','提升社会适应 / 职业规划 / 择业就业能力，高质量充分就业','一句话：国家把你送出门，还要扶你走一程']},
+{k:'板块① · 培训对象',h:'<h2>培训对象</h2>',li:['<b>2026年秋季自主就业退役士兵</b>','今天的主角，是你们']},
+{k:'板块① · 破冰提问',h:'<h2>破冰提问</h2>',li:['脱下军装那一刻，你最担心的是什么？','共同点：<b>角色转换</b>']},
+{k:'板块① · 三坎',h:'<h2>角色转换三坎</h2>',li:['① <b>服从命令</b> → 自己拍板','② <b>确定性</b> → 不确定性','③ <b>集体荣誉</b> → 个体价值']},
+{k:'板块① · 播音小结①',h:'<h2>播音小结 ① · 开场定调</h2>',li:['新闻播报式「战友」口吻 · 约90秒','点击下方按钮即播（浏览器内置语音）'],au:A1},
+{k:'板块① · 过渡',h:'<h2>过渡</h2>',li:['破冰就到这里 → 国家铺的第一层台阶：<b>政策</b>']},
+{k:'板块② · 政策导语',h:'<h2>政策＝国家白送的第一笔资源</h2>',li:['六个格子，每格三问：<b>是什么 / 谁能享受 / 怎么申请</b>']},
+{k:'板块② · 经济形势',h:'<h2>经济形势三趋势</h2>',li:['① 越来越看重<b>一技之长</b>','② <b>民营经济＋灵活就业</b>是吸纳大头','③ <b>AI 时代</b>，普通人逆袭门槛变低']},
+{k:'板块② · 政策①税收',h:'<h2>政策① 就业创业税收优惠</h2>',li:['你创业减税；别人招你也能减税','入口：退役报到→<b>退役军人事务部门备案</b>']},
+{k:'板块② · 政策②贷款',h:'<h2>政策② 创业担保贷款</h2>',li:['贴息贷款，解决「第一桶金」','入口：退役军人事务部门＋<b>人社创业窗口</b>']},
+{k:'板块② · 政策③培训',h:'<h2>政策③ 免费职业技能培训</h2>',li:['免费培训＋技能证书，订单式推荐上岗','强调：先花几个月，拿一个<b>能吃饭的手艺</b>']},
+{k:'板块② · 政策④招录',h:'<h2>政策④ 公务员/事业单位专项招录</h2>',li:['定向岗位＋加分','关注招考公告「<b>面向退役军人</b>」岗位']},
+{k:'板块② · 政策⑤吸纳',h:'<h2>政策⑤ 企业吸纳退役军人优惠</h2>',li:['企业招你，企业得补贴/减税','你的身份是<b>加分项</b>，不是包袱']},
+{k:'板块② · 政策⑥孵化',h:'<h2>政策⑥ 创业孵化基地/园区</h2>',li:['场地＋政策＋辅导一条龙','抱团取暖，比单打独斗强']},
+{k:'板块② · 播音小结②',h:'<h2>播音小结 ② · 政策托底</h2>',li:['政策只能垫脚，不能替你走路 · 约90秒'],au:A2},
+{k:'板块② · 过渡',h:'<h2>过渡</h2>',li:['六扇门为你开 → 下面讲<b>我自己怎么翻山</b>']},
+{k:'板块③ · 案例①导语',h:'<h2>案例① · 资产零收购</h2>',li:['第一个问题：<b>一个人没钱，能不能起步？</b>']},
+{k:'板块③ · 情境',h:'<h2>1998 · 成都 龙马砂轮厂</h2>',li:['濒临倒闭：12名工人 / 70年代苏联老设备','原料断 / 市场饱和 / 说明书全是俄文']},
+{k:'板块③ · 零元接手',h:'<div class="big"><span class="g">零元</span>收购</div>',li:['资产归我，债务归我，工人归我','零元，背上一整个包袱']},
+{k:'板块③ · 七策1-4',h:'<h2>七策（1–4）</h2>',li:['① 商务谈判 ② 分期付款','③ 出让股权 ④ 河南赊原料']},
+{k:'板块③ · 七策5-7',h:'<h2>七策（5–7）</h2>',li:['⑤ 以砂轮换垫圈 ⑥ 自改配方降本三成','⑦ 跑遍成都五金市场']},
+{k:'板块③ · 结果',h:'<h2>结果：败绩型资产</h2>',li:['一年半后厂关门，卖面包车发遣散费','但：<b>七策沉淀为无形资产</b>','教训与经验，都是无形资产']},
+{k:'板块③ · 军人映射',h:'<h2>军人映射</h2>',li:['<b>敢接硬骨头，不惧零起点</b>','你们手里还有退役金＋军人体魄，怕什么']},
+{k:'板块③ · 金句①',h:'<div class="big"><span class="g">资产不是钱多钱少，</span><br>是把烂牌打好的七策</div>'},
+{k:'板块③ · 播音小结③',h:'<h2>播音小结 ③ · 烂牌变黄金</h2>',li:['烂牌也能打成黄金资产 · 约90秒'],au:A3},
+{k:'板块③ · 过渡',h:'<h2>过渡</h2>',li:['敢接 → 还要做成<b>能卖的单品</b>']},
+{k:'板块④ · 案例②导语',h:'<h2>案例② · 焚烧炉单品</h2>',li:['怎么把一个破烂，磨成<b>卖爆的单品</b>？']},
+{k:'板块④ · 非典情境',h:'<h2>2003 · 非典</h2>',li:['医疗废物无人处理','进口焚烧炉一台几十万，医院用不起']},
+{k:'板块④ · 改造',h:'<h2>老熔炉改造</h2>',li:['想起砂轮厂那台老熔炉 → 改造成焚烧炉','试三个月，成了；成本<b>不到进口的1/10</b>']},
+{k:'板块④ · 反向定价',h:'<h2>反向定价</h2>',li:['同行卖 <b>2万</b>，我卖 <b>20万</b>，添一个零','非典缺「能用」而非「便宜」→ <b>卖爆</b>']},
+{k:'板块④ · 全链条',h:'<h2>全链条五步</h2>',li:['生产外包 → 期刊广告获客 → 铁路公路联运','异地九天安装 → 电话远程售后']},
+{k:'板块④ · 结果',h:'<h2>结果</h2>',li:['瑕疵产品成爆款，畅销数月，<b>翻身仗</b>']},
+{k:'板块④ · 军人映射',h:'<h2>军人映射</h2>',li:['<b>动手力＋应急力</b>＝最稀缺的「单品打磨能力」']},
+{k:'板块④ · 金句②',h:'<div class="big"><span class="g">先求其有，再论其优</span></div>',li:['别死在追求完美的路上']},
+{k:'板块④ · 播音小结④',h:'<h2>播音小结 ④ · 单品翻山</h2>',li:['给「等条件成熟」的人一记提醒 · 约90秒'],au:A4},
+{k:'板块④ · 过渡+茶歇',h:'<h2>过渡＋茶歇</h2>',li:['会做单品 → 怎么把自己变成<b>可复制的产品</b>','茶歇 10:50-11:05']},
+{k:'板块⑤ · 案例③导语',h:'<h2>案例③ · 品牌加盟</h2>',li:['加盟本质：把你自己做成产品，<b>让别人复制你</b>']},
+{k:'板块⑤ · 顶层设计',h:'<h2>加盟顶层设计</h2>',li:['四块：品牌授权 / 技术培训 / 设备供应 / 运营督导']},
+{k:'板块⑤ · 标准品',h:'<h2>把自己变成标准品</h2>',li:['「将你自身化为产品，打包成可复制的标准品」','卖时间 &lt; 卖手艺 &lt; 卖产品 &lt; <b>卖方法</b>']},
+{k:'板块⑤ · 标准化优势',h:'<h2>军人标准化优势</h2>',li:['军队把你练成「标准件」','对标准/流程/纪律的本能＝社会最稀缺']},
+{k:'板块⑤ · 军人映射',h:'<h2>军人映射</h2>',li:['你不是「找工作的人」，是「<b>被标准化过的、可复制价值的产品</b>」']},
+{k:'板块⑤ · 金句③',h:'<div class="big"><span class="g">把自己变成标准品</span></div>'},
+{k:'板块⑤ · 播音小结⑤',h:'<h2>播音小结 ⑤ · 稀缺变IP</h2>',li:['把稀缺放大成IP · 约90秒'],au:A5},
+{k:'板块⑤ · 过渡',h:'<h2>过渡</h2>',li:['传统打法要场地团队资金 → <b>AI时代人人可起步</b>']},
+{k:'板块⑥ · 案例④导语',h:'<h2>案例④ · 自媒体AI-IP</h2>',li:['自媒体时代，AI 赋能，打造<b>个人 IP</b>']},
+{k:'板块⑥ · 点暇斋IP',h:'<h2>点暇斋 IP</h2>',li:['笔名「点暇斋」，七部纪实小说，<b>两百多万字</b>','全部版权登记']},
+{k:'板块⑥ · 矩阵云传播',h:'<h2>矩阵云传播</h2>',li:['一部作品拆素材，多点分发：头条/百科/小说平台/闲鱼']},
+{k:'板块⑥ · 变现',h:'<h2>变现</h2>',li:['闲鱼<b>自有版权独立发行</b>，零广告费长尾收入','把经历变成资产']},
+{k:'板块⑥ · AI实操三步',h:'<h2>AI 实操三步</h2>',li:['① AI写内容（你负责真实，AI负责表达）','② AI做图做视频（一键配音字幕成片）','③ AI多平台分发（一个素材变十个）']},
+{k:'板块⑥ · 军人映射',h:'<h2>军人映射</h2>',li:['军人最大的IP是你这个人：<b>纪律、故事、精气神</b>']},
+{k:'板块⑥ · 金句④',h:'<div class="big"><span class="g">AI时代，经历就是资产，</span><br>人人都能做IP</div>'},
+{k:'板块⑥ · 行动清单',h:'<h2>行动清单（四件小事）</h2>',li:['① 办齐手续，落袋政策','② 报免费技能培训，拿到手艺','③ 见一人、读一页、发一条','④ 用AI写第一段军旅故事']},
+{k:'板块⑥ · 播音小结⑥',h:'<h2>播音小结 ⑥ · 前程似锦</h2>',li:['来日方长 · 约90秒'],au:A6},
+{k:'板块⑥ · 结束',h:'<div class="big"><span class="gr">军装脱了，军魂还在</span><br>枪交了，你就是最后的资产</div>',li:['谢谢战友们']}
+];
+
+var stage = document.getElementById('stage');
+var cur = 0, total = slides.length;
+document.getElementById('total').textContent = total;
+
+// ---- 语音合成 ----
+var voices = [];
+function loadVoices(){ voices = speechSynthesis.getVoices(); }
+if('speechSynthesis' in window){
+  loadVoices();
+  speechSynthesis.onvoiceschanged = loadVoices;
+}
+function pickVoice(){
+  if(!voices.length) return null;
+  var v = voices.find(function(x){ return /zh|cmn|chinese/i.test(x.lang) && /female|xiao|huihui|yaoyao|ting/i.test(x.name); });
+  if(!v) v = voices.find(function(x){ return /zh|cmn|chinese/i.test(x.lang); });
+  return v || null;
+}
+function speak(text, btn){
+  if(!('speechSynthesis' in window)){ alert('当前浏览器不支持语音合成，请用 Edge 或 Chrome 打开'); return; }
+  if(speechSynthesis.speaking){
+    speechSynthesis.cancel();
+    if(btn){ btn.classList.remove('playing'); btn.innerHTML='▶ 播放小结'; }
+    return;
+  }
+  var u = new SpeechSynthesisUtterance(text);
+  u.lang = 'zh-CN'; u.rate = 0.95; u.pitch = 1.0;
+  var v = pickVoice(); if(v) u.voice = v;
+  u.onend = function(){ if(btn){ btn.classList.remove('playing'); btn.innerHTML='▶ 播放小结'; } };
+  u.onerror = function(){ if(btn){ btn.classList.remove('playing'); btn.innerHTML='▶ 播放小结'; } };
+  speechSynthesis.speak(u);
+  if(btn){ btn.classList.add('playing'); btn.innerHTML='<span class="dot"></span> 正在播报 · 点击停止'; }
+}
+
+function render(i){
+  var s = slides[i];
+  var html = '<div class="slide active"><div class="kicker">'+s.k+'</div>'+s.h+(s.li?'<ul>'+s.li.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>':'');
+  if(s.au){
+    html += '<div><button class="speak" data-i="'+i+'">▶ 播放小结</button></div>';
+  }
+  html += '</div>';
+  stage.innerHTML = html;
+  if(s.au){
+    var b = stage.querySelector('.speak');
+    b.onclick = function(){ speak(s.au, b); };
+  }
+  document.getElementById('cur').textContent = i+1;
+  document.getElementById('prog').style.width = ((i+1)/total*100)+'%';
+}
+function go(i){ if(i<0)i=0; if(i>total-1)i=total-1; speechSynthesis.cancel(); cur=i; render(i); }
+document.getElementById('prev').onclick=function(){go(cur-1)};
+document.getElementById('next').onclick=function(){go(cur+1)};
+document.addEventListener('keydown',function(e){ if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1)} if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)} });
+render(0);
+</script>
+</body>
+</html>
