@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>09 · 第3周第二章鉴别</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:#0a1628;color:#c8d6e5;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 20px}
+.wrap{max-width:820px;width:100%}
+.back-btn{position:fixed;top:18px;left:18px;padding:8px 16px;border-radius:8px;background:rgba(13,31,53,.85);border:1px solid rgba(91,155,213,.2);color:#7fb8e0;text-decoration:none;font-size:14px;transition:all .3s}
+.back-btn:hover{color:#fff;border-color:#5b9bd5}
+.hero{text-align:center;margin-bottom:24px}
+.hero h1{font-size:26px;color:#fff;margin-bottom:6px}
+.hero .sub{color:#8899aa;font-size:13px;line-height:1.8}
+.section{margin-bottom:22px}
+.section h2{font-size:16px;color:#5b9bd5;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(91,155,213,.12)}
+.card{background:rgba(13,31,53,.85);border:1px solid rgba(91,155,213,.08);border-radius:12px;padding:18px 20px;margin-bottom:12px}
+.card h3{font-size:15px;color:#7fb8e0;margin-bottom:8px}
+.card p,.card li{font-size:13px;color:#aabbcc;line-height:1.9}
+.card ul{padding-left:18px}
+.card b{color:#e67e22}
+.card .gz{color:#2ecc71}
+.speak{display:inline-flex;align-items:center;gap:10px;margin:10px 0;padding:11px 22px;background:linear-gradient(135deg,#1a5276,#2980b9);border:none;border-radius:24px;color:#fff;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:1px}
+.speak:hover{transform:translateY(-2px)}
+.speak.playing{background:linear-gradient(135deg,#c62828,#e53935)}
+.speak .dot{width:8px;height:8px;border-radius:50%;background:#fff;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+.footer{text-align:center;color:#445;font-size:12px;padding:10px 0 20px}
+</style>
+</head>
+<body>
+<a class="back-btn" href="index.html">◀ 返回首页</a>
+<div class="wrap">
+  <div class="hero">
+    <h1>第3周 第二章鉴别</h1>
+    <div class="sub">固体废物来源、特性与鉴别（一）· 法律账</div>
+  </div>
+
+  <div class="section">
+    <h2>▸ 鉴别定义</h2>
+    <div class="card"><p>用<b>技术 + 法律</b>手段判定某物是否属于固废、是否属于危险废物，判定结论<b>有法律效力</b>。</p></div>
+  </div>
+
+  <div class="section">
+    <h2>▸ 鉴别对象：一般固废 vs 危废</h2>
+    <div class="card">
+      <p>危废五类危害特性：<b>毒性 / 腐蚀性 / 易燃性 / 反应性 / 感染性</b>（任一即属危废 HW）。</p>
+      <p>判"一般固废" vs "危废"：管理路径、成本、责任<b class="gz">天差地别</b>（危废走联单、要资质、三责同追）。</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>▸ 鉴别方法</h2>
+    <div class="card">
+      <ul>
+        <li><b>理化性质分析</b>：含水率 / 热值 / 元素组成（呼应绪论二）。</li>
+        <li><b class="gz">浸出毒性试验</b>（Leaching Toxicity）：模拟有害物质溶出，超标→判危废，是危废鉴定核心。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>▸ 法典鉴别的法律效力</h2>
+    <div class="card"><p>鉴别结论决定合规路径——<b>环评 / 排污许可 / 转移联单 / 环境披露</b>全跟着走。</p></div>
+  </div>
+
+  <div class="section">
+    <h2>▸ 资源化产物「不再属于固废」</h2>
+    <div class="card">
+      <p>资源化加工 → 符合产品标准 → <b class="gz">不再是固废，变商品</b>。</p>
+      <p>成立两前提：<b>技术达标</b> + <b>符合产品标准</b>（缺一仍固废）。</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>▸ 环评 / 排污许可 / AI 复核</h2>
+    <div class="card">
+      <ul>
+        <li>环评阶段<b>固废属性预判</b>：判错→全链条违法。</li>
+        <li>排污许可<b>属性台账</b>：产生量/属性/贮存处置，采基础理化数据。</li>
+        <li>AI 鉴别辅助：智能体初筛，结论<b class="gz">必须人工复核</b>（有法律效力，防 AI 幻觉）。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>▸ 语音小结①（法律账→资产账）</h2>
+    <div class="card"><button class="speak" onclick="play()">▶ 播放小结</button></div>
+  </div>
+
+  <div class="footer">© 黄正文（点暇斋）· 素材母库 S001-S021</div>
+</div>
+
+<script>
+var TEXT='同学们，鉴别这一课，我们学的是一本法律账——一个东西算不算固废、资源化之后还算不算固废，不是凭感觉，而是有法定边界的。判一般固废还是危险废物，后面的管理路径、成本、责任，天差地别。但法律账之外，还有一本更重要的账，叫资产账：法律看的是边界，商业看的是价值。接下来，讲一个1998年的真实故事——零元接手一座濒临倒闭的砂轮厂。请看。';
+var voices=[]; function loadVoices(){ voices=speechSynthesis.getVoices(); }
+if('speechSynthesis' in window){ loadVoices(); speechSynthesis.onvoiceschanged=loadVoices; }
+function pick(){ if(!voices.length) return null; var v=voices.find(function(x){return /zh|cmn|chinese/i.test(x.lang)}); return v||null; }
+function play(){
+  if(!('speechSynthesis' in window)){ alert('请用 Edge 或 Chrome 打开'); return; }
+  var b=document.querySelector('.speak');
+  if(speechSynthesis.speaking){ speechSynthesis.cancel(); b.classList.remove('playing'); b.innerHTML='▶ 播放小结'; return; }
+  var u=new SpeechSynthesisUtterance(TEXT); u.lang='zh-CN'; u.rate=0.95; u.pitch=1.0;
+  var v=pick(); if(v) u.voice=v;
+  u.onend=function(){b.classList.remove('playing');b.innerHTML='▶ 播放小结';};
+  u.onerror=function(){b.classList.remove('playing');b.innerHTML='▶ 播放小结';};
+  speechSynthesis.speak(u);
+  b.classList.add('playing'); b.innerHTML='<span class="dot"></span> 播报中 · 点击停止';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第三次课 · 固体废弃物处理与处置 — 演示页</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:#0a1628;color:#c8d6e5;overflow:hidden;-webkit-font-smoothing:antialiased}
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:40px 60px}
+.slide{display:none;width:100%;max-width:1100px;height:100%;max-height:640px;flex-direction:column;justify-content:center;animation:fade .4s}
+.slide.active{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.slide .kicker{font-size:13px;letter-spacing:3px;color:#5b9bd5;margin-bottom:10px}
+.slide h1{font-size:40px;color:#fff;margin-bottom:14px;line-height:1.25}
+.slide h1 span{color:#2ecc71}
+.slide h2{font-size:30px;color:#e8ecef;margin-bottom:16px}
+.slide .sub{font-size:17px;color:#8899aa;margin-bottom:10px}
+.slide .motto{font-size:20px;font-weight:600;margin-top:8px}
+.slide .motto .a{color:#5b9bd5}.slide .motto .b{color:#2ecc71}
+.slide ul{list-style:none;margin-top:8px}
+.slide li{font-size:18px;line-height:1.9;color:#b8c4ce;padding:3px 0;position:relative;padding-left:24px}
+.slide li::before{content:"▸";position:absolute;left:0;color:#2ecc71}
+.slide li b{color:#e67e22}
+.slide li .g{color:#2ecc71}
+.big{font-size:38px;color:#fff;text-align:center;margin:16px 0}
+.big .g{color:#2ecc71}
+.speak{display:inline-flex;align-items:center;gap:10px;margin-top:20px;padding:14px 26px;background:linear-gradient(135deg,#1a5276,#2980b9);border:none;border-radius:28px;color:#fff;font-size:19px;font-weight:600;cursor:pointer;letter-spacing:1px;box-shadow:0 6px 20px rgba(26,82,118,.35)}
+.speak:hover{transform:translateY(-2px)}
+.speak.playing{background:linear-gradient(135deg,#c62828,#e53935)}
+.speak .dot{width:9px;height:9px;border-radius:50%;background:#fff;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+#chrome{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:center;gap:18px;background:rgba(13,31,53,.7);backdrop-filter:blur(6px);border-top:1px solid rgba(91,155,213,.12)}
+#chrome .pg{font-size:13px;color:#8899aa;min-width:60px;text-align:center}
+#chrome .bar{flex:1;max-width:400px;height:3px;background:rgba(91,155,213,.15);border-radius:2px;overflow:hidden}
+#chrome .bar i{display:block;height:100%;background:#2ecc71;width:0;transition:width .3s}
+#chrome button{background:rgba(91,155,213,.12);border:1px solid rgba(91,155,213,.2);color:#7fb8e0;padding:6px 16px;border-radius:8px;cursor:pointer;font-size:13px}
+#chrome button:hover{border-color:#5b9bd5;color:#fff}
+.back-btn{position:fixed;top:18px;left:18px;z-index:10;padding:6px 14px;border-radius:8px;background:rgba(13,31,53,.85);border:1px solid rgba(91,155,213,.2);color:#7fb8e0;text-decoration:none;font-size:13px}
+.back-btn:hover{color:#fff;border-color:#5b9bd5}
+.hint{position:fixed;top:18px;right:18px;font-size:11px;color:#445}
+@media (max-width:768px){#stage{padding:20px}.slide h1{font-size:26px}.slide li{font-size:14px}.big{font-size:28px}}
+</style>
+</head>
+<body>
+<a class="back-btn" href="../03-浏览页/index.html">◀ 返回浏览页</a>
+<div class="hint">← → 或点击翻页</div>
+<div id="stage"></div>
+<div id="chrome">
+  <button id="prev">◀</button>
+  <div class="pg"><span id="cur">1</span> / <span id="total">32</span></div>
+  <div class="bar"><i id="prog"></i></div>
+  <button id="next">▶</button>
+</div>
+
+<script>
+var A1='同学们，鉴别这一课，我们学的是一本法律账——一个东西算不算固废、资源化之后还算不算固废，不是凭感觉，而是有法定边界的。判一般固废还是危险废物，后面的管理路径、成本、责任，天差地别。但法律账之外，还有一本更重要的账，叫资产账：法律看的是边界，商业看的是价值。接下来，讲一个1998年的真实故事——零元接手一座濒临倒闭的砂轮厂。请看。';
+var A2='零元接手，七策打磨，一年半后关门，却沉淀下一整套可迁移的无形资产。同学们，鉴别告诉我们它还算不算固废，零收购告诉我们它还能不能变资产——两本账，其实是同一句话：换一本账，废物变资源。这就是这一课，把法律账和资产账焊在一起的地方。下节课，我们继续鉴别的应用，并进入第三章收运贮存。请看。';
+
+var slides = [
+{k:'板块① · 封面',h:'<h1><span>固体废弃物处理与处置</span></h1><div class="sub">第三次课 · 第二章 来源、特性与鉴别（一）· 零收购砂轮厂案例</div><div class="sub">黄正文 教授 · 成都大学环境工程系 · 2026年9月21日</div><div class="motto"><span class="a">绿水青山＝金山银山</span> ｜ <span class="b">好好学习 天天向上</span></div>'},
+{k:'板块① · 导航',h:'<h2>本课四个板块</h2>',li:['开场＋点题双主线','第二章鉴别（法律账）','零收购砂轮厂案（资产账）','收口＋作业＋预告']},
+{k:'板块① · 点题',h:'<h2>点题：两本账</h2>',li:['① <b>鉴别</b>（法律账）：它还算不算固废','② <b>零收购</b>（资产账）：它还能不能变资产','一句话：<b class="g">换一本账，废物变资源</b>']},
+{k:'板块① · 路线图',h:'<h2>本课路线图</h2>',li:['法律账：鉴别＝「它还算不算固废」（法定边界）','资产账：零收购＝「它还能不能变资产」（七策）']},
+{k:'板块② · 导语',h:'<h2>第二章：来源、特性与鉴别</h2>',li:['来源/特性绪论已讲，本次聚焦<b>鉴别</b>','鉴别＝用技术+法律手段判定是否固废/危废']},
+{k:'板块② · 鉴别定义',h:'<h2>固废鉴别定义</h2>',li:['判定某物是否属固废、是否属危险废物','判定结论<b>有法律效力</b>']},
+{k:'板块② · 对象',h:'<h2>鉴别对象：一般固废 vs 危废</h2>',li:['危废五类危害特性：<b>毒 / 腐 / 易燃 / 反应 / 感染</b>','判「一般」vs「危废」：管理路径、成本、责任<b>天差地别</b>']},
+{k:'板块② · 方法',h:'<h2>鉴别方法</h2>',li:['理化性质分析（含水率/热值/元素组成）','<b>浸出毒性试验</b>（Leaching Toxicity）→ 危废鉴定核心']},
+{k:'板块② · 法律效力',h:'<h2>法典鉴别的法律效力</h2>',li:['鉴别结论决定合规路径：环评/排污许可/联单/披露全跟着走']},
+{k:'板块② · 资源化边界',h:'<h2>资源化产物「不再属于固废」</h2>',li:['资源化加工 → 符合产品标准 → <b class="g">不再是固废，变商品</b>','两前提：<b>技术达标</b> + <b>符合产品标准</b>']},
+{k:'板块② · 环评预判',h:'<h2>环评阶段固废属性预判</h2>',li:['环评前置：预判各固废属性，判错→全链条违法']},
+{k:'板块② · 排污许可台账',h:'<h2>排污许可属性台账</h2>',li:['固废台账：产生量/属性/贮存处置，采基础理化数据']},
+{k:'板块② · AI鉴别',h:'<h2>AI 鉴别辅助＋人工复核</h2>',li:['AI 智能体初筛，结论<b>必须人工复核</b>（防 AI 幻觉）']},
+{k:'板块② · 互动①',h:'<h2>互动 ①（含答案）</h2>',li:['问：资源化产物「不再属于固废」的两个前提？','答：<b class="g">技术达标 + 符合产品标准</b>']},
+{k:'板块② · 播音小结①',h:'<h2>播音小结 ① · 法律账→资产账</h2>',li:['承上启下 · 约90秒 · 点击即播'],au:A1},
+{k:'板块② · 过渡',h:'<h2>过渡</h2>',li:['法律只能告诉你「是不是废」，不能告诉你「废里有没有宝」→ <b>资产账</b>']},
+{k:'板块③ · 导语+定位',h:'<h2>零收购砂轮厂案 · 生命周期定位</h2>',li:['生命周期三阶段：<b>源头 → 过程 → 末端</b>','零收购案落在「过程」（资源化·变废为宝）']},
+{k:'板块③ · 情境',h:'<h2>1998 · 龙马砂轮厂</h2>',li:['濒临倒闭：12名工人 / 70年代苏联老设备','说明书俄文 / 原料断 / 市场饱和']},
+{k:'板块③ · 零元接手',h:'<div class="big"><span class="g">零元</span>收购</div>',li:['资产归己、债务归己、工人归己——零元背下一整个包袱']},
+{k:'板块③ · 七策1-4',h:'<h2>七策（1–4）</h2>',li:['① 商务谈判 ② 分期付款','③ 出让股权 ④ 河南赊原料']},
+{k:'板块③ · 七策5-7',h:'<h2>七策（5–7）</h2>',li:['⑤ 以砂轮换垫圈 ⑥ 自改配方降本三成','⑦ 跑遍成都五金市场']},
+{k:'板块③ · 结果',h:'<h2>结果：一年半关门</h2>',li:['卖面包车发十二人遣散费']},
+{k:'板块③ · 败绩型资产化',h:'<h2>败绩型资产化</h2>',li:['七策沉淀为<b>无形资产</b>（谈判方法论/成本直觉/技改手感/渠道门路）','<b class="g">垃圾资产 → 黄金资产</b>']},
+{k:'板块③ · 双创映射',h:'<h2>七策 → 工程能力</h2>',li:['谈判=沟通 分期=财务 让股=整合 赊料=诚信','以物易物=置换 改配方=降本 跑市场=获客']},
+{k:'板块③ · 金句',h:'<div class="big"><span class="g">教训与经验，都是无形资产</span><br>垃圾资产，也能打成黄金资产</div>'},
+{k:'板块③ · 播音小结②',h:'<h2>播音小结 ② · 收口承上启下</h2>',li:['两本账焊成一句 · 约90秒 · 点击即播'],au:A2},
+{k:'板块③ · 过渡',h:'<h2>过渡</h2>',li:['法律账和资产账，在这里碰头了']},
+{k:'板块④ · 并线结论',h:'<h2>并线结论</h2>',li:['法律问「还算不算固废」，商业问「还能不能变资产」','<b class="g">换一本账，废物变资源</b>']},
+{k:'板块④ · 作业',h:'<h2>作业布置（留痕四步法）</h2>',li:['用 AI 查「法典'资源化产物不再属于固废'判定条件」，逐条核对标错']},
+{k:'板块④ · 下次预告',h:'<h2>下次预告</h2>',li:['第二章鉴别应用收尾 → 第三章收集、运输与贮存']},
+{k:'板块④ · 思政收尾',h:'<div class="big"><span class="g">绿水青山就是金山银山</span><br>好好学习 天天向上</div>',li:['鉴别守红线 · 零收购守眼光 · 七策七能力']},
+{k:'板块④ · 结束',h:'<div class="big"><span class="g">谢谢</span></div>',li:['点暇斋 · 故事云驱动 · 素材母库 S001-S021']}
+];
+
+var stage = document.getElementById('stage');
+var cur = 0, total = slides.length;
+document.getElementById('total').textContent = total;
+
+var voices = [];
+function loadVoices(){ voices = speechSynthesis.getVoices(); }
+if('speechSynthesis' in window){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+function pickVoice(){ if(!voices.length) return null; var v = voices.find(function(x){ return /zh|cmn|chinese/i.test(x.lang) && /female|xiao|huihui|yaoyao|ting/i.test(x.name); }); if(!v) v = voices.find(function(x){ return /zh|cmn|chinese/i.test(x.lang); }); return v || null; }
+function speak(text, btn){
+  if(!('speechSynthesis' in window)){ alert('当前浏览器不支持语音合成，请用 Edge 或 Chrome 打开'); return; }
+  if(speechSynthesis.speaking){ speechSynthesis.cancel(); if(btn){ btn.classList.remove('playing'); btn.innerHTML='▶ 播放小结'; } return; }
+  var u = new SpeechSynthesisUtterance(text); u.lang='zh-CN'; u.rate=0.95; u.pitch=1.0;
+  var v = pickVoice(); if(v) u.voice = v;
+  u.onend = function(){ if(btn){ btn.classList.remove('playing'); btn.innerHTML='▶ 播放小结'; } };
+  u.onerror = function(){ if(btn){ btn.classList.remove('playing'); btn.innerHTML='▶ 播放小结'; } };
+  speechSynthesis.speak(u);
+  if(btn){ btn.classList.add('playing'); btn.innerHTML='<span class="dot"></span> 正在播报 · 点击停止'; }
+}
+
+function render(i){
+  var s = slides[i];
+  var html = '<div class="slide active"><div class="kicker">'+s.k+'</div>'+s.h+(s.li?'<ul>'+s.li.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>':'');
+  if(s.au){ html += '<div><button class="speak" data-i="'+i+'">▶ 播放小结</button></div>'; }
+  html += '</div>';
+  stage.innerHTML = html;
+  if(s.au){ var b = stage.querySelector('.speak'); b.onclick = function(){ speak(s.au, b); }; }
+  document.getElementById('cur').textContent = i+1;
+  document.getElementById('prog').style.width = ((i+1)/total*100)+'%';
+}
+function go(i){ if(i<0)i=0; if(i>total-1)i=total-1; speechSynthesis.cancel(); cur=i; render(i); }
+document.getElementById('prev').onclick=function(){go(cur-1)};
+document.getElementById('next').onclick=function(){go(cur+1)};
+document.addEventListener('keydown',function(e){ if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1)} if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)} });
+render(0);
+</script>
+</body>
+</html>
