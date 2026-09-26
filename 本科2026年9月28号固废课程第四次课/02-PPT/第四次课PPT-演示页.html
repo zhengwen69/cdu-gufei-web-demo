@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第四次课 · 固体废弃物处理与处置 — 演示页</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:#0a1628;color:#c8d6e5;overflow:hidden;-webkit-font-smoothing:antialiased}
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:40px 60px}
+.slide{display:none;width:100%;max-width:1100px;height:100%;max-height:640px;flex-direction:column;justify-content:center;animation:fade .4s}
+.slide.active{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.slide .kicker{font-size:13px;letter-spacing:3px;color:#5b9bd5;margin-bottom:10px}
+.slide h1{font-size:40px;color:#fff;margin-bottom:14px;line-height:1.25}
+.slide h1 span{color:#2ecc71}
+.slide h2{font-size:30px;color:#e8ecef;margin-bottom:16px}
+.slide .sub{font-size:17px;color:#8899aa;margin-bottom:10px}
+.slide .motto{font-size:20px;font-weight:600;margin-top:8px}
+.slide .motto .a{color:#5b9bd5}.slide .motto .b{color:#2ecc71}
+.slide ul{list-style:none;margin-top:8px}
+.slide li{font-size:18px;line-height:1.9;color:#b8c4ce;padding:3px 0;position:relative;padding-left:24px}
+.slide li::before{content:"▸";position:absolute;left:0;color:#2ecc71}
+.slide li b{color:#e67e22}
+.slide li .g{color:#2ecc71}
+.big{font-size:38px;color:#fff;text-align:center;margin:16px 0}
+.big .g{color:#2ecc71}
+.speak{display:inline-flex;align-items:center;gap:10px;margin-top:20px;padding:14px 26px;background:linear-gradient(135deg,#1a5276,#2980b9);border:none;border-radius:28px;color:#fff;font-size:19px;font-weight:600;cursor:pointer;letter-spacing:1px;box-shadow:0 6px 20px rgba(26,82,118,.35)}
+.speak:hover{transform:translateY(-2px)}
+.speak.playing{background:linear-gradient(135deg,#c62828,#e53935)}
+.speak .dot{width:9px;height:9px;border-radius:50%;background:#fff;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+#chrome{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:center;gap:18px;background:rgba(13,31,53,.7);backdrop-filter:blur(6px);border-top:1px solid rgba(91,155,213,.12)}
+#chrome .pg{font-size:13px;color:#8899aa;min-width:60px;text-align:center}
+#chrome .bar{flex:1;max-width:400px;height:3px;background:rgba(91,155,213,.15);border-radius:2px;overflow:hidden}
+#chrome .bar i{display:block;height:100%;background:#2ecc71;width:0;transition:width .3s}
+#chrome button{background:rgba(91,155,213,.12);border:1px solid rgba(91,155,213,.2);color:#7fb8e0;padding:6px 16px;border-radius:8px;cursor:pointer;font-size:13px}
+#chrome button:hover{border-color:#5b9bd5;color:#fff}
+.back-btn{position:fixed;top:18px;left:18px;z-index:10;padding:6px 14px;border-radius:8px;background:rgba(13,31,53,.85);border:1px solid rgba(91,155,213,.2);color:#7fb8e0;text-decoration:none;font-size:13px}
+.back-btn:hover{color:#fff;border-color:#5b9bd5}
+.hint{position:fixed;top:18px;right:18px;font-size:11px;color:#445}
+@media (max-width:768px){#stage{padding:20px}.slide h1{font-size:26px}.slide li{font-size:14px}.big{font-size:28px}}
+</style>
+</head>
+<body>
+<a class="back-btn" href="../03-浏览页/index.html">◀ 返回浏览页</a>
+<div class="hint">← → 或点击翻页</div>
+<div id="stage"></div>
+<div id="chrome">
+  <button id="prev">◀</button>
+  <div class="pg"><span id="cur">1</span> / <span id="total">32</span></div>
+  <div class="bar"><i id="prog"></i></div>
+  <button id="next">▶</button>
+</div>
+
+<script>
+var A1='同学们，第三章我们讲了收集、运输与贮存。固废从产生到处置，中间这段搬运，看似平常，实则步步有规矩——尤其危险废物，联单一张跟到底，跨省要审批，贮存要分区。法律管住的是物的行动轨迹。但还有一样东西，法律管不住，只能靠你自己——那就是时间。接下来，布置这学期的课程设计，然后我们聊一个垃圾时间的故事。请看。';
+var A2='垃圾时间三维——工艺时间、环境效益兑现时间、投资回收时间。同学们，堆肥慢、焚烧快，不是谁好谁坏，是时间节奏不同。看懂时间的节奏，你手里的碎片时间，就不再是荒废，而是积蓄。下节课，我们进入第五章热处理。请看。';
+
+var slides = [
+{k:'板块① · 封面',h:'<h1><span>固体废弃物处理与处置</span></h1><div class="sub">第四次课 · 第三章 收集、运输与贮存 · 垃圾时间三维</div><div class="sub">黄正文 教授 · 成都大学环境工程系 · 2026年9月28日</div><div class="motto"><span class="a">绿水青山＝金山银山</span> ｜ <span class="b">好好学习 天天向上</span></div>'},
+{k:'板块① · 导航',h:'<h2>本课三件事</h2>',li:['第三章 收集、运输与贮存（规定）','布置课程设计（50 题选题库）','垃圾时间三维案例（变化）']},
+{k:'板块① · 承前点题',h:'<h2>承前点题</h2>',li:['上周：鉴别（法律账）＋零收购（资产账）','本周：收运贮存（物怎么走）＋垃圾时间（时怎么用）']},
+{k:'板块① · 路线图',h:'<h2>本课路线图</h2>',li:['规定：第三章收运贮存','事务：课设布置','变化：垃圾时间三维']},
+{k:'板块② · 导语',h:'<h2>第三章 收集、运输与贮存</h2>',li:['从产生地到处置厂之间的「搬运」学问','三段：<b>收集 → 运输 → 贮存</b>']},
+{k:'板块② · 收运系统',h:'<h2>收运系统</h2>',li:['收集：定点 / 上门 / 管道；<b>分类收集</b>是资源化的根子','收集容器：容积、数量、布点按服务人口算']},
+{k:'板块② · 中转站',h:'<h2>中转站</h2>',li:['小车转大车、压缩后再长途运输','选址 / 规模 / 压缩方式；邻避（NIMBY）']},
+{k:'板块② · 贮存设施',h:'<h2>贮存设施</h2>',li:['防渗、防漏、防飞扬','危废贮存：专门库房、<b>分区、分类、标识</b>']},
+{k:'板块② · 危废联单',h:'<h2>危废联单制度</h2>',li:['联单＝危废的「身份证＋行动轨迹」','纸质五联单 → <b>电子联单</b>，全程可追溯']},
+{k:'板块② · 跨省转移',h:'<h2>跨省转移审批</h2>',li:['危废跨省运输须<b>事先审批</b>，防偷排偷倒']},
+{k:'板块② · 三同时',h:'<h2>贮存「三同时」</h2>',li:['环保设施与主体工程<b>同时设计 / 施工 / 投产</b>']},
+{k:'板块② · 环评+台账',h:'<h2>环评 + 排污许可台账</h2>',li:['环评论证收运贮存方案；排污许可落实贮存台账']},
+{k:'板块② · AI调度',h:'<h2>AI 收运调度</h2>',li:['<b>路线优化</b>、<b>风险预警</b>；AI 辅助，人工兜底']},
+{k:'板块② · 互动①',h:'<h2>互动 ①（含答案）</h2>',li:['问：危险废物的「身份证」叫什么？','答：<b class="g">联单</b>']},
+{k:'板块② · 播音小结①',h:'<h2>播音小结 ① · 第三章→课设</h2>',li:['承上启下 · 约90秒 · 点击即播'],au:A1},
+{k:'板块② · 过渡',h:'<h2>过渡</h2>',li:['收运贮存讲完 → <b>布置课程设计</b>']},
+{k:'板块③ · 50题',h:'<h2>50 题选题库</h2>',li:['50 题 · 8 大类（焚烧/填埋/生物/工业资源化/建筑电子污泥/危废/收运预处理/双碳AI）','每题带真实工程情境（素材 S 编号）']},
+{k:'板块③ · 选题规则',h:'<h2>选题规则</h2>',li:['每组 <b>2 人</b>，自主选 1 题，先到先得，尽量不重复']},
+{k:'板块③ · 成果三件套',h:'<h2>成果三件套 + AI</h2>',li:['说明书＋计算书＋图纸','用 AI 必须提交<b>修改痕迹</b>、逐条说明 AI 错误']},
+{k:'板块③ · 截止',h:'<h2>截止</h2>',li:['第 <b>16 周周日前</b>；正式任务书第 6 周前发']},
+{k:'板块④ · 导语',h:'<h2>垃圾时间</h2>',li:['看似荒废，实则沉淀——关键在<b>会不会看、会不会用</b>']},
+{k:'板块④ · 三维框架',h:'<div class="big">工艺时间 · 环境效益兑现时间 · <span class="g">投资回收时间</span></div>'},
+{k:'板块④ · 工艺时间',h:'<h2>工艺时间</h2>',li:['堆肥约 <b>30 天</b> vs 焚烧约 <b>2 小时</b> → 两种不同的生意']},
+{k:'板块④ · 环境效益兑现',h:'<h2>环境效益兑现时间</h2>',li:['碳减排「三重不可」：<b>短期不可见 / 长期不可分 / 个人不可得</b>']},
+{k:'板块④ · 投资回收',h:'<h2>投资回收时间</h2>',li:['焚烧现金流快，堆肥回收慢']},
+{k:'板块④ · S006堆肥厂',h:'<h2>S006 堆肥厂慢价值</h2>',li:['财务局长「<b>有机质能发工资吗</b>」 vs 环保局长「碳减排价值」','不是对错，是两个时间尺度对不上']},
+{k:'板块④ · 金句',h:'<div class="big"><span class="g">垃圾时间不是用来填满的</span><br>是想清楚慢功夫兑现在哪</div>'},
+{k:'板块④ · 播音小结②',h:'<h2>播音小结 ② · 收口承上启下</h2>',li:['两时间尺度并线 · 约90秒 · 点击即播'],au:A2},
+{k:'板块⑤ · 并线结论',h:'<h2>并线结论</h2>',li:['收运贮存讲「物怎么走」，垃圾时间讲「时怎么用」','<b class="g">把对的东西，在对的时间，放到对的地方</b>']},
+{k:'板块⑤ · 作业',h:'<h2>作业布置（留痕四步法）</h2>',li:['用 AI 查「危废转移联单制度」，逐条核对标错']},
+{k:'板块⑤ · 下次预告',h:'<h2>下次预告</h2>',li:['<b>第五章 固体废物热处理</b>（焚烧 / 热解 / 气化）']},
+{k:'板块⑤ · 思政收尾',h:'<div class="big"><span class="g">绿水青山就是金山银山</span><br>好好学习 天天向上</div>',li:['收运贮存守运输线 · 垃圾时间用对是积蓄']}
+];
+
+var stage = document.getElementById('stage');
+var cur = 0, total = slides.length;
+document.getElementById('total').textContent = total;
+
+var voices = [];
+function loadVoices(){ voices = speechSynthesis.getVoices(); }
+if('speechSynthesis' in window){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+function pickVoice(){ if(!voices.length) return null; var v = voices.find(function(x){ return /zh|cmn|chinese/i.test(x.lang) && /female|xiao|huihui|yaoyao|ting/i.test(x.name); }); if(!v) v = voices.find(function(x){ return /zh|cmn|chinese/i.test(x.lang); }); return v || null; }
+function speak(text, btn){
+  if(!('speechSynthesis' in window)){ alert('当前浏览器不支持语音合成，请用 Edge 或 Chrome 打开'); return; }
+  if(speechSynthesis.speaking){ speechSynthesis.cancel(); if(btn){ btn.classList.remove('playing'); btn.innerHTML='▶ 播放小结'; } return; }
+  var u = new SpeechSynthesisUtterance(text); u.lang='zh-CN'; u.rate=0.95; u.pitch=1.0;
+  var v = pickVoice(); if(v) u.voice = v;
+  u.onend = function(){ if(btn){ btn.classList.remove('playing'); btn.innerHTML='▶ 播放小结'; } };
+  u.onerror = function(){ if(btn){ btn.classList.remove('playing'); btn.innerHTML='▶ 播放小结'; } };
+  speechSynthesis.speak(u);
+  if(btn){ btn.classList.add('playing'); btn.innerHTML='<span class="dot"></span> 正在播报 · 点击停止'; }
+}
+
+function render(i){
+  var s = slides[i];
+  var html = '<div class="slide active"><div class="kicker">'+s.k+'</div>'+s.h+(s.li?'<ul>'+s.li.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>':'');
+  if(s.au){ html += '<div><button class="speak" data-i="'+i+'">▶ 播放小结</button></div>'; }
+  html += '</div>';
+  stage.innerHTML = html;
+  if(s.au){ var b = stage.querySelector('.speak'); b.onclick = function(){ speak(s.au, b); }; }
+  document.getElementById('cur').textContent = i+1;
+  document.getElementById('prog').style.width = ((i+1)/total*100)+'%';
+}
+function go(i){ if(i<0)i=0; if(i>total-1)i=total-1; speechSynthesis.cancel(); cur=i; render(i); }
+document.getElementById('prev').onclick=function(){go(cur-1)};
+document.getElementById('next').onclick=function(){go(cur+1)};
+document.addEventListener('keydown',function(e){ if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1)} if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)} });
+render(0);
+</script>
+</body>
+</html>
