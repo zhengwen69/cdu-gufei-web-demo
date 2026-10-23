@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第九次课 · 固体废弃物处理与处置 — 演示页</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:#0a1628;color:#c8d6e5;overflow:hidden;-webkit-font-smoothing:antialiased}
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:40px 60px}
+.slide{display:none;width:100%;max-width:1100px;height:100%;max-height:640px;flex-direction:column;justify-content:center;animation:fade .4s}
+.slide.active{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.slide .kicker{font-size:13px;letter-spacing:3px;color:#5b9bd5;margin-bottom:10px}
+.slide h1{font-size:40px;color:#fff;margin-bottom:14px;line-height:1.25}
+.slide h1 span{color:#2ecc71}
+.slide h2{font-size:30px;color:#e8ecef;margin-bottom:16px}
+.slide .sub{font-size:17px;color:#8899aa;margin-bottom:10px}
+.slide .motto{font-size:20px;font-weight:600;margin-top:8px}
+.slide .motto .a{color:#5b9bd5}.slide .motto .b{color:#2ecc71}
+.slide ul{list-style:none;margin-top:8px}
+.slide li{font-size:18px;line-height:1.9;color:#b8c4ce;padding:3px 0;position:relative;padding-left:24px}
+.slide li::before{content:"▸";position:absolute;left:0;color:#2ecc71}
+.slide li b{color:#e67e22}.slide li .g{color:#2ecc71}
+.big{font-size:38px;color:#fff;text-align:center;margin:16px 0}
+.big .g{color:#2ecc71}
+.vwrap{width:100%;display:flex;flex-direction:column;align-items:center;margin-top:14px}
+.vwrap video{width:100%;max-width:900px;max-height:430px;background:#000;border-radius:10px;border:1px solid rgba(91,155,213,.25)}
+.vwrap .vtip{font-size:14px;color:#8899aa;margin-top:8px;letter-spacing:1px}
+#chrome{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:center;gap:18px;background:rgba(13,31,53,.7);backdrop-filter:blur(6px);border-top:1px solid rgba(91,155,213,.12)}
+#chrome .pg{font-size:13px;color:#8899aa;min-width:60px;text-align:center}
+#chrome .bar{flex:1;max-width:400px;height:3px;background:rgba(91,155,213,.15);border-radius:2px;overflow:hidden}
+#chrome .bar i{display:block;height:100%;background:#2ecc71;width:0;transition:width .3s}
+#chrome button{background:rgba(91,155,213,.12);border:1px solid rgba(91,155,213,.2);color:#7fb8e0;padding:6px 16px;border-radius:8px;cursor:pointer;font-size:13px}
+#chrome button:hover{border-color:#5b9bd5;color:#fff}
+.back-btn{position:fixed;top:18px;left:18px;z-index:10;padding:6px 14px;border-radius:8px;background:rgba(13,31,53,.85);border:1px solid rgba(91,155,213,.2);color:#7fb8e0;text-decoration:none;font-size:13px}
+.hint{position:fixed;top:18px;right:18px;font-size:11px;color:#445}
+@media (max-width:768px){#stage{padding:20px}.slide h1{font-size:26px}.slide li{font-size:14px}.big{font-size:28px}.vwrap video{max-height:260px}}
+</style>
+</head>
+<body>
+<a class="back-btn" href="../03-浏览页/index.html">◀ 返回浏览页</a>
+<div class="hint">← → 或点击翻页 · 视频页点开即播</div>
+<div id="stage"></div>
+<div id="chrome">
+  <button id="prev">◀</button>
+  <div class="pg"><span id="cur">1</span> / <span id="total">26</span></div>
+  <div class="bar"><i id="prog"></i></div>
+  <button id="next">▶</button>
+</div>
+
+<script>
+var V='../04-视频素材/';
+var slides = [
+{k:'板块① · 封面',h:'<h1><span>固体废弃物处理与处置</span></h1><div class="sub">第九次课 · 第五章 收尾（AI寻优＋热解＋气化）</div><div class="sub">黄正文 教授 · 成都大学环境工程系 · 2026年11月09日</div><div class="motto"><span class="a">绿水青山＝金山银山</span> ｜ <span class="b">好好学习 天天向上</span></div>'},
+{k:'板块① · 承前点题',h:'<h2>承前点题</h2>',li:['前两课：合规壳＋碳账','本次：AI 帮焚烧厂<b>「调得更好」</b>＋热解、气化两个兄弟技术']},
+{k:'板块① · 本课路线',h:'<h2>本课路线</h2>',li:['AI寻优 → 热解 → 气化 → <b>三兄弟对比</b>']},
+{k:'板块② · AI在焚烧厂干什么',h:'<h2>AI 在焚烧厂干什么</h2>',li:['<b>读数据</b> → <b>算工况</b> → <b>调参数</b>']},
+{k:'板块② · 三个优化目标',h:'<h2>三个优化目标</h2>',li:['<b>降飞灰</b> / <b>稳二噁英</b> / <b>提热效率</b>']},
+{k:'板块② · 数字孪生',h:'<h2>数字孪生 Digital Twin</h2>',li:['物理厂的<b>数字镜像</b>，实时同步、实时模拟']},
+{k:'板块② · 机器学习',h:'<h2>机器学习 Machine Learning</h2>',li:['从历史运行数据学<b>「什么工况烧得最好」</b>']},
+{k:'板块② · 工程师校核红线',h:'<h2>工程师校核红线</h2>',li:['<b class="g">AI 是副驾、工程师是主驾</b>','AI 会幻觉，必须人工拍板才执行']},
+{k:'板块② · 视频01',h:'<h2>🎬 AI 数字孪生垃圾焚烧</h2>',vid:V+'01-AI数字孪生焚烧.mp4',tip:'1\' · 数字孪生 垃圾焚烧发电 3D 可视化'},
+{k:'板块② · 回扣课程目标',h:'<h2>回扣课程目标</h2>',li:['理解工具的<b>局限性</b>——工程判断底线在人']},
+{k:'板块③ · 热解是什么',h:'<h2>热解是什么</h2>',li:['<b>无氧/缺氧</b>条件下，有机物受热分解']},
+{k:'板块③ · 三产物',h:'<h2>热解三产物</h2>',li:['热解油 <b>Bio-oil</b> / 热解炭 <b>Biochar</b> / 热解气']},
+{k:'板块③ · 热解vs焚烧',h:'<h2>热解 vs 焚烧</h2>',li:['差在「<b>氧气</b>」：无氧 vs 富氧']},
+{k:'板块③ · 视频02',h:'<h2>🎬 热解工艺流程</h2>',vid:V+'02-热解工艺流程.mp4',tip:'6\' · 热解工艺流程'},
+{k:'板块③ · 视频03',h:'<h2>🎬 固体废物热解处理</h2>',vid:V+'03-固体废物热解.mp4',tip:'38\' · 固体废物的热解处理'},
+{k:'板块③ · 干馏类比',h:'<h2>干馏类比</h2>',li:['闷着烧炼木炭＝<b>热解</b>；敞开烧＝<b>焚烧</b>']},
+{k:'板块④ · 气化是什么',h:'<h2>气化是什么</h2>',li:['气化剂作用下，有机物<b>部分氧化</b> → 可燃气体']},
+{k:'板块④ · 气化剂',h:'<h2>气化剂</h2>',li:['<b>空气</b> / <b>氧气</b> / <b>蒸汽</b>']},
+{k:'板块④ · 合成气',h:'<h2>合成气 Syngas</h2>',li:['<b>CO ＋ H₂</b> 为主，可发电/制燃料']},
+{k:'板块④ · 视频04',h:'<h2>🎬 生活垃圾热解气化</h2>',vid:V+'04-生活垃圾热解气化.mp4',tip:'3\' · 生活垃圾热解气化'},
+{k:'板块④ · 视频05',h:'<h2>🎬 气化炉原理</h2>',vid:V+'05-气化炉原理.mp4',tip:'5\' · 气化炉结构和工作原理'},
+{k:'板块④ · 评价指标',h:'<h2>评价指标</h2>',li:['<b>冷煤气效率 CGE</b> / <b>碳转化率</b>']},
+{k:'板块④ · 三兄弟对比',h:'<h2>三兄弟对比</h2>',li:['<b class="g">焚烧富氧烧成灰、热解无氧闷成油、气化半氧变煤气</b>']},
+{k:'板块⑤ · 互动',h:'<h2>互动（含答案）</h2>',li:['①热解 vs 焚烧本质差？→ <b>氧气</b>（无氧 vs 富氧）','②AI 工况能否直接执行？→ <b>不能</b>，须工程师校核']},
+{k:'板块⑤ · 作业＋预告',h:'<h2>作业 ＋ 预告</h2>',li:['作业①：AI 查「热解气化区别」「AI工况寻优」，留痕四步法核对','作业②：三兄弟「氧气/温度/产物/用途」四维对比表','预告：第六章 <b>生物处理</b>（堆肥/厌氧消化）']},
+{k:'板块⑤ · 思政收尾',h:'<div class="big"><span class="g">绿水青山就是金山银山</span><br>好好学习 天天向上</div>',li:['AI 更聪明地烧、热解气化更彻底变废为宝 · 热化学三兄弟分清，第五章吃透']}
+];
+
+var stage = document.getElementById('stage');
+var cur = 0, total = slides.length;
+document.getElementById('total').textContent = total;
+function render(i){
+  var s = slides[i];
+  var html = '<div class="slide active"><div class="kicker">'+s.k+'</div>'+s.h;
+  if(s.vid){ html += '<div class="vwrap"><video controls preload="metadata" src="'+s.vid+'"></video><div class="vtip">'+s.tip+' · 点开即播</div></div>'; }
+  else if(s.li){ html += '<ul>'+s.li.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>'; }
+  html += '</div>';
+  stage.innerHTML = html;
+  document.querySelectorAll('video').forEach(function(v){ v.pause(); });
+}
+function show(i){ cur=(i+total)%total; render(cur); document.getElementById('cur').textContent=cur+1; document.getElementById('prog').style.width=((cur+1)/total*100)+'%'; }
+function next(){ show(cur+1); } function prev(){ show(cur-1); }
+document.getElementById('next').onclick=next; document.getElementById('prev').onclick=prev;
+document.addEventListener('keydown',function(e){ if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();next();} if(e.key==='ArrowLeft'){e.preventDefault();prev();} });
+document.getElementById('stage').addEventListener('click',function(e){ if(e.target.tagName==='VIDEO'||e.target.tagName==='BUTTON')return; next(); });
+show(0);
+</script>
+</body>
+</html>
