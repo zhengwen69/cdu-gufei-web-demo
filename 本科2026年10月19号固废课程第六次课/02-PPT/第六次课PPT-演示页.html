@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第六次课 · 固体废弃物处理与处置 — 演示页</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:#0a1628;color:#c8d6e5;overflow:hidden;-webkit-font-smoothing:antialiased}
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:40px 60px}
+.slide{display:none;width:100%;max-width:1100px;height:100%;max-height:640px;flex-direction:column;justify-content:center;animation:fade .4s}
+.slide.active{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.slide .kicker{font-size:13px;letter-spacing:3px;color:#5b9bd5;margin-bottom:10px}
+.slide h1{font-size:40px;color:#fff;margin-bottom:14px;line-height:1.25}
+.slide h1 span{color:#2ecc71}
+.slide h2{font-size:30px;color:#e8ecef;margin-bottom:16px}
+.slide .sub{font-size:17px;color:#8899aa;margin-bottom:10px}
+.slide .motto{font-size:20px;font-weight:600;margin-top:8px}
+.slide .motto .a{color:#5b9bd5}.slide .motto .b{color:#2ecc71}
+.slide ul{list-style:none;margin-top:8px}
+.slide li{font-size:18px;line-height:1.9;color:#b8c4ce;padding:3px 0;position:relative;padding-left:24px}
+.slide li::before{content:"▸";position:absolute;left:0;color:#2ecc71}
+.slide li b{color:#e67e22}
+.slide li .g{color:#2ecc71}
+.big{font-size:38px;color:#fff;text-align:center;margin:16px 0}
+.big .g{color:#2ecc71}
+.speak{display:inline-flex;align-items:center;gap:10px;margin-top:20px;padding:14px 26px;background:linear-gradient(135deg,#1a5276,#2980b9);border:none;border-radius:28px;color:#fff;font-size:19px;font-weight:600;cursor:pointer;letter-spacing:1px;box-shadow:0 6px 20px rgba(26,82,118,.35)}
+.speak:hover{transform:translateY(-2px)}
+.speak.playing{background:linear-gradient(135deg,#c62828,#e53935)}
+.speak .dot{width:9px;height:9px;border-radius:50%;background:#fff;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+.vwrap{width:100%;display:flex;flex-direction:column;align-items:center;margin-top:14px}
+.vwrap video{width:100%;max-width:900px;max-height:430px;background:#000;border-radius:10px;border:1px solid rgba(91,155,213,.25)}
+.vwrap .vtip{font-size:14px;color:#8899aa;margin-top:8px;letter-spacing:1px}
+#chrome{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:center;gap:18px;background:rgba(13,31,53,.7);backdrop-filter:blur(6px);border-top:1px solid rgba(91,155,213,.12)}
+#chrome .pg{font-size:13px;color:#8899aa;min-width:60px;text-align:center}
+#chrome .bar{flex:1;max-width:400px;height:3px;background:rgba(91,155,213,.15);border-radius:2px;overflow:hidden}
+#chrome .bar i{display:block;height:100%;background:#2ecc71;width:0;transition:width .3s}
+#chrome button{background:rgba(91,155,213,.12);border:1px solid rgba(91,155,213,.2);color:#7fb8e0;padding:6px 16px;border-radius:8px;cursor:pointer;font-size:13px}
+#chrome button:hover{border-color:#5b9bd5;color:#fff}
+.back-btn{position:fixed;top:18px;left:18px;z-index:10;padding:6px 14px;border-radius:8px;background:rgba(13,31,53,.85);border:1px solid rgba(91,155,213,.2);color:#7fb8e0;text-decoration:none;font-size:13px}
+.back-btn:hover{color:#fff;border-color:#5b9bd5}
+.hint{position:fixed;top:18px;right:18px;font-size:11px;color:#445}
+@media (max-width:768px){#stage{padding:20px}.slide h1{font-size:26px}.slide li{font-size:14px}.big{font-size:28px}.vwrap video{max-height:260px}}
+</style>
+</head>
+<body>
+<a class="back-btn" href="../03-浏览页/index.html">◀ 返回浏览页</a>
+<div class="hint">← → 或点击翻页 · 视频页点开即播</div>
+<div id="stage"></div>
+<div id="chrome">
+  <button id="prev">◀</button>
+  <div class="pg"><span id="cur">1</span> / <span id="total">36</span></div>
+  <div class="bar"><i id="prog"></i></div>
+  <button id="next">▶</button>
+</div>
+
+<script>
+var A1='焚烧的技术内核，到这里就讲完了。一句话记住焚烧：温度850、时间2秒、湍流搅匀、空气富余，这是3T+E；热值看低位，含水率越高越吃亏；炉子看物料，混垃圾用炉排、难烧用回转窑、均匀用流化床；烟要洗干净，半干法脱酸、活性炭吸附、袋式除尘、脱硝脱酸一整套；二噁英四级控，源头、燃烧、急冷、末端；烧剩的底渣能利用、飞灰是危废。技术吃透了，下一讲我们给焚烧厂套上合规的壳。';
+var A2='今天第五章前半讲完了：焚烧原理3T+E、热值HHV/LHV、三大炉型、烟气四道工艺、二噁英四级控制、飞灰底渣。一句话收：焚烧是把垃圾烧得减量、烧得无害、烟洗干净、灰分对路。下一讲，我们给焚烧厂套上合规的壳，讲环评、三同时、排污许可、清洁生产、环境披露，还有碳排核算和AI寻优。';
+
+var V='../04-视频素材/';
+
+var slides = [
+// 板块①
+{k:'板块① · 封面',h:'<h1><span>固体废弃物处理与处置</span></h1><div class="sub">第六次课 · 第五章 固体废物热处理（前半·焚烧技术内核）</div><div class="sub">黄正文 教授 · 成都大学环境工程系 · 2026年10月19日</div><div class="motto"><span class="a">绿水青山＝金山银山</span> ｜ <span class="b">好好学习 天天向上</span></div>'},
+{k:'板块① · 导航',h:'<h2>本课内容</h2>',li:['焚烧原理与 <b>3T+E</b>','热平衡与<b>热值计算</b>','焚烧<b>炉型</b> → 烟气净化 → 二噁英 → 飞灰底渣','本次只讲技术内核；合规/碳排/AI 留第7次课']},
+{k:'板块① · 承前点题',h:'<h2>承前点题</h2>',li:['上周：预处理（减容/减粒/分离/减毒）把垃圾<b>「改好状态」</b>','本周：热处理——把垃圾「烧掉」，减容 <b>90%</b>、减重 <b>70%</b>']},
+{k:'板块① · 路线图',h:'<h2>本课路线图</h2>',li:['焚烧原理 → 热值 → 炉型 → 烟气净化 → <b>二噁英</b> → 飞灰底渣']},
+// 板块②
+{k:'板块② · 焚烧定义',h:'<h2>焚烧定义 ＋ 三段过程</h2>',li:['焚烧＝可燃组分<b>高温氧化</b>，放热、产烟气和灰渣','三关：<b>干燥</b>（蒸水）→ <b>热解</b>（挥发分析出）→ <b>燃烧</b>（固定碳燃烧）']},
+{k:'板块② · 3T+E总览',h:'<h2>3T+E 四要素</h2>',li:['<b>温度</b> Temperature / <b>时间</b> Time / <b>湍流</b> Turbulence / <b>过剩空气</b> Excess Air']},
+{k:'板块② · 温度+时间',h:'<h2>温度 ＋ 时间</h2>',li:['焚烧室温度 ≥ <b>850℃</b>','烟气在 ≥850℃ 区停留 ≥ <b>2s</b>（GB18485）']},
+{k:'板块② · 湍流+空气',h:'<h2>湍流 ＋ 过剩空气</h2>',li:['湍流＝充分混合；过量空气系数：炉排炉 <b>1.6~2.0</b>、流化床 <b>1.4~1.6</b>','金句：<b class="g">火要大、料要待够、要搅匀、风要足</b>']},
+{k:'板块② · 视频01',h:'<h2>🎬 焚烧炉三维演示动画</h2>',vid:V+'01-焚烧炉三维演示.mp4',tip:'1\'24" · 焚烧炉结构'},
+// 板块③
+{k:'板块③ · HHV/LHV',h:'<h2>热值 ＋ HHV / LHV</h2>',li:['高位热值 <b>HHV</b>（含冷凝潜热） vs 低位热值 <b>LHV</b>（扣水分）','差在一个<b>「水」</b>字']},
+{k:'板块③ · 汽化潜热',h:'<h2>水的汽化潜热</h2>',li:['1 kg 水蒸干吃 <b>2260 kJ</b>','含水率越高，低位热值越低']},
+{k:'板块③ · 带算①',h:'<h2>现场带算 ①（含水率 40%）</h2>',li:['干基热值 10000 kJ/kg、含水率 40%','发热 6000 − 吸水 904 ≈ <b class="g">5100 kJ/kg</b>']},
+{k:'板块③ · 带算②',h:'<h2>现场带算 ②（含水率 60%）</h2>',li:['发热 4000 − 吸水 1356 ≈ <b class="g">2640 kJ/kg</b>','含水率 40%→60%，热值几乎<b>腰斩</b>']},
+{k:'板块③ · 自持燃烧',h:'<h2>自持燃烧</h2>',li:['生活垃圾低位热值 <b>3000~7000</b> kJ/kg','≥ <b>5000</b> 可自持不掺煤；< 4000 需掺煤/助燃']},
+// 板块④
+{k:'板块④ · 炉型总览',h:'<h2>三大炉型</h2>',li:['<b>炉排炉</b> Grate ／ <b>流化床</b> FB ／ <b>回转窑</b> Rotary Kiln']},
+{k:'板块④ · 炉排炉+视频02',h:'<h2>炉排炉 ＋ 🎬视频</h2>',li:['垃圾在炉排上移动翻动，干燥/燃烧/燃尽三段','主流、大容量'],vid:V+'02-往复炉排焚烧炉.mp4',tip:'4\'00" · 往复炉排焚烧炉'},
+{k:'板块④ · 流化床+视频03',h:'<h2>流化床 ＋ 🎬视频</h2>',li:['石英砂流化介质悬浮燃烧，温度均匀、燃烧剧烈','需破碎、粉尘多'],vid:V+'03-流化床焚烧炉.mp4',tip:'3\'52" · 流化床焚烧炉'},
+{k:'板块④ · 回转窑+视频04',h:'<h2>回转窑 ＋ 🎬视频</h2>',li:['慢速旋转、停留时间长，适合<b>危废/污泥</b>等难烧料'],vid:V+'04-回转窑焚烧炉.mp4',tip:'3\'11" · 回转窑三维动画'},
+{k:'板块④ · 选型口诀',h:'<h2>选型口诀</h2>',li:['<b class="g">混垃圾用炉排、难烧危废用回转窑、中等均匀用流化床</b>']},
+{k:'板块④ · 互动①',h:'<h2>互动 ①（含答案）</h2>',li:['问：难烧的危废/污泥用哪种炉？','答：<b class="g">回转窑</b>（慢烤、停留时间长）']},
+// 板块⑤
+{k:'板块⑤ · 五类污染物',h:'<h2>五类污染物</h2>',li:['酸性气体（HCl/SO2/HF）· 颗粒物 · <b>NOx</b> · 二噁英 · 重金属']},
+{k:'板块⑤ · 脱酸',h:'<h2>脱酸</h2>',li:['干法（消石灰）／半干法（石灰浆）／<b>湿法洗涤</b> Wet Scrubbing']},
+{k:'板块⑤ · 除尘',h:'<h2>除尘</h2>',li:['<b>袋式除尘器</b> Baghouse（主流，兼吸二噁英）','静电除尘器 ESP（怕高温）']},
+{k:'板块⑤ · 脱硝+活性炭',h:'<h2>脱硝 ＋ 活性炭喷射</h2>',li:['<b>SNCR</b>（尿素/氨水，非催化）／ <b>SCR</b>（催化，贵）','活性炭喷射 <b>ACI</b> 吸二噁英＋重金属']},
+{k:'板块⑤ · 主流组合',h:'<h2>主流烟气净化组合</h2>',li:['<b class="g">半干法脱酸 ＋ 活性炭喷射 ＋ 袋式除尘 ＋ SNCR/SCR 脱硝</b>']},
+// 板块⑥
+{k:'板块⑥ · 二噁英是什么',h:'<h2>二噁英是什么</h2>',li:['<b>75</b> 种 PCDDs ＋ <b>135</b> 种 PCDFs；剧毒致癌','排放限值 <b>0.1 ng-TEQ/m³</b>']},
+{k:'板块⑥ · 三条生成路径',h:'<h2>三条生成路径</h2>',li:['高温<b>气相生成</b> ／ 前驱物<b>催化生成</b> ／ de novo <b>低温从头合成</b>']},
+{k:'板块⑥ · 再合成窗口',h:'<h2>再合成窗口 ＋ 四级控制</h2>',li:['再合成窗口 <b>250~400℃</b>','四级：<b class="g">源头少喂料 → 炉里烧干净 → 半路别停留 → 最后兜底</b>']},
+{k:'板块⑥ · 视频05',h:'<h2>🎬 二噁英生成与危害科普</h2>',vid:V+'05-二噁英科普.mp4',tip:'2\'53" · 二噁英科普'},
+{k:'板块⑥ · 互动②',h:'<h2>互动 ②（含答案）</h2>',li:['问：二噁英「烧掉为何又长回来」？','答：<b class="g">250~400℃</b> 低温再合成，碳＋氯＋金属催化 de novo，须急冷跨过窗口']},
+// 板块⑦
+{k:'板块⑦ · 底渣vs飞灰',h:'<h2>底渣 vs 飞灰</h2>',li:['<b>底渣</b> Bottom Ash：量大、相对干净，可制砖/路基/骨料','<b>飞灰</b> Fly Ash：烟里捞回的细灰，富集重金属＋二噁英']},
+{k:'板块⑦ · 飞灰危废+视频06',h:'<h2>飞灰是危废 ＋ 🎬视频</h2>',li:['飞灰＝危险废物 <b>HW18</b>，须固化稳定化（回扣第四章）后安全填埋'],vid:V+'06-飞灰处理三维动画.mp4',tip:'5\'12" · 飞灰处理三维动画'},
+{k:'板块⑦ · 播音小结①+伏笔',h:'<h2>播音小结 ① ＋ 合规伏笔</h2>',li:['承上启下 · 约90秒 · 点击即播','伏笔：焚烧厂五道合规关口（环评/三同时/排污许可/清洁生产/环境披露）→ 第7次课'],au:A1},
+// 板块⑧
+{k:'板块⑧ · 播音小结②',h:'<h2>播音小结 ② · 收口承上启下</h2>',li:['全课并线 · 约90秒 · 点击即播'],au:A2},
+{k:'板块⑧ · 作业+预告',h:'<h2>作业 ＋ 预告</h2>',li:['作业①：干基热值 9000、含水率 50%/70%，求低位热值并对比','作业②：留痕四步法——AI 查「二噁英生成机理」「3T+E」，逐条核对标错','预告：第7次课 焚烧厂合规闭环＋碳排核算＋AI 寻优']},
+{k:'板块⑧ · 思政收尾',h:'<div class="big"><span class="g">绿水青山就是金山银山</span><br>好好学习 天天向上</div>',li:['二噁英控到 0.1 ng，控的是老百姓的一口干净空气 · 850℃、2 秒记得牢，手艺才硬']}
+];
+
+var stage = document.getElementById('stage');
+var cur = 0, total = slides.length;
+document.getElementById('total').textContent = total;
+
+var voices = [];
+function loadVoices(){ voices = speechSynthesis.getVoices(); }
+if('speechSynthesis' in window){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+function pickVoice(){ if(!voices.length) return null; var v = voices.find(function(x){ return /zh|cmn|chinese/i.test(x.lang) && /female|xiao|huihui|yaoyao|ting/i.test(x.name); }); if(!v) v = voices.find(function(x){ return /zh|cmn|chinese/i.test(x.lang); }); return v || null; }
+function speak(text, btn){
+  if(!('speechSynthesis' in window)){ alert('当前浏览器不支持语音合成，请用 Edge 或 Chrome 打开'); return; }
+  if(speechSynthesis.speaking){ speechSynthesis.cancel(); if(btn){ btn.classList.remove('playing'); btn.innerHTML='▶ 播放小结'; } return; }
+  var u = new SpeechSynthesisUtterance(text); u.lang='zh-CN'; u.rate=0.95; u.pitch=1.0;
+  var v = pickVoice(); if(v) u.voice = v;
+  u.onend = function(){ if(btn){ btn.classList.remove('playing'); btn.innerHTML='▶ 播放小结'; } };
+  u.onerror = function(){ if(btn){ btn.classList.remove('playing'); btn.innerHTML='▶ 播放小结'; } };
+  speechSynthesis.speak(u);
+  if(btn){ btn.classList.add('playing'); btn.innerHTML='<span class="dot"></span> 正在播报 · 点击停止'; }
+}
+
+function render(i){
+  var s = slides[i];
+  var html = '<div class="slide active"><div class="kicker">'+s.k+'</div>'+s.h;
+  if(s.vid){ html += '<div class="vwrap"><video controls preload="metadata" src="'+s.vid+'"></video><div class="vtip">'+s.tip+' · 点开即播（浏览器原生播放）</div></div>'; }
+  else if(s.li){ html += '<ul>'+s.li.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>'; }
+  if(s.au){ html += '<div><button class="speak" data-i="'+i+'">▶ 播放小结</button></div>'; }
+  html += '</div>';
+  stage.innerHTML = html;
+
+  // 翻页时暂停所有正在播放的视频/语音
+  var olds = document.querySelectorAll('video');
+  olds.forEach(function(v){ v.pause(); });
+
+  var btns = stage.querySelectorAll('.speak');
+  btns.forEach(function(b){
+    b.onclick = function(){
+      var text = slides[i].au;
+      if(b.classList.contains('playing')){ speechSynthesis.cancel(); b.classList.remove('playing'); b.innerHTML='▶ 播放小结'; }
+      else { speak(text, b); }
+    };
+  });
+}
+
+function show(i){
+  cur = (i + total) % total;
+  render(cur);
+  document.getElementById('cur').textContent = cur + 1;
+  document.getElementById('prog').style.width = ((cur+1)/total*100) + '%';
+}
+
+function next(){ show(cur + 1); }
+function prev(){ show(cur - 1); }
+
+document.getElementById('next').onclick = next;
+document.getElementById('prev').onclick = prev;
+document.addEventListener('keydown', function(e){
+  if(e.key === 'ArrowRight' || e.key === ' '){ e.preventDefault(); next(); }
+  if(e.key === 'ArrowLeft'){ e.preventDefault(); prev(); }
+});
+document.getElementById('stage').addEventListener('click', function(e){
+  if(e.target.tagName === 'VIDEO' || e.target.tagName === 'BUTTON') return;
+  next();
+});
+
+show(0);
+</script>
+</body>
+</html>
