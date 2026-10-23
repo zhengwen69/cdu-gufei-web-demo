@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第八次课 · 固体废弃物处理与处置 — 演示页</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:#0a1628;color:#c8d6e5;overflow:hidden;-webkit-font-smoothing:antialiased}
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:40px 60px}
+.slide{display:none;width:100%;max-width:1100px;height:100%;max-height:640px;flex-direction:column;justify-content:center;animation:fade .4s}
+.slide.active{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.slide .kicker{font-size:13px;letter-spacing:3px;color:#5b9bd5;margin-bottom:10px}
+.slide h1{font-size:40px;color:#fff;margin-bottom:14px;line-height:1.25}
+.slide h1 span{color:#2ecc71}
+.slide h2{font-size:30px;color:#e8ecef;margin-bottom:16px}
+.slide .sub{font-size:17px;color:#8899aa;margin-bottom:10px}
+.slide .motto{font-size:20px;font-weight:600;margin-top:8px}
+.slide .motto .a{color:#5b9bd5}.slide .motto .b{color:#2ecc71}
+.slide ul{list-style:none;margin-top:8px}
+.slide li{font-size:18px;line-height:1.9;color:#b8c4ce;padding:3px 0;position:relative;padding-left:24px}
+.slide li::before{content:"▸";position:absolute;left:0;color:#2ecc71}
+.slide li b{color:#e67e22}.slide li .g{color:#2ecc71}
+.big{font-size:38px;color:#fff;text-align:center;margin:16px 0}
+.big .g{color:#2ecc71}
+.vwrap{width:100%;display:flex;flex-direction:column;align-items:center;margin-top:14px}
+.vwrap video{width:100%;max-width:900px;max-height:430px;background:#000;border-radius:10px;border:1px solid rgba(91,155,213,.25)}
+.vwrap .vtip{font-size:14px;color:#8899aa;margin-top:8px;letter-spacing:1px}
+#chrome{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:center;gap:18px;background:rgba(13,31,53,.7);backdrop-filter:blur(6px);border-top:1px solid rgba(91,155,213,.12)}
+#chrome .pg{font-size:13px;color:#8899aa;min-width:60px;text-align:center}
+#chrome .bar{flex:1;max-width:400px;height:3px;background:rgba(91,155,213,.15);border-radius:2px;overflow:hidden}
+#chrome .bar i{display:block;height:100%;background:#2ecc71;width:0;transition:width .3s}
+#chrome button{background:rgba(91,155,213,.12);border:1px solid rgba(91,155,213,.2);color:#7fb8e0;padding:6px 16px;border-radius:8px;cursor:pointer;font-size:13px}
+#chrome button:hover{border-color:#5b9bd5;color:#fff}
+.back-btn{position:fixed;top:18px;left:18px;z-index:10;padding:6px 14px;border-radius:8px;background:rgba(13,31,53,.85);border:1px solid rgba(91,155,213,.2);color:#7fb8e0;text-decoration:none;font-size:13px}
+.hint{position:fixed;top:18px;right:18px;font-size:11px;color:#445}
+@media (max-width:768px){#stage{padding:20px}.slide h1{font-size:26px}.slide li{font-size:14px}.big{font-size:28px}.vwrap video{max-height:260px}}
+</style>
+</head>
+<body>
+<a class="back-btn" href="../03-浏览页/index.html">◀ 返回浏览页</a>
+<div class="hint">← → 或点击翻页 · 视频页点开即播</div>
+<div id="stage"></div>
+<div id="chrome">
+  <button id="prev">◀</button>
+  <div class="pg"><span id="cur">1</span> / <span id="total">25</span></div>
+  <div class="bar"><i id="prog"></i></div>
+  <button id="next">▶</button>
+</div>
+
+<script>
+var V='../04-视频素材/';
+var slides = [
+{k:'板块① · 封面',h:'<h1><span>固体废弃物处理与处置</span></h1><div class="sub">第八次课 · 第五章 后半（环责险＋碳排核算）</div><div class="sub">黄正文 教授 · 成都大学环境工程系 · 2026年11月02日</div><div class="motto"><span class="a">绿水青山＝金山银山</span> ｜ <span class="b">好好学习 天天向上</span></div>'},
+{k:'板块① · 承前点题',h:'<h2>承前点题</h2>',li:['上次：五道合规关口（环评/三同时/排污许可/清洁生产/环境披露）','本次：<b>最后一根保险丝</b>（环责险）＋<b>一笔碳账</b>（碳排核算）']},
+{k:'板块① · 本课路线',h:'<h2>本课路线</h2>',li:['环责险 → 碳排核算 → 焚烧 vs 填埋 → <b>CCER</b>']},
+{k:'板块② · 环责险是什么',h:'<h2>环责险是什么</h2>',li:['企业污染造成损害 → 投保责任险 → <b>保险公司承担赔偿</b>']},
+{k:'板块② · 损害担责原则',h:'<h2>损害担责原则</h2>',li:['<b class="g">谁污染、谁治理、谁赔偿</b>']},
+{k:'板块② · 为什么强制投保',h:'<h2>为什么焚烧企业强制投保</h2>',li:['高环境风险（二噁英/重金属）→ 赔偿<b>天价</b>','强制投保 → <b>保护受害者</b>、防止企业破产无人赔付']},
+{k:'板块② · 交强险类比',h:'<h2>交强险类比</h2>',li:['焚烧厂＝环境领域的<b>「重型车」</b>，必须强制投保']},
+{k:'板块② · 法典要求',h:'<h2>法典要求</h2>',li:['<b>危废焚烧企业</b> → <b class="g">强制环境污染责任保险</b>']},
+{k:'板块② · 三责同追',h:'<h2>三责同追</h2>',li:['<b>行政</b> ＋ <b>民事</b> ＋ <b>刑事</b>，三责可能同追']},
+{k:'板块② · 视频01',h:'<h2>🎬 环境污染责任保险</h2>',vid:V+'01-环境污染责任保险.mp4',tip:'1\'04" · 环责险'},
+{k:'板块② · 环责险双保险',h:'<h2>环责险双保险</h2>',li:['给受害者<b>「保底」</b> ＋ 给企业<b>「止损」</b>']},
+{k:'板块③ · 排放因子法',h:'<h2>排放因子法</h2>',li:['温室气体排放 ＝ <b>活动水平</b> × <b>排放因子</b>（IPCC 方法学）']},
+{k:'板块③ · 视频02',h:'<h2>🎬 碳交易机制原理</h2>',vid:V+'02-碳交易原理.mp4',tip:'33\' · 碳交易机制原理与核心要素'},
+{k:'板块③ · 焚烧的碳：两类',h:'<h2>焚烧的碳：两类</h2>',li:['<b>生物质碳</b>（餐厨/纸/木·碳中和不计）／ <b>化石碳</b>（塑料·计净排放）']},
+{k:'板块③ · 碳中和逻辑',h:'<h2>碳中和逻辑</h2>',li:['生物质碳近年<b>固自大气</b> → 烧了回大气 → <b class="g">净零</b>']},
+{k:'板块③ · 化石碳',h:'<h2>化石碳</h2>',li:['塑料碳来自<b>地下化石</b> → 烧了净增 → 占焚烧 CO₂ 约 <b>1/3~1/2</b>']},
+{k:'板块③ · 焚烧vs填埋',h:'<h2>焚烧 vs 填埋</h2>',li:['焚烧排 <b>CO₂</b> / 填埋排 <b>CH₄</b>（温室效应 25~28 倍 CO₂）']},
+{k:'板块③ · 视频03',h:'<h2>🎬 碳达峰与碳中和科普</h2>',vid:V+'03-碳达峰碳中和.mp4',tip:'3\'52" · 全国优秀科普微视频'},
+{k:'板块③ · 视频04',h:'<h2>🎬 「碳交易」动画科普</h2>',vid:V+'04-碳交易动画科普.mp4',tip:'1\' · 碳交易是什么意思'},
+{k:'板块③ · 厌氧替代填埋减排',h:'<h2>厌氧替代填埋减排</h2>',li:['厨余厌氧产沼替代填埋 → 减排约 <b>150 kg CO₂e/吨</b>']},
+{k:'板块③ · CCER',h:'<h2>CCER</h2>',li:['国家核证自愿减排量 → 减排变<b class="g">碳资产</b>、可交易']},
+{k:'板块③ · 视频05',h:'<h2>🎬 成都万兴垃圾焚烧发电项目</h2>',vid:V+'05-焚烧发电碳排项目.mp4',tip:'1\' · 成都万兴环保发电厂'},
+{k:'板块④ · 互动',h:'<h2>互动（含答案）</h2>',li:['①焚烧企业为何强制环责险？→ <b>高环境风险、赔偿巨大</b>','②焚烧 CO₂ 哪部分算净排放？→ <b class="g">化石碳（塑料）</b>']},
+{k:'板块④ · 作业＋预告',h:'<h2>作业 ＋ 预告</h2>',li:['作业①：AI 查「环责险」「焚烧碳排核算」，留痕四步法核对','作业②：800t/d 焚烧厂化石碳净排放估算（排放因子法）','预告：第9次课 <b>AI寻优</b>＋<b>热解</b>＋<b>气化</b>']},
+{k:'板块④ · 思政收尾',h:'<div class="big"><span class="g">绿水青山就是金山银山</span><br>好好学习 天天向上</div>',li:['算清碳账、开发碳资产，就是守住绿水青山的金山银山 · 排放因子法＝双碳时代的手艺']}
+];
+
+var stage = document.getElementById('stage');
+var cur = 0, total = slides.length;
+document.getElementById('total').textContent = total;
+function render(i){
+  var s = slides[i];
+  var html = '<div class="slide active"><div class="kicker">'+s.k+'</div>'+s.h;
+  if(s.vid){ html += '<div class="vwrap"><video controls preload="metadata" src="'+s.vid+'"></video><div class="vtip">'+s.tip+' · 点开即播</div></div>'; }
+  else if(s.li){ html += '<ul>'+s.li.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>'; }
+  html += '</div>';
+  stage.innerHTML = html;
+  document.querySelectorAll('video').forEach(function(v){ v.pause(); });
+}
+function show(i){ cur=(i+total)%total; render(cur); document.getElementById('cur').textContent=cur+1; document.getElementById('prog').style.width=((cur+1)/total*100)+'%'; }
+function next(){ show(cur+1); } function prev(){ show(cur-1); }
+document.getElementById('next').onclick=next; document.getElementById('prev').onclick=prev;
+document.addEventListener('keydown',function(e){ if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();next();} if(e.key==='ArrowLeft'){e.preventDefault();prev();} });
+document.getElementById('stage').addEventListener('click',function(e){ if(e.target.tagName==='VIDEO'||e.target.tagName==='BUTTON')return; next(); });
+show(0);
+</script>
+</body>
+</html>
